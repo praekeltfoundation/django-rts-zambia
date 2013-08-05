@@ -25,7 +25,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'skeleton',
+        'NAME': 'rts',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
