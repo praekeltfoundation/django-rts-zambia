@@ -127,6 +127,18 @@ function VumiGoSkeleton() {
         "How many teachers in total do you have in your school?"
     ));
 
+    self.add_state(new FreeText(
+        "reg_school_teachers_g1",
+        "reg_school_teachers_g2",
+        "How many teachers teach G1 local language literacy?"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_teachers_g2",
+        "reg_school_student_g2_boys",
+        "How many teachers teach G2 local language literacy?"
+    ));
+
     self.add_state(new EndState(
         "end_state",
         "Thank you and bye bye!",
