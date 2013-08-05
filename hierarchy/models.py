@@ -39,8 +39,8 @@ class Zones(models.Model):
 class Schools(models.Model):
     EMIS = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, verbose_name=u'Name of School')
-    school_id = models.ForeignKey('Zones',
-                                   related_name='school_id ')
+    zone_id = models.ForeignKey('Zones',
+                                   related_name='zone_id ')
 
     def __unicode__(self):
         return self.name
