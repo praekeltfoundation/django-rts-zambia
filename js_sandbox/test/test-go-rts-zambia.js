@@ -27,7 +27,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
     var tester = new vumigo.test_utils.ImTester(app.api, {
         custom_setup: function (api) {
             api.config_store.config = JSON.stringify({
-                sms_short_code: "1234"
+                sms_short_code: "1234",
+                cms_api_root: 'http://qa/'
             });
             fixtures.forEach(function (f) {
                 api.load_http_fixture(f);
