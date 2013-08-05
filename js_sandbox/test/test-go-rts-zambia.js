@@ -212,5 +212,48 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("entering gender should ask for school classrooms number", function (done) {
+        var user = {
+            current_state: 'reg_gender',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "reg_school_classrooms",
+            response: "^How many classrooms do you have in your school\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering school classrooms should ask for teachers number", function (done) {
+        var user = {
+            current_state: 'reg_school_classrooms',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "5",
+            next_state: "reg_school_teachers",
+            response: "^How many teachers in total do you have in your school\\?$"
+        });
+        p.then(done, done);
+    });
+
 });
 
