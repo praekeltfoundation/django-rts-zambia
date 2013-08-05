@@ -1,1 +1,0 @@
-require("./test-vumi-go-skeleton.js")
