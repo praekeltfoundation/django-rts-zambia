@@ -15,10 +15,85 @@ var EndState = vumigo.states.EndState;
 var InteractionMachine = vumigo.state_machine.InteractionMachine;
 var StateCreator = vumigo.state_machine.StateCreator;
 
-function VumiGoSkeleton() {
+function GoRtsZambiaError(msg) {
+    var self = this;
+    self.msg = msg;
+
+    self.toString = function() {
+        return "<GoRtsZambiaError: " + self.msg + ">";
+    };
+}
+
+function GoRtsZambia() {
     var self = this;
     // The first state to enter
     StateCreator.call(self, 'initial_state');
+
+    // START Shared helpers
+
+    self.cms_get = function(path) {
+        var url = im.config.cms_api_root + path + "?format=json";
+        var p = im.api_request("http.get", {
+            url: url,
+            headers: self.headers
+        });
+        p.add_callback(function(result) {
+            var json = self.check_reply(result, url, 'GET', null, false);
+            return json;
+        });
+        return p;
+    };
+
+    self.cms_post = function(path, data) {
+        var url = im.config.cms_api_root + path + "?format=json";
+        data = self.url_encode(data);
+        var p = im.api_request("http.post", {
+            url: url,
+            headers: self.post_headers,
+            data: data
+        });
+        p.add_callback(function(result) {
+            var json = self.check_reply(result, url, 'POST', data, false);
+            return json;
+        });
+        return p;
+    };
+
+    self.url_encode = function(params) {
+        var items = [];
+        for (var key in params) {
+            items[items.length] = (encodeURIComponent(key) + '=' +
+                                   encodeURIComponent(params[key]));
+        }
+        return items.join('&');
+    };
+
+    self.check_reply = function(reply, url, method, data, ignore_error) {
+        var error;
+        if (reply.success && (reply.code >= 200 && reply.code < 300))  {
+            if (reply.body) {
+                var json = JSON.parse(reply.body);
+                return json;
+            } else {
+                return null;
+            }
+        }
+        else {
+            error = reply.reason;
+        }
+        var error_msg = ("API " + method + " to " + url + " failed: " +
+                         error);
+        if (typeof data != 'undefined') {
+            error_msg = error_msg + '; data: ' + JSON.stringify(data);
+        }
+        im.log(error_msg);
+        if (!ignore_error) {
+            throw new GoNikeGHRError(error_msg);
+        }
+    };
+
+    // END Shared helpers
+
 
     // Shared creators
     self.make_emis_error_state = function(state_name) {
@@ -192,7 +267,7 @@ function VumiGoSkeleton() {
 }
 
 // launch app
-var states = new VumiGoSkeleton();
+var states = new GoRtsZambia();
 var im = new InteractionMachine(api, states);
 im.attach();
  
