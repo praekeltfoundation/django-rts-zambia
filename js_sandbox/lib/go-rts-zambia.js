@@ -115,6 +115,18 @@ function VumiGoSkeleton() {
         ]
     ));
 
+    self.add_state(new FreeText(
+        "reg_school_classrooms",
+        "reg_school_teachers",
+        "How many classrooms do you have in your school?"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_teachers",
+        "reg_school_teachers_g1",
+        "How many teachers in total do you have in your school?"
+    ));
+
     self.add_state(new EndState(
         "end_state",
         "Thank you and bye bye!",
