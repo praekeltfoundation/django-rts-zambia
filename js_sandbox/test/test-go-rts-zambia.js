@@ -27,7 +27,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
     var tester = new vumigo.test_utils.ImTester(app.api, {
         custom_setup: function (api) {
             api.config_store.config = JSON.stringify({
-                //user_store: "go_skeleton"
+                sms_short_code: "1234"
             });
             fixtures.forEach(function (f) {
                 api.load_http_fixture(f);
@@ -54,6 +54,78 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
     it("selecting to register should ask for EMIS", function (done) {
         var user = {
             current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_emis",
+            response: "^What is your school EMIS number\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering valid EMIS should ask for School Name", function (done) {
+        var user = {
+            current_state: 'reg_emis',
+            answers: {
+                initial_state: 'reg_emis'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "0001",
+            next_state: "reg_school_name",
+            response: "^What is your school name\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS should ask for reenter or exit", function (done) {
+        var user = {
+            current_state: 'reg_emis',
+            answers: {
+                initial_state: 'reg_emis'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "000A",
+            next_state: "reg_emis_error",
+            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
+                "you have entered the number correctly.[^]" +
+                "1. Try again[^]" +
+                "2. Exit$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS and choosing to exit should tell send SMS", function (done) {
+        var user = {
+            current_state: 'reg_emis_error',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '000A'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "reg_exit_emis",
+            response: "^There seems to be a problem with the EMIS number. " +
+                "Please send a SMS with the code EMIS ERROR to 1234 " +
+                "and your district officer will be in touch.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS and choosing to reenter should ask EMIS", function (done) {
+        var user = {
+            current_state: 'reg_emis_error',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '000A'
+            }
         };
         var p = tester.check_state({
             user: user,
