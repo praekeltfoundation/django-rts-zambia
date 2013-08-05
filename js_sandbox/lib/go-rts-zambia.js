@@ -135,8 +135,20 @@ function VumiGoSkeleton() {
 
     self.add_state(new FreeText(
         "reg_school_teachers_g2",
-        "reg_school_student_g2_boys",
+        "reg_school_students_g2_boys",
         "How many teachers teach G2 local language literacy?"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_students_g2_boys",
+        "reg_school_students_g2_girls",
+        "Total number of G2 boys registered/enrolled?"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_students_g2_girls",
+        "reg_zone_head",
+        "Total number of G2 girls registered/enrolled?"
     ));
 
     self.add_state(new EndState(
