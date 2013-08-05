@@ -26,6 +26,11 @@ function GoRtsZambiaError(msg) {
 
 function GoRtsZambia() {
     var self = this;
+
+    self.post_headers = {
+        'Content-Type': ['application/x-www-form-urlencoded']
+    };
+
     // The first state to enter
     StateCreator.call(self, 'initial_state');
 
@@ -86,16 +91,55 @@ function GoRtsZambia() {
         if (typeof data != 'undefined') {
             error_msg = error_msg + '; data: ' + JSON.stringify(data);
         }
+
         im.log(error_msg);
         if (!ignore_error) {
-            throw new GoNikeGHRError(error_msg);
+            throw new GoRtsZambiaError(error_msg);
         }
     };
 
     // END Shared helpers
 
+    // START CMS Interactions
 
-    // Shared creators
+    self.cms_registration = function(im) {
+        var data = {
+            emis: parseInt(im.get_user_answer('reg_emis')),
+            school_name: im.get_user_answer('reg_school_name'),
+            first_name: im.get_user_answer('reg_first_name'),
+            surname: im.get_user_answer('reg_surname'),
+            date_of_birth: im.get_user_answer('reg_date_of_birth'),
+            gender: im.get_user_answer('reg_gender'),
+            school_classrooms: parseInt(im.get_user_answer('reg_school_classrooms')),
+            school_teachers: parseInt(im.get_user_answer('reg_school_teachers')),
+            school_teachers_g1: parseInt(im.get_user_answer('reg_school_teachers_g1')),
+            school_teachers_g2: parseInt(im.get_user_answer('reg_school_teachers_g2')),
+            school_students_g2_boys: parseInt(im.get_user_answer('reg_school_students_g2_boys')),
+            school_students_g2_girls: parseInt(im.get_user_answer('reg_school_students_g2_girls'))
+        };
+        if (im.get_user_answer('reg_zonal_head') === "reg_zonal_head_name") {
+            data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
+            data['zonal_head_self'] = false;
+        } else {
+            data['zonal_head_name'] = "self";
+            data['zonal_head_self'] = true;
+        }
+
+        return self.cms_post("registration/", data);
+    };
+
+    // END CMS Interactions
+
+    // START Shared creators
+
+    self.error_state = function() {
+        return new EndState(
+            "end_state_error",
+            "Sorry! Something went wrong. Please redial and try again.",
+            "initial_state"
+        );
+    };
+
     self.make_emis_error_state = function(state_name) {
         return new ChoiceState(
             state_name,
@@ -244,20 +288,36 @@ function GoRtsZambia() {
         "What is the name and surname of your Zonal Head?"
     ));
 
-    self.add_state(new EndState(
-        "reg_thanks_head_teacher",
-        "Thank you for registering! When you are ready you can dial in again " +
-        "to start reporting.",
-        "initial_state"
-    ));
+    self.add_creator('reg_thanks_head_teacher', function(state_name, im) {
+        // Log the users data
+        var p = self.cms_registration(im);
+        // Generate the EndState
+        p.add_callback(function(result) {
+            return new EndState(
+                state_name,
+                "Thank you for registering! When you are ready you can dial in again " +
+                "to start reporting.",
+                "initial_state"
+            );
+        });
+        return p;
+    });
 
-    self.add_state(new EndState(
-        "reg_thanks_zonal_head",
-        "Thank you for registering! When you are ready you can dial in again " +
-        "to start reporting. You will also start receiving the monthly SMS's " +
-        "from your Headteachers.",
-        "initial_state"
-    ));
+    self.add_creator('reg_thanks_zonal_head', function(state_name, im) {
+        // Log the users data
+        var p = self.cms_registration(im);
+        // Generate the EndState
+        p.add_callback(function(result) {
+            return new EndState(
+                state_name,
+                "Thank you for registering! When you are ready you can dial in again " +
+                "to start reporting. You will also start receiving the monthly SMS's " +
+                "from your Headteachers.",
+                "initial_state"
+            );
+        });
+        return p;
+    });
 
     self.add_state(new EndState(
         "end_state",

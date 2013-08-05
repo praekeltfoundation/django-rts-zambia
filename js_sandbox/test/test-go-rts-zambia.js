@@ -17,19 +17,42 @@ describe("test_api", function() {
     });
 });
 
+var test_fixtures_full = [
+    'test/fixtures/post_registration.json',
+    'test/fixtures/post_registration_zonalhead.json',
+];
+
 describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
-    var fixtures = [
-    ];
+    var fixtures = test_fixtures_full;
 
     var tester = new vumigo.test_utils.ImTester(app.api, {
         custom_setup: function (api) {
             api.config_store.config = JSON.stringify({
                 sms_short_code: "1234",
-                cms_api_root: 'http://qa/'
+                cms_api_root: 'http://qa/api/'
             });
+
+            var dummy_contact = {
+                key: "f953710a2472447591bd59e906dc2c26",
+                surname: "Trotter",
+                user_account: "test-0-user",
+                bbm_pin: null,
+                msisdn: "+1234567",
+                created_at: "2013-04-24 14:01:41.803693",
+                gtalk_id: null,
+                dob: null,
+                groups: null,
+                facebook_id: null,
+                twitter_handle: null,
+                email_address: null,
+                name: "Rodney"
+            };
+
+            api.add_contact(dummy_contact);
+
             fixtures.forEach(function (f) {
                 api.load_http_fixture(f);
             });
