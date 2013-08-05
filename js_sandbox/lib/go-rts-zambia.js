@@ -35,6 +35,12 @@ function VumiGoSkeleton() {
             );
     });
 
+    self.add_state(new FreeText(
+        "reg_emis",
+        "reg_schoolname",
+        "What is your school EMIS number?"
+    ));
+
     self.add_state(new EndState(
         "end_state",
         "Thank you and bye bye!",
