@@ -1,7 +1,7 @@
 {
-  "name": "vumi-go-skeleton",
+  "name": "go-rts-zambia",
   "version": "0.0.1",
-  "description": "A Vumi Go skeleton application.",
+  "description": "A Vumi Go skeleton for RTS Zambia.",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/westerncapelabs/vumi-go-skeleton"
+    "url": "git://github.com/praekelt/go-rts-zambia"
   },
   "keywords": [
     "vumi",
