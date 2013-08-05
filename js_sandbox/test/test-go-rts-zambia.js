@@ -136,5 +136,81 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("entering School Name should ask for users name", function (done) {
+        var user = {
+            current_state: 'reg_school_name',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "School One",
+            next_state: "reg_first_name",
+            response: "^What is your name\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering name should ask for users surname", function (done) {
+        var user = {
+            current_state: 'reg_first_name',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "Jack",
+            next_state: "reg_surname",
+            response: "^What is your surname\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering suname should ask for users date of birth", function (done) {
+        var user = {
+            current_state: 'reg_surname',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "Black",
+            next_state: "reg_date_of_birth",
+            response: "^What is your date of birth\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering valid date of birth should ask for users gender", function (done) {
+        var user = {
+            current_state: 'reg_date_of_birth',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "11-Sep-1980",
+            next_state: "reg_gender",
+            response: "^What is your gender\\?[^]" +
+            "1. Female[^]" +
+            "2. Male$"
+        });
+        p.then(done, done);
+    });
+
 });
 
