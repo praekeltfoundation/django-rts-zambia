@@ -51,5 +51,18 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("selecting to register should ask for EMIS", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_emis",
+            response: "^What is your school EMIS number\\?$"
+        });
+        p.then(done, done);
+    });
+
 });
 
