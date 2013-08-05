@@ -1,5 +1,5 @@
 *.py[cod]
-DS_Store
+*.DS_Store
 
 # C extensions
 *.so
@@ -37,3 +37,4 @@ nosetests.xml
 /ve/
 logs/*.log
 *.pid
+node_modules
