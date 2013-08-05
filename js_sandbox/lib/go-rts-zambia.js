@@ -20,6 +20,24 @@ function VumiGoSkeleton() {
     // The first state to enter
     StateCreator.call(self, 'initial_state');
 
+    // Shared creators
+    self.make_emis_error_state = function(state_name) {
+        return new ChoiceState(
+            state_name,
+            function(choice) {
+                return choice.value;
+            },
+            "Sorry!\nThat is not a EMIS we recognise. Make sure you have " +
+            "entered the number correctly.",
+            [
+                new Choice("reg_emis", "Try again"),
+                new Choice("reg_exit_emis", "Exit")
+            ]
+        );
+    };
+
+    // END Shared creators
+
     self.add_creator('initial_state', function(state_name, im) {
         return new ChoiceState(
             state_name,
@@ -32,19 +50,47 @@ function VumiGoSkeleton() {
                 new Choice("manage_change_emis", "Change my school"),
                 new Choice("manage_change_msisdn", "Change my primary mobile number")
             ]
-            );
+        );
     });
 
     self.add_state(new FreeText(
         "reg_emis",
-        "reg_schoolname",
+        "reg_school_name",
         "What is your school EMIS number?"
     ));
+
+    self.add_creator('reg_school_name', function(state_name, im) {
+        var EMIS = parseInt(im.get_user_answer('reg_emis'));
+        // TODO: Validate EMIS properly
+        if (EMIS === 1) {
+            // EMIS valid
+            return new FreeText(
+                state_name,
+                "reg_first_name",
+                "What is your school name?"
+            );
+        } else {
+            // Invalid EMIS - request again
+            return self.make_emis_error_state('reg_emis_error');
+        }
+    });
+
+    self.add_state(self.make_emis_error_state('reg_emis_error'));
+
+    self.add_creator('reg_exit_emis', function(state_name, im) {
+        return new EndState(
+            state_name,
+            "There seems to be a problem with the EMIS number. Please send a SMS " +
+            "with the code EMIS ERROR to " + im.config.sms_short_code + " " +
+            "and your district officer will be in touch.",
+            "initial_state"
+        );
+    });
 
     self.add_state(new EndState(
         "end_state",
         "Thank you and bye bye!",
-        "first_state"
+        "initial_state"
     ));
 }
 
