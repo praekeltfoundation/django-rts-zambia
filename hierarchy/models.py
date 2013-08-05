@@ -13,20 +13,20 @@ class Provinces(models.Model):
 
 class Districts(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of District')
-    province_id = models.ForeignKey('MonitorAndLearningQuizId',
+    province_id = models.ForeignKey('Provinces',
                                     related_name='province_id ')
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Monitor and Learning Quiz Question"
+        verbose_name_plural = "District"
 
 
 
 class Zones(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of Zone')
-    district_id = models.ForeignKey('MonitorAndLearningQuizId',
+    district_id = models.ForeignKey('Districts',
                                     related_name='district_id ')
 
     def __unicode__(self):
@@ -39,7 +39,7 @@ class Zones(models.Model):
 class Schools(models.Model):
     EMIS = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, verbose_name=u'Name of School')
-    school_id = models.ForeignKey('MonitorAndLearningQuizId',
+    school_id = models.ForeignKey('Zones',
                                    related_name='school_id ')
 
     def __unicode__(self):
