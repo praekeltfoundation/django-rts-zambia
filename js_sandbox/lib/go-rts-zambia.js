@@ -87,6 +87,34 @@ function VumiGoSkeleton() {
         );
     });
 
+    self.add_state(new FreeText(
+        "reg_first_name",
+        "reg_surname",
+        "What is your name?"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_surname",
+        "reg_date_of_birth",
+        "What is your surname?"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_date_of_birth",
+        "reg_gender",
+        "What is your date of birth?"
+    ));
+
+    self.add_state(new ChoiceState(
+        'reg_gender',
+        'reg_school_classrooms',
+        "What is your gender?",
+        [
+            new Choice("female", "Female"),
+            new Choice("male", "Male")
+        ]
+    ));
+
     self.add_state(new EndState(
         "end_state",
         "Thank you and bye bye!",
