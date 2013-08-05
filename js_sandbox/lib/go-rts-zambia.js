@@ -147,8 +147,41 @@ function VumiGoSkeleton() {
 
     self.add_state(new FreeText(
         "reg_school_students_g2_girls",
-        "reg_zone_head",
+        "reg_zonal_head",
         "Total number of G2 girls registered/enrolled?"
+    ));
+
+    self.add_state(new ChoiceState(
+        'reg_zonal_head',
+        function(choice) {
+            return choice.value;
+        },
+        "Are you a Zonal Head?",
+        [
+            new Choice("reg_thanks_zonal_head", "Yes"),
+            new Choice("reg_zonal_head_name", "No")
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "reg_zonal_head_name",
+        "reg_thanks_head_teacher",
+        "What is the name and surname of your Zonal Head?"
+    ));
+
+    self.add_state(new EndState(
+        "reg_thanks_head_teacher",
+        "Thank you for registering! When you are ready you can dial in again " +
+        "to start reporting.",
+        "initial_state"
+    ));
+
+    self.add_state(new EndState(
+        "reg_thanks_zonal_head",
+        "Thank you for registering! When you are ready you can dial in again " +
+        "to start reporting. You will also start receiving the monthly SMS's " +
+        "from your Headteachers.",
+        "initial_state"
     ));
 
     self.add_state(new EndState(
