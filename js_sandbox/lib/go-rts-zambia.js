@@ -155,6 +155,18 @@ function GoRtsZambia() {
         );
     };
 
+    self.make_bad_data_state = function(state_name, next_state, expecting) {
+        return new ChoiceState(
+            state_name,
+            next_state,
+            "Sorry!\nThe information you entered is not what we were expecting.\n" +
+            "We were expecting " + expecting,
+            [
+                new Choice("back", "Try again")
+            ]
+        );
+    };
+
     // END Shared creators
 
     self.add_creator('initial_state', function(state_name, im) {
@@ -237,37 +249,68 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_school_classrooms",
         "reg_school_teachers",
-        "How many classrooms do you have in your school?"
+        "How many classrooms do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for how many classrooms you have in your school'
     ));
+
 
     self.add_state(new FreeText(
         "reg_school_teachers",
         "reg_school_teachers_g1",
-        "How many teachers in total do you have in your school?"
+        "How many teachers in total do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for how many teachers in total do you have in your school'
     ));
 
     self.add_state(new FreeText(
         "reg_school_teachers_g1",
         "reg_school_teachers_g2",
-        "How many teachers teach G1 local language literacy?"
+        "How many teachers teach G1 local language literacy?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for how many teachers teach G1 local language literacy'
     ));
 
     self.add_state(new FreeText(
         "reg_school_teachers_g2",
         "reg_school_students_g2_boys",
-        "How many teachers teach G2 local language literacy?"
+        "How many teachers teach G2 local language literacy?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for how many teachers teach G2 local language literacy'
     ));
 
     self.add_state(new FreeText(
         "reg_school_students_g2_boys",
         "reg_school_students_g2_girls",
-        "Total number of G2 boys registered/enrolled?"
+        "Total number of G2 boys registered/enrolled?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for total number of G2 boys registered/enrolled'
     ));
 
     self.add_state(new FreeText(
         "reg_school_students_g2_girls",
         "reg_zonal_head",
-        "Total number of G2 girls registered/enrolled?"
+        "Total number of G2 girls registered/enrolled?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for total number of G2 girls registered/enrolled'
     ));
 
     self.add_state(new ChoiceState(
