@@ -1,0 +1,7 @@
+{
+    "url": "http://qa/api/registration/?format=json",
+    "method": "POST",
+    "content_type": "application/x-www-form-urlencoded",
+    "data": "emis=1&school_name=School%20One&first_name=Jack&surname=Black&date_of_birth=11-Sep-1980&gender=male&school_classrooms=5&school_teachers=5&school_teachers_g1=2&school_teachers_g2=2&school_students_g2_boys=10&school_students_g2_girls=11&zonal_head_name=self&zonal_head_self=true",
+    "body": {}
+}
