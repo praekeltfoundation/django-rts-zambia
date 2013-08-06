@@ -1,7 +1,6 @@
-from tastypie.resources import ModelResource, ALL_WITH_RELATIONS
-from django.conf.urls import url
+from tastypie.resources import ModelResource
 from tastypie import fields
-from models import (Provinces, Districts, Zones, Schools)
+from models import (Province, District, Zone, School)
 
 
 class ProvinceResource(ModelResource):
@@ -19,7 +18,7 @@ class ProvinceResource(ModelResource):
         resource_name = "hierarchy"
         allowed_methods = ['get']
         include_resource_uri = False
-        queryset = Provinces.objects.all()
+        queryset = Province.objects.all()
 
 
 class DistrictResource(ModelResource):
@@ -37,7 +36,7 @@ class DistrictResource(ModelResource):
         resource_name = "hierarchy"
         allowed_methods = ['get']
         include_resource_uri = False
-        queryset = Districts.objects.all()
+        queryset = District.objects.all()
 
 
 class ZoneResource(ModelResource):
@@ -56,7 +55,7 @@ class ZoneResource(ModelResource):
         resource_name = "hierarchy"
         allowed_methods = ['get']
         include_resource_uri = False
-        queryset = Zones.objects.all()
+        queryset = Zone.objects.all()
 
 
 class SchoolResource(ModelResource):
@@ -76,4 +75,4 @@ class SchoolResource(ModelResource):
         resource_name = "hierarchy"
         allowed_methods = ['get']
         include_resource_uri = False
-        queryset = Schools.objects.all()
+        queryset = School.objects.all()
