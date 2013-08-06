@@ -282,6 +282,28 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("entering invalid school classrooms number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_classrooms',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "five",
+            next_state: "reg_school_classrooms",
+            response: "^Please provide a number value for how many classrooms you have in your school$"
+        });
+        p.then(done, done);
+    });
+
     it("entering teachers number should ask for G1 teachers number", function (done) {
         var user = {
             current_state: 'reg_school_teachers',
@@ -301,6 +323,29 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             content: "5",
             next_state: "reg_school_teachers_g1",
             response: "^How many teachers teach G1 local language literacy\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid teachers number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_teachers',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male',
+                reg_school_classrooms: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "five",
+            next_state: "reg_school_teachers",
+            response: "^Please provide a number value for how many teachers in total do you have in your school$"
         });
         p.then(done, done);
     });
@@ -329,6 +374,30 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("entering invalid teachers G1 number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_teachers_g1',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male',
+                reg_school_classrooms: '5',
+                reg_school_teachers: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "two",
+            next_state: "reg_school_teachers_g1",
+            response: "^Please provide a number value for how many teachers teach G1 local language literacy$"
+        });
+        p.then(done, done);
+    });
+
     it("entering teachers G2 number should ask for G2 boys number", function (done) {
         var user = {
             current_state: 'reg_school_teachers_g2',
@@ -350,6 +419,31 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             content: "2",
             next_state: "reg_school_students_g2_boys",
             response: "^Total number of G2 boys registered/enrolled\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid teachers G2 number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_teachers_g2',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male',
+                reg_school_classrooms: '5',
+                reg_school_teachers: '5',
+                reg_school_teachers_g1: '2'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "two",
+            next_state: "reg_school_teachers_g2",
+            response: "^Please provide a number value for how many teachers teach G2 local language literacy$"
         });
         p.then(done, done);
     });
@@ -380,6 +474,32 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("entering invalid student boys G2 number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_students_g2_boys',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male',
+                reg_school_classrooms: '5',
+                reg_school_teachers: '5',
+                reg_school_teachers_g1: '2',
+                reg_school_teachers_g2: '2'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "ten",
+            next_state: "reg_school_students_g2_boys",
+            response: "^Please provide a number value for total number of G2 boys registered/enrolled$"
+        });
+        p.then(done, done);
+    });
+
     it("entering student girls G2 number should ask for zonal head", function (done) {
         var user = {
             current_state: 'reg_school_students_g2_girls',
@@ -405,6 +525,33 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             response: "^Are you a Zonal Head\\?[^]" +
                     "1. Yes[^]" +
                     "2. No$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid student girls G2 number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_students_g2_girls',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male',
+                reg_school_classrooms: '5',
+                reg_school_teachers: '5',
+                reg_school_teachers_g1: '2',
+                reg_school_teachers_g2: '2',
+                reg_school_students_g2_boys: '10'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "eleven",
+            next_state: "reg_school_students_g2_girls",
+            response: "^Please provide a number value for total number of G2 girls registered/enrolled$"
         });
         p.then(done, done);
     });
