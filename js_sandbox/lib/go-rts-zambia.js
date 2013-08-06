@@ -98,6 +98,27 @@ function GoRtsZambia() {
         }
     };
 
+    self.array_parse_ints = function(target){
+        // returns false if fails to parse
+        for (var i = 0; i < target.length; i++) {
+            target[i] = parseInt(target[i],10);
+            if (isNaN(target[i])) return false;
+        }
+        return target;
+    };
+
+    self.check_and_parse_date = function(date_string){
+        // an opinionated data parser - expects "DD MM YYYY"
+        // returns false if fails to parse
+        var da = self.array_parse_ints(date_string.split(" "));
+        if (da && da[0]<=31 && da[1] <= 12){
+            da[1] = da[1]-1; // JS dates are 0-bound
+            return new Date(da[2], da[1], da[0]);
+        } else {
+            return false;
+        }
+    };
+
     // END Shared helpers
 
     // START CMS Interactions
@@ -233,7 +254,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_date_of_birth",
         "reg_gender",
-        "What is your date of birth?"
+        "What is your date of birth? (example 21 07 1980)",
+        function(content) {
+            // check that the value provided is date format we expect
+            return self.check_and_parse_date(content);
+        },
+        "Please enter your date of birth formatted DD MM YYYY"
     ));
 
     self.add_state(new ChoiceState(

@@ -63,6 +63,20 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         });
     });
 
+    it('should tell us whether a date string is acceptable', function(done) {
+        var state_creator = app.api.im.state_creator;
+        assert.equal(
+            state_creator.check_and_parse_date('11 09 1980').toISOString(),
+            new Date(1980,8,11).toISOString());
+        assert.equal(
+            state_creator.check_and_parse_date('11th Sept 1980'),
+            false);
+        assert.equal(
+            state_creator.check_and_parse_date('2013-08-01'),
+            false);
+        done();
+    });
+
     // first test should always start 'null, null' because we haven't
     // started interacting yet
     it("first display navigation menu", function (done) {
@@ -212,7 +226,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "Black",
             next_state: "reg_date_of_birth",
-            response: "^What is your date of birth\\?$"
+            response: "^What is your date of birth\\? \\(example 21 07 1980\\)$"
         });
         p.then(done, done);
     });
@@ -230,11 +244,31 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "11-Sep-1980",
+            content: "11 09 1980",
             next_state: "reg_gender",
             response: "^What is your gender\\?[^]" +
             "1. Female[^]" +
             "2. Male$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid date of birth should error", function (done) {
+        var user = {
+            current_state: 'reg_date_of_birth',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "11 Sep 1980",
+            next_state: "reg_date_of_birth",
+            response: "^Please enter your date of birth formatted DD MM YYYY$"
         });
         p.then(done, done);
     });
