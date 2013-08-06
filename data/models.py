@@ -3,30 +3,40 @@ from hierarchy.models import School
 
 
 class SchoolData(models.Model):
-    EMIS = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50, verbose_name=u'Name of School')
-    zone_id = models.ForeignKey('Zones',
-                                   related_name='zone_id ')
+    EMIS_id = models.ForeignKey('School',
+                                related_name='EMIS_id',
+                                verbose_name=u'EMIS Number')
+    classroom_total = models.IntegerField()
+    teachers_total = models.IntegerField()
+    g1_teachers = models.IntegerField()
+    g2_teachers = models.IntegerField()
+    boys_total = models.IntegerField()
+    girls_total = models.IntegerField()
+    g2_boys = models.IntegerField()
+    g2_girls = models.IntegerField()
 
     def __unicode__(self):
-        return self.name
+        return self.EMIS_id
 
     class Meta:
-        verbose_name_plural = "School"
+        verbose_name_plural = "School Data"
 
 
 class HeadTeacher(models.Model):
-    name_first = models.CharField(max_length=50, verbose_name=u'First Name')
-    name_last = models.CharField(max_length=50, verbose_name=u'Last Name')
+    first_name = models.CharField(max_length=50, verbose_name=u'First Name')
+    last_name = models.CharField(max_length=50, verbose_name=u'Last Name')
     gender = models.CharField(max_length=2, verbose_name=u'Gender',
                               choices =(("M", "Male"), ("F", "Female")))
+    mobile_number = models.IntegerField()
     date_of_birth = models.DateField()
     is_zonal_head = models.BooleanField()
-    EMIS_id = models.IntegerField(School,
-                                  related_name="EMIS")
+    EMIS_id = models.ForeignKey(School,
+                                related_name="EMIS_id",
+                                verbose_name=u'EMIS Number')
+    year = models.DateField()
 
     def __unicode__(self):
-        return self.name
+        return "%s %S" % (self.first_name, self.last_name)
 
     class Meta:
-        verbose_name_plural = "Province"
+        verbose_name_plural = "Head Teacher"
