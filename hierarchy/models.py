@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Provinces(models.Model):
+class Province(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of Province')
 
     def __unicode__(self):
@@ -11,10 +11,11 @@ class Provinces(models.Model):
         verbose_name_plural = "Province"
 
 
-class Districts(models.Model):
+class District(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of District')
-    province_id = models.ForeignKey('Provinces',
-                                    related_name='province_id ')
+    province_id = models.ForeignKey('Province',
+                                    related_name='province_id',
+                                    verbose_name=u'Province')
 
     def __unicode__(self):
         return self.name
@@ -24,10 +25,11 @@ class Districts(models.Model):
 
 
 
-class Zones(models.Model):
+class Zone(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of Zone')
-    district_id = models.ForeignKey('Districts',
-                                    related_name='district_id ')
+    district_id = models.ForeignKey('District',
+                                    related_name='district_id',
+                                    verbose_name=u'District')
 
     def __unicode__(self):
         return self.name
@@ -36,11 +38,12 @@ class Zones(models.Model):
         verbose_name_plural = "Zone"
 
 
-class Schools(models.Model):
+class School(models.Model):
     EMIS = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, verbose_name=u'Name of School')
-    zone_id = models.ForeignKey('Zones',
-                                   related_name='zone_id ')
+    zone_id = models.ForeignKey('Zone',
+                                related_name='zone_id',
+                                verbose_name=u'Zone')
 
     def __unicode__(self):
         return self.name
