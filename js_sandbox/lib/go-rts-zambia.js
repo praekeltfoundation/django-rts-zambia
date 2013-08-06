@@ -117,7 +117,7 @@ function GoRtsZambia() {
             school_students_g2_boys: parseInt(im.get_user_answer('reg_school_students_g2_boys')),
             school_students_g2_girls: parseInt(im.get_user_answer('reg_school_students_g2_girls'))
         };
-        if (im.get_user_answer('reg_zonal_head') === "reg_zonal_head_name") {
+        if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
             data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
             data['zonal_head_self'] = false;
         } else {
