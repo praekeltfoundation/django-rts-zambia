@@ -1,10 +1,10 @@
 from django.contrib import admin
-from models import (Provinces, Districts, Zones, Schools)
+from models import (Province, District, Zone, School)
 
 class SchoolAdmin(admin.ModelAdmin):
     list_display = ["EMIS", "name", "zone_id"]
 
-admin.site.register(Provinces)
-admin.site.register(Districts)
-admin.site.register(Zones)
-admin.site.register(Schools, SchoolAdmin)
+admin.site.register(Province)
+admin.site.register(District)
+admin.site.register(Zone)
+admin.site.register(School, SchoolAdmin)
