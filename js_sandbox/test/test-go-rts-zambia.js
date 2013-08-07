@@ -20,6 +20,7 @@ describe("test_api", function() {
 var test_fixtures_full = [
     'test/fixtures/post_registration.json',
     'test/fixtures/post_registration_zonalhead.json',
+    'test/fixtures/get_hierarchy.json'
 ];
 
 var tester;
@@ -676,6 +677,93 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             response: "^Thank you for registering! When you are ready you can dial " +
             "in again to start reporting.$",
             continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to change primary number should ask for EMIS", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "3",
+            next_state: "mangage_change_msisdn_emis_lookup",
+            response: "^What is your school EMIS number\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering valid EMIS should thank the user and exit", function (done) {
+        var user = {
+            current_state: 'mangage_change_msisdn_emis_lookup',
+            answers: {
+                initial_state: 'mangage_change_msisdn_emis_lookup'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "0001",
+            next_state: "mangage_change_msisdn_confirm",
+            response: "^Thank you! We have now allocated your new contact mobile number " +
+            "to your current school.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS should ask for reenter or exit", function (done) {
+        var user = {
+            current_state: 'mangage_change_msisdn_emis_lookup',
+            answers: {
+                initial_state: 'mangage_change_msisdn_emis_lookup'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "000A",
+            next_state: "mangage_change_msisdn_emis_error",
+            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
+                "you have entered the number correctly.[^]" +
+                "1. Try again[^]" +
+                "2. Exit$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS and choosing to exit should tell send SMS", function (done) {
+        var user = {
+            current_state: 'mangage_change_msisdn_emis_error',
+            answers: {
+                initial_state: 'mangage_change_msisdn_confirm',
+                mangage_change_msisdn_emis_lookup: '000A'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "reg_exit_emis",
+            response: "^There seems to be a problem with the EMIS number. " +
+                "Please send a SMS with the code EMIS ERROR to 1234 " +
+                "and your district officer will be in touch.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS and choosing to reenter should ask EMIS", function (done) {
+        var user = {
+            current_state: 'mangage_change_msisdn_emis_error',
+            answers: {
+                initial_state: 'mangage_change_msisdn_emis_lookup',
+                mangage_change_msisdn_emis_lookup: '000A'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "mangage_change_msisdn_emis_lookup",
+            response: "^What is your school EMIS number\\?$"
         });
         p.then(done, done);
     });
