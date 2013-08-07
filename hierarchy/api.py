@@ -10,10 +10,6 @@ class ProvinceResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # quiz_ids = fields.ToManyField(path,
-    #                               'quiz_ids', full=True)
-
     class Meta:
         resource_name = "hierarchy"
         allowed_methods = ['get']
@@ -28,10 +24,8 @@ class DistrictResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # quiz_ids = fields.ToManyField(path,
-    #                               'quiz_ids', full=True)
-    province_id = fields.ForeignKey(ProvinceResource, 'province_id', full=True)
+    path = 'hierarchy.api.ProvinceResource'
+    province_id = fields.ForeignKey(path, 'province_id', full=True)
     class Meta:
         resource_name = "hierarchy"
         allowed_methods = ['get']
@@ -46,11 +40,8 @@ class ZoneResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # quiz_ids = fields.ToManyField(path,
-    #                               'quiz_ids',
-    #                               full=True)
-    district_id = fields.ForeignKey(DistrictResource, 'district_id', full=True)
+    path = 'hierarchy.api.DistrictResource'
+    district_id = fields.ForeignKey(path, 'district_id', full=True)
     class Meta:
         resource_name = "hierarchy"
         allowed_methods = ['get']
@@ -65,11 +56,7 @@ class SchoolResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # school_id = fields.ToManyField(path,
-    #                               'school_id',
-    #                               full=True)
-    
+    path = 'hierarchy.api.ZoneResource'
     zone_id = fields.ForeignKey(ZoneResource, 'zone_id', full=True)
     class Meta:
         resource_name = "hierarchy"
