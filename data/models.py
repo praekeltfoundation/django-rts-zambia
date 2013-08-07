@@ -19,7 +19,7 @@ class SchoolData(models.Model):
         return "%s" % self.EMIS_id_school_data
 
     class Meta:
-        verbose_name_plural = "School Data"
+        verbose_name = "School Data"
 
 
 class HeadTeacher(models.Model):
@@ -39,4 +39,4 @@ class HeadTeacher(models.Model):
         return "%s %s" % (self.first_name, self.last_name)
 
     class Meta:
-        verbose_name_plural = "Head Teacher"
+        verbose_name = "Head Teacher"
