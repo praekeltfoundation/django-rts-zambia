@@ -29,7 +29,7 @@ class Migration(SchemaMigration):
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('gender', self.gf('django.db.models.fields.CharField')(max_length=2)),
-            ('mobile_number', self.gf('django.db.models.fields.IntegerField')()),
+            ('mobile_number', self.gf('django.db.models.fields.CharField')(max_length=15)),
             ('date_of_birth', self.gf('django.db.models.fields.DateField')()),
             ('is_zonal_head', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('EMIS_id_header_teacher', self.gf('django.db.models.fields.related.ForeignKey')(related_name='EMIS_id_header_teacher', to=orm['hierarchy.School'])),
@@ -56,7 +56,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_zonal_head': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'mobile_number': ('django.db.models.fields.IntegerField', [], {}),
+            'mobile_number': ('django.db.models.fields.CharField', [], {'max_length': '15'}),
             'year': ('django.db.models.fields.DateField', [], {})
         },
         u'data.schooldata': {
