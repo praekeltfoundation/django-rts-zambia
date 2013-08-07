@@ -11,9 +11,6 @@ class ProvinceResource(ModelResource):
         based on the url
     """
     class Meta:
-        resource_name = "hierarchy"
-        allowed_methods = ['get']
-        include_resource_uri = False
         queryset = Province.objects.all()
 
 
@@ -27,9 +24,6 @@ class DistrictResource(ModelResource):
     path = 'hierarchy.api.ProvinceResource'
     province_id = fields.ForeignKey(path, 'province_id', full=True)
     class Meta:
-        resource_name = "hierarchy"
-        allowed_methods = ['get']
-        include_resource_uri = False
         queryset = District.objects.all()
 
 
@@ -43,9 +37,6 @@ class ZoneResource(ModelResource):
     path = 'hierarchy.api.DistrictResource'
     district_id = fields.ForeignKey(path, 'district_id', full=True)
     class Meta:
-        resource_name = "hierarchy"
-        allowed_methods = ['get']
-        include_resource_uri = False
         queryset = Zone.objects.all()
 
 
