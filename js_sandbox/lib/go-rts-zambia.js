@@ -159,6 +159,14 @@ function GoRtsZambia() {
         return self.cms_post("registration/", data);
     };
 
+    self.cms_registration_update_msisdn = function(im) {
+        var data = {
+            emis: parseInt(im.get_user_answer('mangage_change_msisdn_emis_lookup')),
+            msisdn: im.user_addr
+        };
+        return self.cms_post("registration/msisdn/", data);
+    };
+
     self.cms_hierarchy_load = function() {
         var p = self.cms_get("hierarchy/");
         p.add_callback(function(result){
@@ -247,7 +255,13 @@ function GoRtsZambia() {
                 state_name,
                 "Thank you! We have now allocated your new contact mobile number " +
                 "to your current school.",
-                "initial_state"
+                "initial_state",
+                {
+                    on_enter: function() {
+                        var p = self.cms_registration_update_msisdn(im);
+                        return p;
+                    }
+                }
             );
         } else {
             // Invalid EMIS - request again

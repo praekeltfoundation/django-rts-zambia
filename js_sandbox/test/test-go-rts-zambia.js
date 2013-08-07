@@ -20,7 +20,8 @@ describe("test_api", function() {
 var test_fixtures_full = [
     'test/fixtures/post_registration.json',
     'test/fixtures/post_registration_zonalhead.json',
-    'test/fixtures/get_hierarchy.json'
+    'test/fixtures/get_hierarchy.json',
+    'test/fixtures/post_registration_update_msisdn.json',
 ];
 
 var tester;
