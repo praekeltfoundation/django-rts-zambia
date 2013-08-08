@@ -1,0 +1,7 @@
+{
+    "url": "http://qa/api/registration/emisdelink/?format=json",
+    "method": "POST",
+    "content_type": "application/x-www-form-urlencoded",
+    "data": "emis=1",
+    "body": {}
+}
