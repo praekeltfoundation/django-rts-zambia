@@ -21,8 +21,7 @@ class DistrictResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    path = 'hierarchy.api.ProvinceResource'
-    province_id = fields.ForeignKey(path, 'province_id', full=True)
+    province_id = fields.ForeignKey(ProvinceResource, 'province_id', full=True)
     class Meta:
         queryset = District.objects.all()
 
@@ -34,8 +33,7 @@ class ZoneResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    path = 'hierarchy.api.DistrictResource'
-    district_id = fields.ForeignKey(path, 'district_id', full=True)
+    district_id = fields.ForeignKey(DistrictResource, 'district_id', full=True)
     class Meta:
         queryset = Zone.objects.all()
 
@@ -47,7 +45,6 @@ class SchoolResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    path = 'hierarchy.api.ZoneResource'
     zone_id = fields.ForeignKey(ZoneResource, 'zone_id', full=True)
     class Meta:
         resource_name = "hierarchy"
