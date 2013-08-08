@@ -13,9 +13,8 @@ class Province(models.Model):
 
 class District(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of District')
-    province_id = models.ForeignKey('Province',
-                                    related_name='province_id',
-                                    verbose_name=u'Province')
+    province = models.ForeignKey('Province',
+                                  verbose_name=u'Province')
 
     def __unicode__(self):
         return self.name
@@ -27,9 +26,8 @@ class District(models.Model):
 
 class Zone(models.Model):
     name = models.CharField(max_length=50, verbose_name=u'Name of Zone')
-    district_id = models.ForeignKey('District',
-                                    related_name='district_id',
-                                    verbose_name=u'District')
+    district = models.ForeignKey('District',
+                                 verbose_name=u'District')
 
     def __unicode__(self):
         return self.name
@@ -41,9 +39,8 @@ class Zone(models.Model):
 class School(models.Model):
     EMIS = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50, verbose_name=u'Name of School')
-    zone_id = models.ForeignKey('Zone',
-                                related_name='zone_id',
-                                verbose_name=u'Zone')
+    zone = models.ForeignKey('Zone',
+                             verbose_name=u'Zone')
 
     def __unicode__(self):
         return self.name
