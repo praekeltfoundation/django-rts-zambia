@@ -161,7 +161,7 @@ function GoRtsZambia() {
 
     self.cms_registration_update_msisdn = function(im) {
         var data = {
-            emis: parseInt(im.get_user_answer('mangage_change_msisdn_emis_lookup')),
+            emis: parseInt(im.get_user_answer('manage_change_msisdn_emis_lookup')),
             msisdn: im.user_addr
         };
         return self.cms_post("registration/msisdn/", data);
@@ -230,7 +230,7 @@ function GoRtsZambia() {
             [
                 new Choice("reg_emis", "Register as a new user"),
                 new Choice("manage_change_emis", "Change my school"),
-                new Choice("mangage_change_msisdn_emis_lookup", "Change my primary mobile number")
+                new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
             ]
         );
     });
@@ -242,13 +242,13 @@ function GoRtsZambia() {
     ));
 
     self.add_state(new FreeText(
-        "mangage_change_msisdn_emis_lookup",
-        "mangage_change_msisdn_confirm",
+        "manage_change_msisdn_emis_lookup",
+        "manage_change_msisdn_confirm",
         "What is your school EMIS number?"
     ));
 
-    self.add_creator('mangage_change_msisdn_confirm', function(state_name, im) {
-        var EMIS = im.get_user_answer('mangage_change_msisdn_emis_lookup');
+    self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
+        var EMIS = im.get_user_answer('manage_change_msisdn_emis_lookup');
         if (self.check_valid_emis(EMIS)) {
             // EMIS valid
             return new EndState(
@@ -265,13 +265,13 @@ function GoRtsZambia() {
             );
         } else {
             // Invalid EMIS - request again
-            return self.make_emis_error_state('mangage_change_msisdn_emis_error',
-                'mangage_change_msisdn_emis_lookup');
+            return self.make_emis_error_state('manage_change_msisdn_emis_error',
+                'manage_change_msisdn_emis_lookup');
         }
     });
 
-    self.add_state(self.make_emis_error_state('mangage_change_msisdn_emis_error',
-        'mangage_change_msisdn_emis_lookup'));
+    self.add_state(self.make_emis_error_state('manage_change_msisdn_emis_error',
+        'manage_change_msisdn_emis_lookup'));
 
     self.add_creator('reg_school_name', function(state_name, im) {
         var EMIS = im.get_user_answer('reg_emis');

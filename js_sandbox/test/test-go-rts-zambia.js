@@ -689,7 +689,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "3",
-            next_state: "mangage_change_msisdn_emis_lookup",
+            next_state: "manage_change_msisdn_emis_lookup",
             response: "^What is your school EMIS number\\?$"
         });
         p.then(done, done);
@@ -697,15 +697,15 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     it("entering valid EMIS should thank the user and exit", function (done) {
         var user = {
-            current_state: 'mangage_change_msisdn_emis_lookup',
+            current_state: 'manage_change_msisdn_emis_lookup',
             answers: {
-                initial_state: 'mangage_change_msisdn_emis_lookup'
+                initial_state: 'manage_change_msisdn_emis_lookup'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "0001",
-            next_state: "mangage_change_msisdn_confirm",
+            next_state: "manage_change_msisdn_confirm",
             response: "^Thank you! We have now allocated your new contact mobile number " +
             "to your current school.$",
             continue_session: false
@@ -715,15 +715,15 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     it("entering invalid EMIS should ask for reenter or exit", function (done) {
         var user = {
-            current_state: 'mangage_change_msisdn_emis_lookup',
+            current_state: 'manage_change_msisdn_emis_lookup',
             answers: {
-                initial_state: 'mangage_change_msisdn_emis_lookup'
+                initial_state: 'manage_change_msisdn_emis_lookup'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "000A",
-            next_state: "mangage_change_msisdn_emis_error",
+            next_state: "manage_change_msisdn_emis_error",
             response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
                 "you have entered the number correctly.[^]" +
                 "1. Try again[^]" +
@@ -734,10 +734,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     it("entering invalid EMIS and choosing to exit should tell send SMS", function (done) {
         var user = {
-            current_state: 'mangage_change_msisdn_emis_error',
+            current_state: 'manage_change_msisdn_emis_error',
             answers: {
-                initial_state: 'mangage_change_msisdn_confirm',
-                mangage_change_msisdn_emis_lookup: '000A'
+                initial_state: 'manage_change_msisdn_confirm',
+                manage_change_msisdn_emis_lookup: '000A'
             }
         };
         var p = tester.check_state({
@@ -754,16 +754,16 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     it("entering invalid EMIS and choosing to reenter should ask EMIS", function (done) {
         var user = {
-            current_state: 'mangage_change_msisdn_emis_error',
+            current_state: 'manage_change_msisdn_emis_error',
             answers: {
-                initial_state: 'mangage_change_msisdn_emis_lookup',
-                mangage_change_msisdn_emis_lookup: '000A'
+                initial_state: 'manage_change_msisdn_emis_lookup',
+                manage_change_msisdn_emis_lookup: '000A'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "1",
-            next_state: "mangage_change_msisdn_emis_lookup",
+            next_state: "manage_change_msisdn_emis_lookup",
             response: "^What is your school EMIS number\\?$"
         });
         p.then(done, done);
