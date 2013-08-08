@@ -460,10 +460,7 @@ function GoRtsZambia() {
 
     self.on_config_read = function(event){
         // Run calls out to the APIs to load dynamic states
-        var p = new Promise();
-        p.add_callback(self.cms_hierarchy_load);
-        p.callback();
-        return p;
+        return self.cms_hierarchy_load();
     };
 }
 
