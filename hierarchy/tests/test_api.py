@@ -12,7 +12,7 @@ class TestHierarchyAPI(TestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'hierarchy',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
         self.assertEqual(response.status_code, 200)
