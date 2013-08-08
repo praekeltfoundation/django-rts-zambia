@@ -22,6 +22,7 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_zonalhead.json',
     'test/fixtures/get_hierarchy.json',
     'test/fixtures/post_registration_update_msisdn.json',
+    'test/fixtures/post_registration_emisdelink.json',
 ];
 
 var tester;
@@ -765,6 +766,35 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             content: "1",
             next_state: "manage_change_msisdn_emis_lookup",
             response: "^What is your school EMIS number\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to change school should ask for EMIS", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "manage_change_emis",
+            response: "^What is your school EMIS number\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering valid EMIS should disassociate current and ask for School Name", function (done) {
+        var user = {
+            current_state: 'reg_emis',
+            answers: {
+                initial_state: 'manage_change_emis'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "0001",
+            next_state: "reg_school_name",
+            response: "^What is your school name\\?$"
         });
         p.then(done, done);
     });

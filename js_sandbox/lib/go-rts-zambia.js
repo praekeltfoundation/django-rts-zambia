@@ -133,7 +133,7 @@ function GoRtsZambia() {
 
     // START CMS Interactions
 
-    self.cms_registration = function(im) {
+    self.cms_registration = function(im, data) {
         var data = {
             emis: parseInt(im.get_user_answer('reg_emis')),
             school_name: im.get_user_answer('reg_school_name'),
@@ -165,6 +165,13 @@ function GoRtsZambia() {
             msisdn: im.user_addr
         };
         return self.cms_post("registration/msisdn/", data);
+    };
+
+    self.cms_registration_emis_delink = function(im, emis) {
+        var data = {
+            emis: parseInt(emis)
+        };
+        return self.cms_post("registration/emisdelink/", data);
     };
 
     self.cms_hierarchy_load = function() {
@@ -247,6 +254,12 @@ function GoRtsZambia() {
         "What is your school EMIS number?"
     ));
 
+    self.add_state(new FreeText(
+        "manage_change_emis",
+        "reg_school_name",
+        "What is your school EMIS number?"
+    ));
+
     self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
         var EMIS = im.get_user_answer('manage_change_msisdn_emis_lookup');
         if (self.check_valid_emis(EMIS)) {
@@ -278,11 +291,24 @@ function GoRtsZambia() {
         // TODO: Validate EMIS properly
         if (self.check_valid_emis(EMIS)) {
             // EMIS valid
-            return new FreeText(
-                state_name,
-                "reg_first_name",
-                "What is your school name?"
-            );
+            if(im.get_user_answer('initial_state') == 'manage_change_emis'){
+                // drop the current msisdn from this emis
+                var p = self.cms_registration_emis_delink(im, EMIS);
+                p.add_callback(function(result){
+                    return new FreeText(
+                        state_name,
+                        "reg_first_name",
+                        "What is your school name?"
+                    );
+                });
+                return p;
+            } else {
+                return new FreeText(
+                    state_name,
+                    "reg_first_name",
+                    "What is your school name?"
+                );
+            }
         } else {
             // Invalid EMIS - request again
             return self.make_emis_error_state('reg_emis_error', 'reg_emis');
