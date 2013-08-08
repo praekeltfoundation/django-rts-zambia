@@ -129,13 +129,8 @@ function GoRtsZambia() {
         }        
     };
 
-    // END Shared helpers
-
-    // START CMS Interactions
-
-    self.cms_registration = function(im, data) {
+    self.registration_data_collect = function(){
         var data = {
-            emis: parseInt(im.get_user_answer('reg_emis')),
             school_name: im.get_user_answer('reg_school_name'),
             first_name: im.get_user_answer('reg_first_name'),
             surname: im.get_user_answer('reg_surname'),
@@ -155,7 +150,20 @@ function GoRtsZambia() {
             data['zonal_head_name'] = "self";
             data['zonal_head_self'] = true;
         }
+        if (im.get_user_answer('initial_state') == 'manage_change_emis'){
+            data['emis'] = parseInt(im.get_user_answer('manage_change_emis'));
+        } else {
+            data['emis'] = parseInt(im.get_user_answer('reg_emis'));
+        }
+        return data;
+    }
 
+    // END Shared helpers
+
+    // START CMS Interactions
+
+    self.cms_registration = function(im) {
+        var data = self.registration_data_collect();
         return self.cms_post("registration/", data);
     };
 
@@ -311,7 +319,11 @@ function GoRtsZambia() {
             }
         } else {
             // Invalid EMIS - request again
-            return self.make_emis_error_state('reg_emis_error', 'reg_emis');
+            if(im.get_user_answer('initial_state') == 'manage_change_emis'){
+                return self.make_emis_error_state('reg_emis_error', 'manage_change_emis');
+            } else {
+                return self.make_emis_error_state('reg_emis_error', 'reg_emis');
+            }
         }
     });
 

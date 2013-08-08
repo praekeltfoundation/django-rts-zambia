@@ -799,5 +799,36 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("saying are zonal head after disassociate should thank long and close", function (done) {
+        var user = {
+            current_state: 'reg_zonal_head',
+            answers: {
+                initial_state: 'manage_change_emis',
+                manage_change_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11-Sep-1980',
+                reg_gender: 'male',
+                reg_school_classrooms: '5',
+                reg_school_teachers: '5',
+                reg_school_teachers_g1: '2',
+                reg_school_teachers_g2: '2',
+                reg_school_students_g2_boys: '10',
+                reg_school_students_g2_girls: '11'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_thanks_zonal_head",
+            response: "^Thank you for registering! When you are ready you can " +
+            "dial in again to start reporting. You will also start receiving the " +
+            "monthly SMS's from your Headteachers.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+
 });
 
