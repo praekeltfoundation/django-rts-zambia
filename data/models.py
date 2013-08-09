@@ -2,41 +2,41 @@ from django.db import models
 from hierarchy.models import School
 
 
-class SchoolData(models.Model):
-    EMIS_id_school_data = models.ForeignKey('hierarchy.School',
-                                            related_name='EMIS_id_school_data',
-                                            verbose_name=u'EMIS Number')
-    classroom_total = models.IntegerField()
-    teachers_total = models.IntegerField()
-    g1_teachers = models.IntegerField()
-    g2_teachers = models.IntegerField()
-    boys_total = models.IntegerField()
-    girls_total = models.IntegerField()
-    g2_boys = models.IntegerField()
-    g2_girls = models.IntegerField()
-
-    def __unicode__(self):
-        return "%s" % self.EMIS_id_school_data
-
-    class Meta:
-        verbose_name = "School Data"
-
-
 class HeadTeacher(models.Model):
     first_name = models.CharField(max_length=50, verbose_name=u'First Name')
     last_name = models.CharField(max_length=50, verbose_name=u'Last Name')
-    gender = models.CharField(max_length=2, verbose_name=u'Gender',
-                              choices =(("M", "Male"), ("F", "Female")))
-    mobile_number = models.CharField(max_length=15)
+    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    msisdn = models.CharField(max_length=20)
     date_of_birth = models.DateField()
     is_zonal_head = models.BooleanField()
-    EMIS_id_header_teacher = models.ForeignKey(School,
-                                               related_name="EMIS_id_header_teacher",
-                                               verbose_name=u'EMIS Number')
-    year = models.DateField()
+    emis_id = models.ForeignKey('hierarchy.School',
+                                null=True,
+                                blank=True,
+                                verbose_name=u'EMIS Number')
+    created_at = models.DateField()
 
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
 
     class Meta:
         verbose_name = "Head Teacher"
+
+
+class SchoolData(models.Model):
+    emis_id = models.ForeignKey('hierarchy.School',
+                                verbose_name=u'EMIS Number')
+    classrooms = models.IntegerField()
+    teachers = models.IntegerField()
+    teachers_g1 = models.IntegerField()
+    teachers_g2 = models.IntegerField()
+    boys_g2 = models.IntegerField()
+    girls_g2 = models.IntegerField()
+    created_at = models.DateField()
+    created_by = models.ForeignKey(HeadTeacher,
+                                    verbose_name=u'EMIS Number')
+
+    def __unicode__(self):
+        return "%s" % self.emis_id
+
+    class Meta:
+        verbose_name = "School Data"
