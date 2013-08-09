@@ -1,0 +1,7 @@
+{
+    "url": "http://qa/api/headteacher/?format=json",
+    "method": "POST",
+    "content_type": "application/x-www-form-urlencoded",
+    "data": "first_name=Jack&last_name=Black&date_of_birth=11-Sep-1980&gender=male&zonal_head_name=Jim%20Carey&is_zonal_head=false&emis=1",
+    "body": {}
+}
