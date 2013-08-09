@@ -126,37 +126,43 @@ function GoRtsZambia() {
             return im.config.array_emis.indexOf(parseInt(emis)) != -1;
         } else {
             return false;
-        }        
+        }
     };
 
     self.registration_data_collect = function(){
-        var data = {
-            school_name: im.get_user_answer('reg_school_name'),
+        var headteacher_data = {
             first_name: im.get_user_answer('reg_first_name'),
-            surname: im.get_user_answer('reg_surname'),
+            last_name: im.get_user_answer('reg_surname'),
             date_of_birth: im.get_user_answer('reg_date_of_birth'),
             gender: im.get_user_answer('reg_gender'),
-            school_classrooms: parseInt(im.get_user_answer('reg_school_classrooms')),
-            school_teachers: parseInt(im.get_user_answer('reg_school_teachers')),
-            school_teachers_g1: parseInt(im.get_user_answer('reg_school_teachers_g1')),
-            school_teachers_g2: parseInt(im.get_user_answer('reg_school_teachers_g2')),
-            school_students_g2_boys: parseInt(im.get_user_answer('reg_school_students_g2_boys')),
-            school_students_g2_girls: parseInt(im.get_user_answer('reg_school_students_g2_girls'))
         };
         if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
-            data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
-            data['zonal_head_self'] = false;
+            headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
+            headteacher_data['is_zonal_head'] = false;
         } else {
-            data['zonal_head_name'] = "self";
-            data['zonal_head_self'] = true;
+            headteacher_data['zonal_head_name'] = "self";
+            headteacher_data['is_zonal_head'] = true;
         }
+        var school_data = {
+            name: im.get_user_answer('reg_school_name'),   
+            classrooms: parseInt(im.get_user_answer('reg_school_classrooms')),
+            teachers: parseInt(im.get_user_answer('reg_school_teachers')),
+            teachers_g1: parseInt(im.get_user_answer('reg_school_teachers_g1')),
+            teachers_g2: parseInt(im.get_user_answer('reg_school_teachers_g2')),
+            boys_g2: parseInt(im.get_user_answer('reg_school_students_g2_boys')),
+            girls_g2: parseInt(im.get_user_answer('reg_school_students_g2_girls'))
+        };
+        
         if (im.get_user_answer('initial_state') == 'manage_change_emis'){
-            data['emis'] = parseInt(im.get_user_answer('manage_change_emis'));
+            school_data['emis'] = parseInt(im.get_user_answer('manage_change_emis'));
+            headteacher_data['emis'] = parseInt(im.get_user_answer('manage_change_emis'));
         } else {
-            data['emis'] = parseInt(im.get_user_answer('reg_emis'));
+            school_data['emis'] = parseInt(im.get_user_answer('reg_emis'));
+            headteacher_data['emis'] = parseInt(im.get_user_answer('reg_emis'));
         }
-        return data;
-    }
+        
+        return [headteacher_data, school_data];
+    };
 
     // END Shared helpers
 
@@ -164,7 +170,19 @@ function GoRtsZambia() {
 
     self.cms_registration = function(im) {
         var data = self.registration_data_collect();
-        return self.cms_post("registration/", data);
+        var headteacher_data = data[0];
+        var school_data = data[1];
+        var p = new Promise();
+        p.add_callback(function(){
+            var p_s = self.cms_post("school/", school_data);
+            return p_s;
+        });
+        p.add_callback(function(){
+            var p_ht = self.cms_post("headteacher/", headteacher_data);
+            return p_ht;
+        });
+        p.callback();
+        return p;
     };
 
     self.cms_registration_update_msisdn = function(im) {
