@@ -76,7 +76,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'District'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'province_id': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'province_id'", 'to': u"orm['hierarchy.Province']"})
+            'province': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.Province']"})
         },
         u'hierarchy.province': {
             'Meta': {'object_name': 'Province'},
@@ -84,14 +84,15 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         u'hierarchy.school': {
-            'EMIS': ('django.db.models.fields.IntegerField', [], {'primary_key': 'True'}),
+            'EMIS': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
             'Meta': {'object_name': 'School'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'zone_id': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'zone_id'", 'to': u"orm['hierarchy.Zone']"})
+            'zone': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.Zone']"})
         },
         u'hierarchy.zone': {
             'Meta': {'object_name': 'Zone'},
-            'district_id': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'district_id'", 'to': u"orm['hierarchy.District']"}),
+            'district': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.District']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
