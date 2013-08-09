@@ -10,14 +10,7 @@ class ProvinceResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # quiz_ids = fields.ToManyField(path,
-    #                               'quiz_ids', full=True)
-
     class Meta:
-        resource_name = "hierarchy"
-        allowed_methods = ['get']
-        include_resource_uri = False
         queryset = Province.objects.all()
 
 
@@ -28,14 +21,8 @@ class DistrictResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # quiz_ids = fields.ToManyField(path,
-    #                               'quiz_ids', full=True)
-    province_id = fields.ForeignKey(ProvinceResource, 'province_id', full=True)
+    province = fields.ForeignKey(ProvinceResource, 'province', full=True)
     class Meta:
-        resource_name = "hierarchy"
-        allowed_methods = ['get']
-        include_resource_uri = False
         queryset = District.objects.all()
 
 
@@ -46,15 +33,8 @@ class ZoneResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # quiz_ids = fields.ToManyField(path,
-    #                               'quiz_ids',
-    #                               full=True)
-    district_id = fields.ForeignKey(DistrictResource, 'district_id', full=True)
+    district = fields.ForeignKey(DistrictResource, 'district', full=True)
     class Meta:
-        resource_name = "hierarchy"
-        allowed_methods = ['get']
-        include_resource_uri = False
         queryset = Zone.objects.all()
 
 
@@ -65,12 +45,7 @@ class SchoolResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # path = 'monitor_and_learn.api.MonitorAndLearningQuizQuestionResource'
-    # school_id = fields.ToManyField(path,
-    #                               'school_id',
-    #                               full=True)
-    
-    zone_id = fields.ForeignKey(ZoneResource, 'zone_id', full=True)
+    zone = fields.ForeignKey(ZoneResource, 'zone', full=True)
     class Meta:
         resource_name = "hierarchy"
         allowed_methods = ['get']

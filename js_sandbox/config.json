@@ -1,0 +1,5 @@
+{
+    "user_store": "rts_ussd_qa",
+    "sms_short_code": "1234",
+    "cms_api_root": "http://qa-rts.za.prk-host.net"
+}
