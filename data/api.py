@@ -1,8 +1,7 @@
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie import fields
-from models import (HeadTeacher)
-from hierarchy.api import SchoolResource
+from models import (HeadTeacher, SchoolData)
 from tastypie.utils import dict_strip_unicode_keys
 from tastypie import http
 
@@ -14,12 +13,12 @@ class HeadTeacherResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    emis_id = fields.ForeignKey(SchoolResource, 'emis_id', full=True)
-    
+    emis_id = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis_id', full=True)
+
     class Meta:
         queryset = HeadTeacher.objects.all()
         resource_name = "data/headteacher"
-        list_allowed_methods = ['post', 'get', 'put'] 
+        list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
         include_resource_uri = False
 
@@ -46,3 +45,15 @@ class HeadTeacherResource(ModelResource):
     #     #     updated_bundle = self.full_dehydrate(updated_bundle)
     #     #     updated_bundle = self.alter_detail_data_to_serialize(request, updated_bundle)
     #     #     return self.create_response(request, updated_bundle, response_class=http.HttpCreated, location=location)
+
+
+class SchoolDataResource(ModelResource):
+    emis_id = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis_id', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+
+    class Meta:
+        queryset = SchoolData.objects.all()
+        resource_name = "data/schooldata"
+        list_allowed_methods = ['post', 'get'] 
+        authorization = Authorization()
+        include_resource_uri = False
