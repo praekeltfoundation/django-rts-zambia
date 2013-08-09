@@ -8,73 +8,75 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Provinces'
-        db.create_table(u'hierarchy_provinces', (
+        # Adding model 'Province'
+        db.create_table(u'hierarchy_province', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
         ))
-        db.send_create_signal(u'hierarchy', ['Provinces'])
+        db.send_create_signal(u'hierarchy', ['Province'])
 
-        # Adding model 'Districts'
-        db.create_table(u'hierarchy_districts', (
+        # Adding model 'District'
+        db.create_table(u'hierarchy_district', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('province_id', self.gf('django.db.models.fields.related.ForeignKey')(related_name='province_id ', to=orm['hierarchy.Provinces'])),
+            ('province', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.Province'])),
         ))
-        db.send_create_signal(u'hierarchy', ['Districts'])
+        db.send_create_signal(u'hierarchy', ['District'])
 
-        # Adding model 'Zones'
-        db.create_table(u'hierarchy_zones', (
+        # Adding model 'Zone'
+        db.create_table(u'hierarchy_zone', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('district_id', self.gf('django.db.models.fields.related.ForeignKey')(related_name='district_id ', to=orm['hierarchy.Zones'])),
+            ('district', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.District'])),
         ))
-        db.send_create_signal(u'hierarchy', ['Zones'])
+        db.send_create_signal(u'hierarchy', ['Zone'])
 
-        # Adding model 'Schools'
-        db.create_table(u'hierarchy_schools', (
-            ('EMIS', self.gf('django.db.models.fields.IntegerField')(primary_key=True)),
+        # Adding model 'School'
+        db.create_table(u'hierarchy_school', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('EMIS', self.gf('django.db.models.fields.IntegerField')(unique=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('school_id', self.gf('django.db.models.fields.related.ForeignKey')(related_name='school_id ', to=orm['hierarchy.Schools'])),
+            ('zone', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.Zone'])),
         ))
-        db.send_create_signal(u'hierarchy', ['Schools'])
+        db.send_create_signal(u'hierarchy', ['School'])
 
 
     def backwards(self, orm):
-        # Deleting model 'Provinces'
-        db.delete_table(u'hierarchy_provinces')
+        # Deleting model 'Province'
+        db.delete_table(u'hierarchy_province')
 
-        # Deleting model 'Districts'
-        db.delete_table(u'hierarchy_districts')
+        # Deleting model 'District'
+        db.delete_table(u'hierarchy_district')
 
-        # Deleting model 'Zones'
-        db.delete_table(u'hierarchy_zones')
+        # Deleting model 'Zone'
+        db.delete_table(u'hierarchy_zone')
 
-        # Deleting model 'Schools'
-        db.delete_table(u'hierarchy_schools')
+        # Deleting model 'School'
+        db.delete_table(u'hierarchy_school')
 
 
     models = {
-        u'hierarchy.districts': {
-            'Meta': {'object_name': 'Districts'},
+        u'hierarchy.district': {
+            'Meta': {'object_name': 'District'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'province_id': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'province_id '", 'to': u"orm['hierarchy.Provinces']"})
+            'province': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.Province']"})
         },
-        u'hierarchy.provinces': {
-            'Meta': {'object_name': 'Provinces'},
+        u'hierarchy.province': {
+            'Meta': {'object_name': 'Province'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        u'hierarchy.schools': {
-            'EMIS': ('django.db.models.fields.IntegerField', [], {'primary_key': 'True'}),
-            'Meta': {'object_name': 'Schools'},
+        u'hierarchy.school': {
+            'EMIS': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
+            'Meta': {'object_name': 'School'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'school_id': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'school_id '", 'to': u"orm['hierarchy.Schools']"})
+            'zone': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.Zone']"})
         },
-        u'hierarchy.zones': {
-            'Meta': {'object_name': 'Zones'},
-            'district_id': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'district_id '", 'to': u"orm['hierarchy.Zones']"}),
+        u'hierarchy.zone': {
+            'Meta': {'object_name': 'Zone'},
+            'district': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.District']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }

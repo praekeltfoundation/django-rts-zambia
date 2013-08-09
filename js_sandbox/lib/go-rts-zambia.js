@@ -98,6 +98,37 @@ function GoRtsZambia() {
         }
     };
 
+    self.array_parse_ints = function(target){
+        // returns false if fails to parse
+        for (var i = 0; i < target.length; i++) {
+            target[i] = parseInt(target[i],10);
+            if (isNaN(target[i])) return false;
+        }
+        return target;
+    };
+
+    self.check_and_parse_date = function(date_string){
+        // an opinionated data parser - expects "DD MM YYYY"
+        // returns false if fails to parse
+        var da = self.array_parse_ints(date_string.split(" "));
+        if (da && da[0]<=31 && da[1] <= 12){
+            da[1] = da[1]-1; // JS dates are 0-bound
+            return new Date(da[2], da[1], da[0]);
+        } else {
+            return false;
+        }
+    };
+
+    self.check_valid_emis = function(emis){
+        // returns false if fails to find
+        var numbers_only = new RegExp('^\\d+$');
+        if (numbers_only.test(emis)){
+            return im.config.array_emis.indexOf(parseInt(emis)) != -1;
+        } else {
+            return false;
+        }        
+    };
+
     // END Shared helpers
 
     // START CMS Interactions
@@ -128,6 +159,26 @@ function GoRtsZambia() {
         return self.cms_post("registration/", data);
     };
 
+    self.cms_registration_update_msisdn = function(im) {
+        var data = {
+            emis: parseInt(im.get_user_answer('manage_change_msisdn_emis_lookup')),
+            msisdn: im.user_addr
+        };
+        return self.cms_post("registration/msisdn/", data);
+    };
+
+    self.cms_hierarchy_load = function() {
+        var p = self.cms_get("hierarchy/");
+        p.add_callback(function(result){
+            var array_emis = []
+            for (var i=0;i<result.objects.length;i++){
+                array_emis.push(result.objects[i].EMIS);
+            }
+            im.config.array_emis = array_emis;
+        });
+        return p;
+    };
+
     // END CMS Interactions
 
     // START Shared creators
@@ -140,7 +191,7 @@ function GoRtsZambia() {
         );
     };
 
-    self.make_emis_error_state = function(state_name) {
+    self.make_emis_error_state = function(state_name, retry_state) {
         return new ChoiceState(
             state_name,
             function(choice) {
@@ -149,7 +200,7 @@ function GoRtsZambia() {
             "Sorry!\nThat is not a EMIS we recognise. Make sure you have " +
             "entered the number correctly.",
             [
-                new Choice("reg_emis", "Try again"),
+                new Choice(retry_state, "Try again"),
                 new Choice("reg_exit_emis", "Exit")
             ]
         );
@@ -179,7 +230,7 @@ function GoRtsZambia() {
             [
                 new Choice("reg_emis", "Register as a new user"),
                 new Choice("manage_change_emis", "Change my school"),
-                new Choice("manage_change_msisdn", "Change my primary mobile number")
+                new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
             ]
         );
     });
@@ -190,10 +241,42 @@ function GoRtsZambia() {
         "What is your school EMIS number?"
     ));
 
+    self.add_state(new FreeText(
+        "manage_change_msisdn_emis_lookup",
+        "manage_change_msisdn_confirm",
+        "What is your school EMIS number?"
+    ));
+
+    self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
+        var EMIS = im.get_user_answer('manage_change_msisdn_emis_lookup');
+        if (self.check_valid_emis(EMIS)) {
+            // EMIS valid
+            return new EndState(
+                state_name,
+                "Thank you! We have now allocated your new contact mobile number " +
+                "to your current school.",
+                "initial_state",
+                {
+                    on_enter: function() {
+                        var p = self.cms_registration_update_msisdn(im);
+                        return p;
+                    }
+                }
+            );
+        } else {
+            // Invalid EMIS - request again
+            return self.make_emis_error_state('manage_change_msisdn_emis_error',
+                'manage_change_msisdn_emis_lookup');
+        }
+    });
+
+    self.add_state(self.make_emis_error_state('manage_change_msisdn_emis_error',
+        'manage_change_msisdn_emis_lookup'));
+
     self.add_creator('reg_school_name', function(state_name, im) {
-        var EMIS = parseInt(im.get_user_answer('reg_emis'));
+        var EMIS = im.get_user_answer('reg_emis');
         // TODO: Validate EMIS properly
-        if (EMIS === 1) {
+        if (self.check_valid_emis(EMIS)) {
             // EMIS valid
             return new FreeText(
                 state_name,
@@ -202,11 +285,13 @@ function GoRtsZambia() {
             );
         } else {
             // Invalid EMIS - request again
-            return self.make_emis_error_state('reg_emis_error');
+            return self.make_emis_error_state('reg_emis_error', 'reg_emis');
         }
     });
 
-    self.add_state(self.make_emis_error_state('reg_emis_error'));
+    self.add_state(self.make_emis_error_state('reg_emis_error', 'reg_emis'));
+
+    
 
     self.add_creator('reg_exit_emis', function(state_name, im) {
         return new EndState(
@@ -233,7 +318,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_date_of_birth",
         "reg_gender",
-        "What is your date of birth?"
+        "What is your date of birth? (example 21 07 1980)",
+        function(content) {
+            // check that the value provided is date format we expect
+            return self.check_and_parse_date(content);
+        },
+        "Please enter your date of birth formatted DD MM YYYY"
     ));
 
     self.add_state(new ChoiceState(
@@ -367,6 +457,11 @@ function GoRtsZambia() {
         "Thank you and bye bye!",
         "initial_state"
     ));
+
+    self.on_config_read = function(event){
+        // Run calls out to the APIs to load dynamic states
+        return self.cms_hierarchy_load();
+    };
 }
 
 // launch app

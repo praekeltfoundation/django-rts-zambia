@@ -20,6 +20,8 @@ describe("test_api", function() {
 var test_fixtures_full = [
     'test/fixtures/post_registration.json',
     'test/fixtures/post_registration_zonalhead.json',
+    'test/fixtures/get_hierarchy.json',
+    'test/fixtures/post_registration_update_msisdn.json',
 ];
 
 var tester;
@@ -61,6 +63,20 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             },
             async: true
         });
+    });
+
+    it('should tell us whether a date string is acceptable', function(done) {
+        var state_creator = app.api.im.state_creator;
+        assert.equal(
+            state_creator.check_and_parse_date('11 09 1980').toISOString(),
+            new Date(1980,8,11).toISOString());
+        assert.equal(
+            state_creator.check_and_parse_date('11th Sept 1980'),
+            false);
+        assert.equal(
+            state_creator.check_and_parse_date('2013-08-01'),
+            false);
+        done();
     });
 
     // first test should always start 'null, null' because we haven't
@@ -212,7 +228,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "Black",
             next_state: "reg_date_of_birth",
-            response: "^What is your date of birth\\?$"
+            response: "^What is your date of birth\\? \\(example 21 07 1980\\)$"
         });
         p.then(done, done);
     });
@@ -230,11 +246,31 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "11-Sep-1980",
+            content: "11 09 1980",
             next_state: "reg_gender",
             response: "^What is your gender\\?[^]" +
             "1. Female[^]" +
             "2. Male$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid date of birth should error", function (done) {
+        var user = {
+            current_state: 'reg_date_of_birth',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "11 Sep 1980",
+            next_state: "reg_date_of_birth",
+            response: "^Please enter your date of birth formatted DD MM YYYY$"
         });
         p.then(done, done);
     });
@@ -642,6 +678,93 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             response: "^Thank you for registering! When you are ready you can dial " +
             "in again to start reporting.$",
             continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to change primary number should ask for EMIS", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "3",
+            next_state: "manage_change_msisdn_emis_lookup",
+            response: "^What is your school EMIS number\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering valid EMIS should thank the user and exit", function (done) {
+        var user = {
+            current_state: 'manage_change_msisdn_emis_lookup',
+            answers: {
+                initial_state: 'manage_change_msisdn_emis_lookup'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "0001",
+            next_state: "manage_change_msisdn_confirm",
+            response: "^Thank you! We have now allocated your new contact mobile number " +
+            "to your current school.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS should ask for reenter or exit", function (done) {
+        var user = {
+            current_state: 'manage_change_msisdn_emis_lookup',
+            answers: {
+                initial_state: 'manage_change_msisdn_emis_lookup'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "000A",
+            next_state: "manage_change_msisdn_emis_error",
+            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
+                "you have entered the number correctly.[^]" +
+                "1. Try again[^]" +
+                "2. Exit$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS and choosing to exit should tell send SMS", function (done) {
+        var user = {
+            current_state: 'manage_change_msisdn_emis_error',
+            answers: {
+                initial_state: 'manage_change_msisdn_confirm',
+                manage_change_msisdn_emis_lookup: '000A'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "reg_exit_emis",
+            response: "^There seems to be a problem with the EMIS number. " +
+                "Please send a SMS with the code EMIS ERROR to 1234 " +
+                "and your district officer will be in touch.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+
+    it("entering invalid EMIS and choosing to reenter should ask EMIS", function (done) {
+        var user = {
+            current_state: 'manage_change_msisdn_emis_error',
+            answers: {
+                initial_state: 'manage_change_msisdn_emis_lookup',
+                manage_change_msisdn_emis_lookup: '000A'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "manage_change_msisdn_emis_lookup",
+            response: "^What is your school EMIS number\\?$"
         });
         p.then(done, done);
     });
