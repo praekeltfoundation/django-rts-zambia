@@ -8,69 +8,69 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'SchoolData'
-        db.create_table(u'data_schooldata', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('EMIS_id_school_data', self.gf('django.db.models.fields.related.ForeignKey')(related_name='EMIS_id_school_data', to=orm['hierarchy.School'])),
-            ('classroom_total', self.gf('django.db.models.fields.IntegerField')()),
-            ('teachers_total', self.gf('django.db.models.fields.IntegerField')()),
-            ('g1_teachers', self.gf('django.db.models.fields.IntegerField')()),
-            ('g2_teachers', self.gf('django.db.models.fields.IntegerField')()),
-            ('boys_total', self.gf('django.db.models.fields.IntegerField')()),
-            ('girls_total', self.gf('django.db.models.fields.IntegerField')()),
-            ('g2_boys', self.gf('django.db.models.fields.IntegerField')()),
-            ('g2_girls', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'data', ['SchoolData'])
-
         # Adding model 'HeadTeacher'
         db.create_table(u'data_headteacher', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('gender', self.gf('django.db.models.fields.CharField')(max_length=2)),
-            ('mobile_number', self.gf('django.db.models.fields.CharField')(max_length=15)),
+            ('gender', self.gf('django.db.models.fields.CharField')(max_length=6)),
+            ('msisdn', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('date_of_birth', self.gf('django.db.models.fields.DateField')()),
             ('is_zonal_head', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('EMIS_id_header_teacher', self.gf('django.db.models.fields.related.ForeignKey')(related_name='EMIS_id_header_teacher', to=orm['hierarchy.School'])),
-            ('year', self.gf('django.db.models.fields.DateField')()),
+            ('emis_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.School'], null=True, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateField')()),
         ))
         db.send_create_signal(u'data', ['HeadTeacher'])
 
+        # Adding model 'SchoolData'
+        db.create_table(u'data_schooldata', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('emis_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.School'])),
+            ('classrooms', self.gf('django.db.models.fields.IntegerField')()),
+            ('teachers', self.gf('django.db.models.fields.IntegerField')()),
+            ('teachers_g1', self.gf('django.db.models.fields.IntegerField')()),
+            ('teachers_g2', self.gf('django.db.models.fields.IntegerField')()),
+            ('boys_g2', self.gf('django.db.models.fields.IntegerField')()),
+            ('girls_g2', self.gf('django.db.models.fields.IntegerField')()),
+            ('created_at', self.gf('django.db.models.fields.DateField')()),
+            ('created_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['data.HeadTeacher'])),
+        ))
+        db.send_create_signal(u'data', ['SchoolData'])
+
 
     def backwards(self, orm):
-        # Deleting model 'SchoolData'
-        db.delete_table(u'data_schooldata')
-
         # Deleting model 'HeadTeacher'
         db.delete_table(u'data_headteacher')
+
+        # Deleting model 'SchoolData'
+        db.delete_table(u'data_schooldata')
 
 
     models = {
         u'data.headteacher': {
-            'EMIS_id_header_teacher': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'EMIS_id_header_teacher'", 'to': u"orm['hierarchy.School']"}),
             'Meta': {'object_name': 'HeadTeacher'},
+            'created_at': ('django.db.models.fields.DateField', [], {}),
             'date_of_birth': ('django.db.models.fields.DateField', [], {}),
+            'emis_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.School']", 'null': 'True', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'gender': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
+            'gender': ('django.db.models.fields.CharField', [], {'max_length': '6'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_zonal_head': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'mobile_number': ('django.db.models.fields.CharField', [], {'max_length': '15'}),
-            'year': ('django.db.models.fields.DateField', [], {})
+            'msisdn': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         u'data.schooldata': {
-            'EMIS_id_school_data': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'EMIS_id_school_data'", 'to': u"orm['hierarchy.School']"}),
             'Meta': {'object_name': 'SchoolData'},
-            'boys_total': ('django.db.models.fields.IntegerField', [], {}),
-            'classroom_total': ('django.db.models.fields.IntegerField', [], {}),
-            'g1_teachers': ('django.db.models.fields.IntegerField', [], {}),
-            'g2_boys': ('django.db.models.fields.IntegerField', [], {}),
-            'g2_girls': ('django.db.models.fields.IntegerField', [], {}),
-            'g2_teachers': ('django.db.models.fields.IntegerField', [], {}),
-            'girls_total': ('django.db.models.fields.IntegerField', [], {}),
+            'boys_g2': ('django.db.models.fields.IntegerField', [], {}),
+            'classrooms': ('django.db.models.fields.IntegerField', [], {}),
+            'created_at': ('django.db.models.fields.DateField', [], {}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['data.HeadTeacher']"}),
+            'emis_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.School']"}),
+            'girls_g2': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'teachers_total': ('django.db.models.fields.IntegerField', [], {})
+            'teachers': ('django.db.models.fields.IntegerField', [], {}),
+            'teachers_g1': ('django.db.models.fields.IntegerField', [], {}),
+            'teachers_g2': ('django.db.models.fields.IntegerField', [], {})
         },
         u'hierarchy.district': {
             'Meta': {'object_name': 'District'},
