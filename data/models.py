@@ -1,5 +1,4 @@
 from django.db import models
-from hierarchy.models import School
 
 
 class HeadTeacher(models.Model):
@@ -9,11 +8,12 @@ class HeadTeacher(models.Model):
     msisdn = models.CharField(max_length=20)
     date_of_birth = models.DateField()
     is_zonal_head = models.BooleanField()
-    emis_id = models.ForeignKey('hierarchy.School',
-                                null=True,
-                                blank=True,
-                                verbose_name=u'EMIS Number')
-    created_at = models.DateField()
+    zonal_head_name = models.CharField(max_length=100, verbose_name=u'Zonal Head Name')
+    created_at = models.DateTimeField(auto_now_add=True)
+    emis = models.ForeignKey('hierarchy.School',
+                             null=True,
+                             blank=True,
+                             verbose_name=u'EMIS Number')
 
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -23,15 +23,16 @@ class HeadTeacher(models.Model):
 
 
 class SchoolData(models.Model):
-    emis_id = models.ForeignKey('hierarchy.School',
-                                verbose_name=u'EMIS Number')
+    emis = models.ForeignKey('hierarchy.School',
+                             verbose_name=u'EMIS Number')
+    name = models.CharField(max_length=100, verbose_name=u'Name of School')
     classrooms = models.IntegerField()
     teachers = models.IntegerField()
     teachers_g1 = models.IntegerField()
     teachers_g2 = models.IntegerField()
     boys_g2 = models.IntegerField()
     girls_g2 = models.IntegerField()
-    created_at = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(HeadTeacher,
                                     verbose_name=u'EMIS Number')
 
