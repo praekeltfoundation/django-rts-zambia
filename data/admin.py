@@ -3,11 +3,11 @@ from models import (SchoolData, HeadTeacher)
 
 
 class SchoolDataAdmin(admin.ModelAdmin):
-    list_display = ["emis_id"]
+    list_display = ["emis"]
 
 
 class HeadTeacherAdmin(admin.ModelAdmin):
-    list_display = ["emis_id", "first_name", "last_name", "msisdn"]
+    list_display = ["emis", "first_name", "last_name", "msisdn"]
 
 
 admin.site.register(SchoolData, SchoolDataAdmin)
