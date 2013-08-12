@@ -37,7 +37,7 @@ class SchoolData(models.Model):
                                     verbose_name=u'EMIS Number')
 
     def __unicode__(self):
-        return "%s" % self.emis_id
+        return "%s" % self.emis
 
     class Meta:
         verbose_name = "School Data"
