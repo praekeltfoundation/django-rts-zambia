@@ -4,7 +4,28 @@ from tastypie import fields
 from models import (HeadTeacher, SchoolData)
 from tastypie.utils import dict_strip_unicode_keys
 from tastypie import http
+from tastypie.serializers import Serializer
+import urlparse
 
+class UrlencodeSerializer(Serializer):
+    formats = ['json', 'jsonp', 'xml', 'yaml', 'html', 'plist', 'urlencode']
+    content_types = {
+        'json': 'application/json',
+        'jsonp': 'text/javascript',
+        'xml': 'application/xml',
+        'yaml': 'text/yaml',
+        'html': 'text/html',
+        'plist': 'application/x-plist',
+        'urlencode': 'application/x-www-form-urlencoded',
+    }
+
+    def from_urlencode(self, data, options=None):
+        """ handles the encoded url posts"""
+        qs = dict((k, v if len(v)>1 else v[0]) for k, v in urlparse.parse_qs(data).iteritems())
+        return qs
+
+    def to_urlencode(self, content):
+        pass
 
 class HeadTeacherResource(ModelResource):
     """
@@ -13,7 +34,7 @@ class HeadTeacherResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    emis_id = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis_id', full=True)
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
 
     class Meta:
         queryset = HeadTeacher.objects.all()
@@ -21,6 +42,8 @@ class HeadTeacherResource(ModelResource):
         list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
         include_resource_uri = False
+        always_return_data = True
+        serializer = UrlencodeSerializer()
 
     # def post_list(self, request, **kwargs):
     #     """
