@@ -34,7 +34,7 @@ class Migration(SchemaMigration):
         # Adding model 'School'
         db.create_table(u'hierarchy_school', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('EMIS', self.gf('django.db.models.fields.IntegerField')(unique=True)),
+            ('emis', self.gf('django.db.models.fields.IntegerField')(unique=True, max_length=5)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('zone', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.Zone'])),
         ))
@@ -68,8 +68,8 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         u'hierarchy.school': {
-            'EMIS': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
             'Meta': {'object_name': 'School'},
+            'emis': ('django.db.models.fields.IntegerField', [], {'unique': 'True', 'max_length': '5'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'zone': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.Zone']"})
