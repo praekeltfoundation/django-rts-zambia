@@ -49,15 +49,15 @@ class SchoolResource(ModelResource):
     """
     zone = fields.ForeignKey(ZoneResource, 'zone', full=True)
     class Meta:
-        resource_name = "hierarchy"
+        resource_name = "school"
         allowed_methods = ['get']
         include_resource_uri = False
         queryset = School.objects.all()
-        fields = ['EMIS', 'name', 'zone']
+        fields = ['emis', 'name', 'zone']
         filtering = {
-            'EMIS': ALL}
+            'emis': ALL}
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/EMIS/(?P<EMIS>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>%s)/EMIS/(?P<emis>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
