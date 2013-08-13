@@ -214,3 +214,39 @@ class TestSchoolDataAPI(ResourceTestCase):
                                     })
         json_item = json.loads(response.content)
         self.assertIn("error", json_item)
+
+
+class TestTeacherPerfomanceDataAPI(ResourceTestCase):
+    fixtures = ['data.json', 'hierarchy.json']
+
+    def test_basic_api_functionality(self):
+        """
+            Testing basic teacher perfomance API functionality.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/teacherperfomance',
+                      'api_name': 'api'})
+        response = self.client.get(url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
+
+
+class TestLearnerPerfomanceDataAPI(ResourceTestCase):
+    fixtures = ['data.json', 'hierarchy.json']
+
+    def test_basic_api_functionality(self):
+        """
+            Testing basic learner perfomance API functionality.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/learnerperfomance',
+                      'api_name': 'api'})
+        response = self.client.get(url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
