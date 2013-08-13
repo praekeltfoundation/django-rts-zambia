@@ -9,7 +9,7 @@ class SchoolDataAdmin(admin.ModelAdmin):
 
 class HeadTeacherAdmin(admin.ModelAdmin):
     list_display = ["emis", "first_name", "last_name", "msisdn"]
-    actions = [export_as_csv_action("Export selected objects as CSV file"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
 admin.site.register(SchoolData, SchoolDataAdmin)
