@@ -1,7 +1,7 @@
 from tastypie.resources import ModelResource, ALL_WITH_RELATIONS
 from tastypie.authorization import Authorization
 from tastypie import fields
-from models import (HeadTeacher, SchoolData, TeacherPerfomanceData)
+from models import (HeadTeacher, SchoolData, TeacherPerfomanceData, LearnerPerfomanceData)
 from django.conf.urls import url
 
 
@@ -104,7 +104,40 @@ class TeacherPerfomanceDataResource(ModelResource):
         resource_name = "data/teacherperfomance"
         list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
-        include_resource_uri = False
+        include_resource_uri = True
+        always_return_data = True
+        filtering = {
+            'emis': ALL_WITH_RELATIONS}
+
+
+class LearnerPerfomanceDataResource(ModelResource):
+    """
+    POSTING DATA
+
+    "url": "<base_url>/api/data/schooldata/",
+    "method": "POST",
+    "content_type": "application/json",
+    "body": {
+                "name": "test_name",
+                "classrooms": 30,
+                "teachers": 40,
+                "teachers_g1": 4,
+                "teachers_g2": 8,
+                "boys_g2": 15,
+                "girls_g2": 12,
+                "created_by": "/api/data/headteacher/emis/4813/",
+                "emis": "/api/v1/school/emis/4813/"
+            }
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+
+    class Meta:
+        queryset = LearnerPerfomanceData.objects.all()
+        resource_name = "data/learnerperfomance"
+        list_allowed_methods = ['post', 'get'] 
+        authorization = Authorization()
+        include_resource_uri = True
         always_return_data = True
         filtering = {
             'emis': ALL_WITH_RELATIONS}
