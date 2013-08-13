@@ -37,7 +37,7 @@ class Zone(models.Model):
 
 
 class School(models.Model):
-    EMIS = models.IntegerField(unique=True)
+    emis = models.IntegerField(unique=True)
     name = models.CharField(max_length=50, verbose_name=u'Name of School')
     zone = models.ForeignKey('Zone',
                              verbose_name=u'Zone')
