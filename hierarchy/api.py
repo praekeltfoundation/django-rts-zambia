@@ -51,13 +51,12 @@ class SchoolResource(ModelResource):
     class Meta:
         resource_name = "school"
         allowed_methods = ['get']
-        include_resource_uri = False
+        include_resource_uri = True
         queryset = School.objects.all()
-        fields = ['emis', 'name', 'zone']
         filtering = {
             'emis': ALL}
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/EMIS/(?P<emis>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
