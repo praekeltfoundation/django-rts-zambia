@@ -64,3 +64,22 @@ class TeacherPerfomanceData(models.Model):
                              verbose_name=u'EMIS Number')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
+
+
+
+class LearnerPerfomanceData(models.Model):
+    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    total_number_pupils = models.IntegerField()
+    phonetic_awareness = models.IntegerField()
+    vocabulary = models.IntegerField()
+    reading_comprehension = models.IntegerField()
+    writing_diction = models.IntegerField()
+    below_minimum_results = models.IntegerField()
+    minimum_results = models.IntegerField()
+    desirable_results = models.IntegerField()
+    outstanding_results = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    emis = models.ForeignKey('hierarchy.School',
+                             verbose_name=u'EMIS Number')
+    created_by = models.ForeignKey(HeadTeacher,
+                                   verbose_name=u'Teacher')
