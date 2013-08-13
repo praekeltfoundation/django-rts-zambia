@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'tastypie',
     # sample apps to explain usage
     'hierarchy',
+    'data',
     'celery_app',
 )
 
