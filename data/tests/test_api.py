@@ -2,7 +2,7 @@ from django.test import TestCase
 from tastypie.test import ResourceTestCase
 from django.core.urlresolvers import reverse
 import json
-from data.models import HeadTeacher, SchoolData
+from data.models import HeadTeacher, SchoolData, TeacherPerfomanceData, LearnerPerfomanceData
 import datetime
 
 
@@ -233,6 +233,152 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertIn("meta", json_item)
         self.assertIn("objects", json_item)
 
+    def test_good_post_teacherperfomance_json_data(self):
+        """
+            Testing good post teacher perfomance data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'api'})
+        response = self.api_client.get("%s?emis__emis=4813" % (url))
+        json_item = json.loads(response.content)
+        headteacher_uri = json_item['objects'][0]['resource_uri']
+        headteacher_id = json_item['objects'][0]['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/teacherperfomance',
+                      'api_name': 'api'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={"gender": "male",
+                                    "age": 30,
+                                    "years_experience": 5,
+                                    "g2_pupils_present": 40,
+                                    "g2_pupils_registered": 50,
+                                    "classroom_environment_score": 15,
+                                    "t_l_materials": 12,
+                                    "pupils_materials_score": 13,
+                                    "pupils_books_number": 14,
+                                    "reading_lesson": 15,
+                                    "pupil_engagment_score": 16,
+                                    "attitudes_and_beliefs": 17,
+                                    "training_subtotal": 18,
+                                    "local_reading_score": 19,
+                                    "academic_level": 20,
+                                    "created_by": headteacher_uri,
+                                    "emis": "/api/v1/school/emis/4813/"
+                                    })
+
+        json_item = json.loads(response.content)
+        self.assertEqual("male", json_item["gender"])
+        self.assertEqual(30, json_item["age"])
+        self.assertEqual(5, json_item["years_experience"])
+        self.assertEqual(40, json_item["g2_pupils_present"])
+        self.assertEqual(50, json_item["g2_pupils_registered"])
+        self.assertEqual(15, json_item["classroom_environment_score"])
+        self.assertEqual(12, json_item["t_l_materials"])
+        self.assertEqual(13, json_item["pupils_materials_score"])
+        self.assertEqual(14, json_item["pupils_books_number"])
+        self.assertEqual(15, json_item["reading_lesson"])
+        self.assertEqual(16, json_item["pupil_engagment_score"])
+        self.assertEqual(17, json_item["attitudes_and_beliefs"])
+        self.assertEqual(18, json_item["training_subtotal"])
+        self.assertEqual(19, json_item["local_reading_score"])
+        self.assertEqual(20, json_item["academic_level"])
+        self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["emis"]["name"])
+
+        teacher = TeacherPerfomanceData.objects.get(pk=1)
+        self.assertEqual("male", teacher.gender)
+        self.assertEqual(30, teacher.age)
+        self.assertEqual(5, teacher.years_experience)
+        self.assertEqual(40, teacher.g2_pupils_present)
+        self.assertEqual(50, teacher.g2_pupils_registered)
+        self.assertEqual(15, teacher.classroom_environment_score)
+        self.assertEqual(12, teacher.t_l_materials)
+        self.assertEqual(13, teacher.pupils_materials_score)
+        self.assertEqual(14, teacher.pupils_books_number)
+        self.assertEqual(15, teacher.reading_lesson)
+        self.assertEqual(16, teacher.pupil_engagment_score)
+        self.assertEqual(17, teacher.attitudes_and_beliefs)
+        self.assertEqual(18, teacher.training_subtotal)
+        self.assertEqual(19, teacher.local_reading_score)
+        self.assertEqual(20, teacher.academic_level)
+        self.assertIsNotNone(teacher.created_at) 
+        self.assertEqual("Musungu", teacher.emis.name)
+        self.assertEqual(4813, teacher.emis.emis)
+        self.assertEqual(4813, teacher.created_by.emis.emis)
+        self.assertEqual(headteacher_id, teacher.created_by.id)
+
+    def test_some_empty_post_teacherperfomance_json_data(self):
+        """
+            Testing good post teacher perfomance data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'api'})
+        response = self.api_client.get("%s?emis__emis=4813" % (url))
+        json_item = json.loads(response.content)
+        headteacher_uri = json_item['objects'][0]['resource_uri']
+        headteacher_id = json_item['objects'][0]['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/teacherperfomance',
+                      'api_name': 'api'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={
+                                    "age": 30,
+                                    "years_experience": 5,
+                                    "g2_pupils_present": 40,
+                                    "g2_pupils_registered": 50,
+                                    "classroom_environment_score": 15,
+                                    "pupils_materials_score": 13,
+                                    "pupils_books_number": 14,
+                                    "created_by": headteacher_uri,
+                                    "emis": "/api/v1/school/emis/4813/"
+                                    })
+    
+        json_item = json.loads(response.content)
+        self.assertEqual(None, json_item["gender"])
+        self.assertEqual(5, json_item["years_experience"])
+        self.assertEqual(40, json_item["g2_pupils_present"])
+        self.assertEqual(50, json_item["g2_pupils_registered"])
+        self.assertEqual(15, json_item["classroom_environment_score"])
+        self.assertEqual(None, json_item["t_l_materials"])
+        self.assertEqual(13, json_item["pupils_materials_score"])
+        self.assertEqual(14, json_item["pupils_books_number"])
+        self.assertEqual(None, json_item["reading_lesson"])
+        self.assertEqual(None, json_item["pupil_engagment_score"])
+        self.assertEqual(None, json_item["attitudes_and_beliefs"])
+        self.assertEqual(None, json_item["training_subtotal"])
+        self.assertEqual(None, json_item["local_reading_score"])
+        self.assertEqual(None, json_item["academic_level"])
+        self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["emis"]["name"])
+
+        teacher = TeacherPerfomanceData.objects.get(pk=1)
+        self.assertEqual(None, teacher.gender)
+        self.assertEqual(30, teacher.age)
+        self.assertEqual(5, teacher.years_experience)
+        self.assertEqual(40, teacher.g2_pupils_present)
+        self.assertEqual(50, teacher.g2_pupils_registered)
+        self.assertEqual(15, teacher.classroom_environment_score)
+        self.assertEqual(None, teacher.t_l_materials)
+        self.assertEqual(13, teacher.pupils_materials_score)
+        self.assertEqual(14, teacher.pupils_books_number)
+        self.assertEqual(None, teacher.reading_lesson)
+        self.assertEqual(None, teacher.pupil_engagment_score)
+        self.assertEqual(None, teacher.attitudes_and_beliefs)
+        self.assertEqual(None, teacher.training_subtotal)
+        self.assertEqual(None, teacher.local_reading_score)
+        self.assertEqual(None, teacher.academic_level)
+        self.assertIsNotNone(teacher.created_at) 
+        self.assertEqual("Musungu", teacher.emis.name)
+        self.assertEqual(4813, teacher.emis.emis)
+        self.assertEqual(4813, teacher.created_by.emis.emis)
+        self.assertEqual(headteacher_id, teacher.created_by.id)
+
 
 class TestLearnerPerfomanceDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
@@ -250,3 +396,118 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         json_item = json.loads(response.content)
         self.assertIn("meta", json_item)
         self.assertIn("objects", json_item)
+
+    def test_good_post_learnerperfomance_json_data(self):
+        """
+            Testing good post learner perfomance data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'api'})
+        response = self.api_client.get("%s?emis__emis=4813" % (url))
+        json_item = json.loads(response.content)
+        headteacher_uri = json_item['objects'][0]['resource_uri']
+        headteacher_id = json_item['objects'][0]['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/learnerperfomance',
+                      'api_name': 'api'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={"gender": "female",
+                                    "total_number_pupils": 40,
+                                    "phonetic_awareness": 50,
+                                    "vocabulary": 15,
+                                    "reading_comprehension": 12,
+                                    "writing_diction": 13,
+                                    "below_minimum_results": 14,
+                                    "minimum_results": 15,
+                                    "desirable_results": 16,
+                                    "outstanding_results": 17,
+                                    "created_by": headteacher_uri,
+                                    "emis": "/api/v1/school/emis/4813/"
+                                    })
+
+        json_item = json.loads(response.content)
+        self.assertEqual("female", json_item["gender"])
+        self.assertEqual(40, json_item["total_number_pupils"])
+        self.assertEqual(50, json_item["phonetic_awareness"])
+        self.assertEqual(15, json_item["vocabulary"])
+        self.assertEqual(12, json_item["reading_comprehension"])
+        self.assertEqual(13, json_item["writing_diction"])
+        self.assertEqual(14, json_item["below_minimum_results"])
+        self.assertEqual(15, json_item["minimum_results"])
+        self.assertEqual(16, json_item["desirable_results"])
+        self.assertEqual(17, json_item["outstanding_results"])
+        self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["emis"]["name"])
+
+        learner = LearnerPerfomanceData.objects.get(pk=1)
+        self.assertEqual("female", learner.gender)
+        self.assertEqual(40, learner.total_number_pupils)
+        self.assertEqual(50, learner.phonetic_awareness)
+        self.assertEqual(15, learner.vocabulary)
+        self.assertEqual(12, learner.reading_comprehension)
+        self.assertEqual(13, learner.writing_diction)
+        self.assertEqual(14, learner.below_minimum_results)
+        self.assertEqual(15, learner.minimum_results)
+        self.assertEqual(16, learner.desirable_results)
+        self.assertEqual(17, learner.outstanding_results)
+        self.assertIsNotNone(learner.created_at) 
+        self.assertEqual("Musungu", learner.emis.name)
+        self.assertEqual(4813, learner.emis.emis)
+        self.assertEqual(4813, learner.created_by.emis.emis)
+        self.assertEqual(headteacher_id, learner.created_by.id)
+
+    def test_empty_post_learnerperfomance_json_data(self):
+        """
+            Testing good post learner perfomance data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'api'})
+        response = self.api_client.get("%s?emis__emis=4813" % (url))
+        json_item = json.loads(response.content)
+        headteacher_uri = json_item['objects'][0]['resource_uri']
+        headteacher_id = json_item['objects'][0]['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/learnerperfomance',
+                      'api_name': 'api'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={
+                                    "created_by": headteacher_uri,
+                                    "emis": "/api/v1/school/emis/4813/"
+                                    })
+
+        json_item = json.loads(response.content)
+        self.assertEqual(None, json_item["gender"])
+        self.assertEqual(None, json_item["total_number_pupils"])
+        self.assertEqual(None, json_item["phonetic_awareness"])
+        self.assertEqual(None, json_item["vocabulary"])
+        self.assertEqual(None, json_item["reading_comprehension"])
+        self.assertEqual(None, json_item["writing_diction"])
+        self.assertEqual(None, json_item["below_minimum_results"])
+        self.assertEqual(None, json_item["minimum_results"])
+        self.assertEqual(None, json_item["desirable_results"])
+        self.assertEqual(None, json_item["outstanding_results"])
+        self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["emis"]["name"])
+
+        learner = LearnerPerfomanceData.objects.get(pk=1)
+        self.assertEqual(None, learner.gender)
+        self.assertEqual(None, learner.total_number_pupils)
+        self.assertEqual(None, learner.phonetic_awareness)
+        self.assertEqual(None, learner.vocabulary)
+        self.assertEqual(None, learner.reading_comprehension)
+        self.assertEqual(None, learner.writing_diction)
+        self.assertEqual(None, learner.below_minimum_results)
+        self.assertEqual(None, learner.minimum_results)
+        self.assertEqual(None, learner.desirable_results)
+        self.assertEqual(None, learner.outstanding_results)
+        self.assertIsNotNone(learner.created_at) 
+        self.assertEqual("Musungu", learner.emis.name)
+        self.assertEqual(4813, learner.emis.emis)
+        self.assertEqual(4813, learner.created_by.emis.emis)
+        self.assertEqual(headteacher_id, learner.created_by.id)
