@@ -14,6 +14,7 @@ class HeadTeacherAdmin(admin.ModelAdmin):
 
 class InboundSMSAdmin(admin.ModelAdmin):
     list_display = ["message", "created_by", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
 admin.site.register(SchoolData, SchoolDataAdmin)
