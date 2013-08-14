@@ -44,22 +44,22 @@ class SchoolData(models.Model):
 
 
 class TeacherPerfomanceData(models.Model):
-    gender = models.CharField(max_length=6, null=True, blank=True, verbose_name=u'Gender')
-    age = models.IntegerField(null=True, blank=True)
-    years_experience = models.IntegerField(null=True, blank=True)
-    g2_pupils_present = models.IntegerField(null=True, blank=True)
-    g2_pupils_registered = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    age = models.IntegerField()
+    years_experience = models.IntegerField()
+    g2_pupils_present = models.IntegerField()
+    g2_pupils_registered = models.IntegerField()
     classroom_environment_score = models.IntegerField()
-    t_l_materials = models.IntegerField(null=True, blank=True)
-    pupils_materials_score = models.IntegerField(null=True, blank=True)
-    pupils_books_number = models.IntegerField(null=True, blank=True)
-    reading_lesson = models.IntegerField(null=True, blank=True)
-    pupil_engagment_score = models.IntegerField(null=True, blank=True)
-    attitudes_and_beliefs = models.IntegerField(null=True, blank=True)
-    training_subtotal = models.IntegerField(null=True, blank=True)
-    local_reading_score = models.IntegerField(null=True, blank=True)
+    t_l_materials = models.IntegerField()
+    pupils_materials_score = models.IntegerField()
+    pupils_books_number = models.IntegerField()
+    reading_lesson = models.IntegerField()
+    pupil_engagment_score = models.IntegerField()
+    attitudes_and_beliefs = models.IntegerField()
+    training_subtotal = models.IntegerField()
+    local_reading_score = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    academic_level = models.IntegerField(null=True, blank=True)  # Used IntField for now
+    academic_level = models.IntegerField()  # Used IntField for now
     emis = models.ForeignKey('hierarchy.School',
                              verbose_name=u'EMIS Number')
     created_by = models.ForeignKey(HeadTeacher,
@@ -68,16 +68,16 @@ class TeacherPerfomanceData(models.Model):
 
 
 class LearnerPerfomanceData(models.Model):
-    gender = models.CharField(max_length=6, null=True, blank=True, verbose_name=u'Gender')
-    total_number_pupils = models.IntegerField(null=True, blank=True)
-    phonetic_awareness = models.IntegerField(null=True, blank=True)
-    vocabulary = models.IntegerField(null=True, blank=True)
-    reading_comprehension = models.IntegerField(null=True, blank=True)
-    writing_diction = models.IntegerField(null=True, blank=True)
-    below_minimum_results = models.IntegerField(null=True, blank=True)
-    minimum_results = models.IntegerField(null=True, blank=True)
-    desirable_results = models.IntegerField(null=True, blank=True)
-    outstanding_results = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    total_number_pupils = models.IntegerField()
+    phonetic_awareness = models.IntegerField()
+    vocabulary = models.IntegerField()
+    reading_comprehension = models.IntegerField()
+    writing_diction = models.IntegerField()
+    below_minimum_results = models.IntegerField()
+    minimum_results = models.IntegerField()
+    desirable_results = models.IntegerField()
+    outstanding_results = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     emis = models.ForeignKey('hierarchy.School',
                              verbose_name=u'EMIS Number')
