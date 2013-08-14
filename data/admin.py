@@ -1,5 +1,8 @@
 from django.contrib import admin
-from models import (SchoolData, HeadTeacher, TeacherPerfomanceData, LearnerPerfomanceData)
+from models import (SchoolData, HeadTeacher, InboundSMS,
+                    TeacherPerfomanceData, LearnerPerfomanceData)
+from actions import export_as_csv_action
+
 
 
 class SchoolDataAdmin(admin.ModelAdmin):
@@ -16,9 +19,16 @@ class TeacherPerfomanceDataAdmin(admin.ModelAdmin):
 
 class LearnerPerfomanceDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "created_by", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
+
+
+class InboundSMSAdmin(admin.ModelAdmin):
+    list_display = ["message", "created_by", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
 admin.site.register(TeacherPerfomanceData, TeacherPerfomanceDataAdmin)
 admin.site.register(LearnerPerfomanceData, LearnerPerfomanceDataAdmin)
+admin.site.register(InboundSMS, InboundSMSAdmin)
