@@ -28,6 +28,7 @@ class InboundSMSAdmin(admin.ModelAdmin):
 
 class AcademicAchievementCodeAdmin(admin.ModelAdmin):
     list_display = ["id", "achievement"]
+    actions = None
 
 
 admin.site.register(SchoolData, SchoolDataAdmin)
