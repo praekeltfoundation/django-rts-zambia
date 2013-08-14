@@ -83,6 +83,19 @@ class LearnerPerfomanceData(models.Model):
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
 
+class AcademicAchievementCode(models.Model):
+    primary_school = models.IntegerField ()
+    junior_secondary_school = models.IntegerField ()
+    secondary_school = models.IntegerField ()
+    primary_school_teacher_certificate = models.IntegerField ()
+    primary_school_teacher_diploma = models.IntegerField ()
+    secondary_school_teacher_diploma = models.IntegerField ()
+    diploma = models.IntegerField ()
+    bachelors = models.IntegerField ()
+    masters = models.IntegerField ()
+    other = models.IntegerField ()
+
+
 class InboundSMS(models.Model):
     message = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
