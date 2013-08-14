@@ -64,6 +64,11 @@ class TeacherPerfomanceData(models.Model):
                              verbose_name=u'EMIS Number')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
+    def __unicode__(self):
+        return "%s" % self.emis
+
+    class Meta:
+        verbose_name = "Teacher Perfomance Data"
 
 
 class LearnerPerfomanceData(models.Model):
@@ -82,18 +87,21 @@ class LearnerPerfomanceData(models.Model):
                              verbose_name=u'EMIS Number')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
+    def __unicode__(self):
+        return "%s" % self.emis
+
+    class Meta:
+        verbose_name = "Inbound SMS"
+
 
 class AcademicAchievementCode(models.Model):
-    primary_school = models.IntegerField ()
-    junior_secondary_school = models.IntegerField ()
-    secondary_school = models.IntegerField ()
-    primary_school_teacher_certificate = models.IntegerField ()
-    primary_school_teacher_diploma = models.IntegerField ()
-    secondary_school_teacher_diploma = models.IntegerField ()
-    diploma = models.IntegerField ()
-    bachelors = models.IntegerField ()
-    masters = models.IntegerField ()
-    other = models.IntegerField ()
+    achievement = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return "%s" % self.achievement
+
+    class Meta:
+        verbose_name = "Academic Achievment Code"
 
 
 class InboundSMS(models.Model):
