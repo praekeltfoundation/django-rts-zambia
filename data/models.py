@@ -43,6 +43,16 @@ class SchoolData(models.Model):
         verbose_name = "School Data"
 
 
+class AcademicAchievementCode(models.Model):
+    achievement = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return "%s" % self.achievement
+
+    class Meta:
+        verbose_name = "Academic Achievment Code"
+
+
 class TeacherPerfomanceData(models.Model):
     gender = models.CharField(max_length=6, verbose_name=u'Gender')
     age = models.IntegerField()
@@ -59,11 +69,12 @@ class TeacherPerfomanceData(models.Model):
     training_subtotal = models.IntegerField()
     local_reading_score = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    academic_level = models.IntegerField()  # Used IntField for now
+    academic_level = models.ForeignKey(AcademicAchievementCode,
+                                    verbose_name=u'Academic Achievment Code')
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'EMIS Number')
+                             verbose_name=u'emis Number')
     created_by = models.ForeignKey(HeadTeacher,
-                                   verbose_name=u'Teacher')
+                                   verbose_name=u'Head Teacher')
     def __unicode__(self):
         return "%s" % self.emis
 
@@ -91,17 +102,7 @@ class LearnerPerfomanceData(models.Model):
         return "%s" % self.emis
 
     class Meta:
-        verbose_name = "Inbound SMS"
-
-
-class AcademicAchievementCode(models.Model):
-    achievement = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return "%s" % self.achievement
-
-    class Meta:
-        verbose_name = "Academic Achievment Code"
+        verbose_name = "Learner Perfomance Data"
 
 
 class InboundSMS(models.Model):
