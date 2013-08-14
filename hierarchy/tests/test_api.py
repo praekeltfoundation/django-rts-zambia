@@ -11,7 +11,7 @@ class TestHierarchyAPI(TestCase):
             Testing basic API functionality.
         """
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'hierarchy',
+                      kwargs={'resource_name': 'school',
                       'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
