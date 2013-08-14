@@ -18,11 +18,12 @@ describe("test_api", function() {
 });
 
 var test_fixtures_full = [
-    'test/fixtures/post_registration.json',
-    'test/fixtures/post_registration_zonalhead.json',
     'test/fixtures/get_hierarchy.json',
     'test/fixtures/post_registration_update_msisdn.json',
     'test/fixtures/post_registration_emisdelink.json',
+    'test/fixtures/post_registration_headteacher.json',
+    'test/fixtures/post_registration_headteacher_zonal.json',
+    'test/fixtures/post_registration_school.json',
 ];
 
 var tester;

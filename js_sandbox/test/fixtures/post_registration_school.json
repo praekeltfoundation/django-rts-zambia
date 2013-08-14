@@ -1,0 +1,16 @@
+{
+    "url": "http://qa/api/school/",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+        "boys_g2": 10,
+        "classrooms": 5,
+        "emis": 1,
+        "girls_g2": 11,
+        "name":"School One",
+        "teachers": 5,
+        "teachers_g1": 2,
+        "teachers_g2": 2
+    },
+    "body": {}
+}
