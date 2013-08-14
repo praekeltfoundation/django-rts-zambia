@@ -28,7 +28,7 @@ function GoRtsZambia() {
     var self = this;
 
     self.post_headers = {
-        'Content-Type': ['application/x-www-form-urlencoded']
+        'Content-Type': ['application/json']
     };
 
     // The first state to enter
@@ -37,7 +37,7 @@ function GoRtsZambia() {
     // START Shared helpers
 
     self.cms_get = function(path) {
-        var url = im.config.cms_api_root + path + "?format=json";
+        var url = im.config.cms_api_root + path;
         var p = im.api_request("http.get", {
             url: url,
             headers: self.headers
@@ -50,8 +50,7 @@ function GoRtsZambia() {
     };
 
     self.cms_post = function(path, data) {
-        var url = im.config.cms_api_root + path + "?format=json";
-        data = self.url_encode(data);
+        var url = im.config.cms_api_root + path;
         var p = im.api_request("http.post", {
             url: url,
             headers: self.post_headers,
@@ -131,10 +130,10 @@ function GoRtsZambia() {
 
     self.registration_data_collect = function(){
         var headteacher_data = {
-            first_name: im.get_user_answer('reg_first_name'),
-            last_name: im.get_user_answer('reg_surname'),
-            date_of_birth: im.get_user_answer('reg_date_of_birth'),
-            gender: im.get_user_answer('reg_gender'),
+            "first_name": im.get_user_answer('reg_first_name'),
+            "last_name": im.get_user_answer('reg_surname'),
+            "date_of_birth": im.get_user_answer('reg_date_of_birth'),
+            "gender": im.get_user_answer('reg_gender'),
         };
         if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
             headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
@@ -144,13 +143,13 @@ function GoRtsZambia() {
             headteacher_data['is_zonal_head'] = true;
         }
         var school_data = {
-            name: im.get_user_answer('reg_school_name'),   
-            classrooms: parseInt(im.get_user_answer('reg_school_classrooms')),
-            teachers: parseInt(im.get_user_answer('reg_school_teachers')),
-            teachers_g1: parseInt(im.get_user_answer('reg_school_teachers_g1')),
-            teachers_g2: parseInt(im.get_user_answer('reg_school_teachers_g2')),
-            boys_g2: parseInt(im.get_user_answer('reg_school_students_g2_boys')),
-            girls_g2: parseInt(im.get_user_answer('reg_school_students_g2_girls'))
+            "name": im.get_user_answer('reg_school_name'),   
+            "classrooms": parseInt(im.get_user_answer('reg_school_classrooms')),
+            "teachers": parseInt(im.get_user_answer('reg_school_teachers')),
+            "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1')),
+            "teachers_g2": parseInt(im.get_user_answer('reg_school_teachers_g2')),
+            "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys')),
+            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'))
         };
         
         if (im.get_user_answer('initial_state') == 'manage_change_emis'){

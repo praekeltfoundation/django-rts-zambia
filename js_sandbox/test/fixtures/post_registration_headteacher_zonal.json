@@ -1,7 +1,15 @@
 {
-    "url": "http://qa/api/headteacher/?format=json",
+    "url": "http://qa/api/headteacher/",
     "method": "POST",
-    "content_type": "application/x-www-form-urlencoded",
-    "data": "first_name=Jack&last_name=Black&date_of_birth=11-Sep-1980&gender=male&zonal_head_name=self&is_zonal_head=true&emis=1",
+    "content_type": "application/json",
+    "data": {
+        "date_of_birth": "11-Sep-1980",
+        "emis": 1,
+        "first_name": "Jack",
+        "gender": "male",
+        "is_zonal_head": true,
+        "last_name": "Black",
+        "zonal_head_name": "self"
+    },
     "body": {}
 }
