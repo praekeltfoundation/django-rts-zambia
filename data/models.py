@@ -66,7 +66,6 @@ class TeacherPerfomanceData(models.Model):
                                    verbose_name=u'Teacher')
 
 
-
 class LearnerPerfomanceData(models.Model):
     gender = models.CharField(max_length=6, verbose_name=u'Gender')
     total_number_pupils = models.IntegerField()
@@ -83,3 +82,15 @@ class LearnerPerfomanceData(models.Model):
                              verbose_name=u'EMIS Number')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
+
+class InboundSMS(models.Model):
+    message = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(HeadTeacher,
+                                    verbose_name=u'Header Teacher')
+
+    def __unicode__(self):
+        return "%s" % self.message
+
+    class Meta:
+        verbose_name = "Inbound SMS"
