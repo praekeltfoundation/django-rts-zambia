@@ -33,6 +33,10 @@ class AcademicAchievementCodeAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def __init__(self, *args, **kwargs):
+        super(AcademicAchievementCodeAdmin, self).__init__(*args, **kwargs)
+        self.list_display_links = (None, )
+
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
