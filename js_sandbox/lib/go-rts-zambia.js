@@ -15,6 +15,13 @@ var EndState = vumigo.states.EndState;
 var InteractionMachine = vumigo.state_machine.InteractionMachine;
 var StateCreator = vumigo.state_machine.StateCreator;
 
+Date.prototype.yyyymmdd = function() {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+    return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+};
+
 function GoRtsZambiaError(msg) {
     var self = this;
     self.msg = msg;
@@ -107,9 +114,13 @@ function GoRtsZambia() {
     };
 
     self.check_and_parse_date = function(date_string){
-        // an opinionated data parser - expects "DD MM YYYY"
+        // an opinionated data parser - expects "DDMMYYYY"
         // returns false if fails to parse
-        var da = self.array_parse_ints(date_string.split(" "));
+        if (date_string.length != 8) return false;
+        var da = [date_string.slice(0,2)];
+        da.push(date_string.slice(2,4));
+        da.push(date_string.slice(4));
+        da = self.array_parse_ints(da);
         if (da && da[0]<=31 && da[1] <= 12){
             da[1] = da[1]-1; // JS dates are 0-bound
             return new Date(da[2], da[1], da[0]);
@@ -133,7 +144,7 @@ function GoRtsZambia() {
             "first_name": im.get_user_answer('reg_first_name'),
             "last_name": im.get_user_answer('reg_surname'),
             "msisdn": im.user_addr,
-            "date_of_birth": im.get_user_answer('reg_date_of_birth'),
+            "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_date_of_birth')).yyyymmdd(),
             "gender": im.get_user_answer('reg_gender'),
         };
         if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
@@ -374,12 +385,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_date_of_birth",
         "reg_gender",
-        "What is your date of birth? (example 21 07 1980)",
+        "What is your date of birth? (example 21071980)",
         function(content) {
             // check that the value provided is date format we expect
             return self.check_and_parse_date(content);
         },
-        "Please enter your date of birth formatted DD MM YYYY"
+        "Please enter your date of birth formatted DDMMYYYY"
     ));
 
     self.add_state(new ChoiceState(
