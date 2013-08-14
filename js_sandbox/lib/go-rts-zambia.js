@@ -132,6 +132,7 @@ function GoRtsZambia() {
         var headteacher_data = {
             "first_name": im.get_user_answer('reg_first_name'),
             "last_name": im.get_user_answer('reg_surname'),
+            "msisdn": im.user_addr,
             "date_of_birth": im.get_user_answer('reg_date_of_birth'),
             "gender": im.get_user_answer('reg_gender'),
         };

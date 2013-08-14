@@ -9,6 +9,7 @@
         "gender": "male",
         "is_zonal_head": true,
         "last_name": "Black",
+        "msisdn": "1234567",
         "zonal_head_name": "self"
     },
     "body": {}
