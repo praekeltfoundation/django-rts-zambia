@@ -81,17 +81,9 @@ class TeacherPerfomanceDataResource(ModelResource):
     """
     POSTING DATA
 
-    "url": "<base_url>/api/data/schooldata/",
-    "method": "POST",
-    "content_type": "application/json",
+    "url": "<base_url>/api/data/teacherperfomance/",
     "body": {
-                "name": "test_name",
-                "classrooms": 30,
-                "teachers": 40,
-                "teachers_g1": 4,
-                "teachers_g2": 8,
-                "boys_g2": 15,
-                "girls_g2": 12,
+                "data": "data",
                 "created_by": "/api/data/headteacher/emis/4813/",
                 "emis": "/api/v1/school/emis/4813/"
             }
@@ -113,18 +105,10 @@ class TeacherPerfomanceDataResource(ModelResource):
 class LearnerPerfomanceDataResource(ModelResource):
     """
     POSTING DATA
-
-    "url": "<base_url>/api/data/schooldata/",
-    "method": "POST",
-    "content_type": "application/json",
+    
+    "url": "<base_url>/api/data/learnerperfomance/",
     "body": {
-                "name": "test_name",
-                "classrooms": 30,
-                "teachers": 40,
-                "teachers_g1": 4,
-                "teachers_g2": 8,
-                "boys_g2": 15,
-                "girls_g2": 12,
+                "data": "data",
                 "created_by": "/api/data/headteacher/emis/4813/",
                 "emis": "/api/v1/school/emis/4813/"
             }
