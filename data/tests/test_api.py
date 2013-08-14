@@ -2,7 +2,7 @@ from django.test import TestCase
 from tastypie.test import ResourceTestCase
 from django.core.urlresolvers import reverse
 import json
-from data.models import HeadTeacher, SchoolData
+from data.models import HeadTeacher, SchoolData, InboundSMS
 import datetime
 
 
@@ -211,6 +211,74 @@ class TestSchoolDataAPI(ResourceTestCase):
                                     "girls_g2": 12,
                                     "created_by": "/api/data/schooldata/9999/",
                                     "emis": "/api/v1/school/emis/4813/"
+                                    })
+        json_item = json.loads(response.content)
+        self.assertIn("error", json_item)
+
+
+class TestInboudSMSAPI(ResourceTestCase):
+    fixtures = ['data.json', 'hierarchy.json']
+
+    def test_basic_api_functionality(self):
+        """
+            Testing basic schooldata API functionality.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/sms',
+                      'api_name': 'api'})
+        response = self.client.get(url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
+
+
+    def test_good_post_sms_data(self):
+        """
+            Testing good post sms data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'api'})
+        response = self.api_client.get("%s?emis__emis=4813" % (url))
+        json_item = json.loads(response.content)
+        headteacher_uri = json_item['objects'][0]['resource_uri']
+        headteacher_id = json_item['objects'][0]['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/sms',
+                      'api_name': 'api'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={"message": "This is the sms",
+                                    "created_by": headteacher_uri,
+                                    })
+
+        json_item = json.loads(response.content)
+        self.assertEqual("This is the sms", json_item["message"])
+        self.assertEqual("/api/data/sms/1/", json_item["resource_uri"])
+        self.assertEqual(4813, json_item["created_by"]["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["created_by"]["emis"]["name"])
+
+        sms = InboundSMS.objects.get(pk=1)
+        self.assertEqual("This is the sms", sms.message)
+        self.assertIsNotNone(sms.created_at) 
+        self.assertEqual("Musungu", sms.created_by.emis.name)
+        self.assertEqual(4813, sms.created_by.emis.emis)
+        self.assertEqual(headteacher_id, sms.created_by.id)
+
+    def test_bad_uri_post_headteacher_data(self):
+        """
+            Testing bad post sms data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/sms',
+                      'api_name': 'api'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={"message": "This is the sms",
+                                    "created_by": "/api/data/headteacher/121212/",
                                     })
         json_item = json.loads(response.content)
         self.assertIn("error", json_item)
