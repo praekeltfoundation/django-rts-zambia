@@ -41,3 +41,17 @@ class SchoolData(models.Model):
 
     class Meta:
         verbose_name = "School Data"
+
+
+class InboundSMS(models.Model):
+    message = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(HeadTeacher,
+                                    verbose_name=u'Header Teacher')
+
+    def __unicode__(self):
+        return "%s" % self.message
+
+    class Meta:
+        verbose_name = "Inbound SMS"
+

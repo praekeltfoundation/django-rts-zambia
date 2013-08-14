@@ -1,7 +1,7 @@
 from tastypie.resources import ModelResource, ALL_WITH_RELATIONS
 from tastypie.authorization import Authorization
 from tastypie import fields
-from models import (HeadTeacher, SchoolData)
+from models import (HeadTeacher, SchoolData, InboundSMS)
 from django.conf.urls import url
 
 
@@ -71,7 +71,37 @@ class SchoolDataResource(ModelResource):
         resource_name = "data/schooldata"
         list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
-        include_resource_uri = False
+        include_resource_uri = True
         always_return_data = True
         filtering = {
             'emis': ALL_WITH_RELATIONS}
+
+
+class InboundSMSResource(ModelResource):
+    """
+    GET SPECIFIC HEADTEACHER ON EMIS
+
+    "url": "<base_url>/api/data/headteacher/?emis__emis=4817",,
+    "method": "GET",
+
+    POSTING DATA
+    
+    "url": "<base_url>/api/data/schooldata/",
+    "method": "POST",
+    "content_type": "application/json",
+    "body": {
+                "message": "test_name",
+                "created_by": "/api/data/headteacher/1/",
+            }
+    """
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+
+    class Meta:
+        queryset = InboundSMS.objects.all()
+        resource_name = "data/sms"
+        list_allowed_methods = ['post', 'get'] 
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
+        filtering = {
+            'created_by': ALL_WITH_RELATIONS}
