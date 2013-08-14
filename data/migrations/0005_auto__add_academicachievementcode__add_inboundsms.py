@@ -8,32 +8,42 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'LearnerPerfomanceData'
-        db.create_table(u'data_learnerperfomancedata', (
+        # Adding model 'AcademicAchievementCode'
+        db.create_table(u'data_academicachievementcode', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('gender', self.gf('django.db.models.fields.CharField')(max_length=6)),
-            ('total_number_pupils', self.gf('django.db.models.fields.IntegerField')()),
-            ('phonetic_awareness', self.gf('django.db.models.fields.IntegerField')()),
-            ('vocabulary', self.gf('django.db.models.fields.IntegerField')()),
-            ('reading_comprehension', self.gf('django.db.models.fields.IntegerField')()),
-            ('writing_diction', self.gf('django.db.models.fields.IntegerField')()),
-            ('below_minimum_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('minimum_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('desirable_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('outstanding_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('emis', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.School'])),
-            ('created_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['data.HeadTeacher'])),
+            ('primary_school', self.gf('django.db.models.fields.IntegerField')()),
+            ('junior_secondary_school', self.gf('django.db.models.fields.IntegerField')()),
+            ('secondary_school', self.gf('django.db.models.fields.IntegerField')()),
+            ('primary_school_teacher_certificate', self.gf('django.db.models.fields.IntegerField')()),
+            ('primary_school_teacher_diploma', self.gf('django.db.models.fields.IntegerField')()),
+            ('secondary_school_teacher_diploma', self.gf('django.db.models.fields.IntegerField')()),
+            ('diploma', self.gf('django.db.models.fields.IntegerField')()),
+            ('bachelors', self.gf('django.db.models.fields.IntegerField')()),
+            ('masters', self.gf('django.db.models.fields.IntegerField')()),
+            ('other', self.gf('django.db.models.fields.IntegerField')()),
         ))
-        db.send_create_signal(u'data', ['LearnerPerfomanceData'])
-
+        db.send_create_signal(u'data', ['AcademicAchievementCode'])
 
     def backwards(self, orm):
-        # Deleting model 'LearnerPerfomanceData'
-        db.delete_table(u'data_learnerperfomancedata')
+        # Deleting model 'AcademicAchievementCode'
+        db.delete_table(u'data_academicachievementcode')
 
 
     models = {
+        u'data.academicachievementcode': {
+            'Meta': {'object_name': 'AcademicAchievementCode'},
+            'bachelors': ('django.db.models.fields.IntegerField', [], {}),
+            'diploma': ('django.db.models.fields.IntegerField', [], {}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'junior_secondary_school': ('django.db.models.fields.IntegerField', [], {}),
+            'masters': ('django.db.models.fields.IntegerField', [], {}),
+            'other': ('django.db.models.fields.IntegerField', [], {}),
+            'primary_school': ('django.db.models.fields.IntegerField', [], {}),
+            'primary_school_teacher_certificate': ('django.db.models.fields.IntegerField', [], {}),
+            'primary_school_teacher_diploma': ('django.db.models.fields.IntegerField', [], {}),
+            'secondary_school': ('django.db.models.fields.IntegerField', [], {}),
+            'secondary_school_teacher_diploma': ('django.db.models.fields.IntegerField', [], {})
+        },
         u'data.headteacher': {
             'Meta': {'object_name': 'HeadTeacher'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
