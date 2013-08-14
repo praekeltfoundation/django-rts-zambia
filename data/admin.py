@@ -30,6 +30,9 @@ class AcademicAchievementCodeAdmin(admin.ModelAdmin):
     list_display = ["id", "achievement"]
     actions = None
 
+    def has_add_permission(self, request):
+        return False
+
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
