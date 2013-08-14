@@ -8,32 +8,106 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'LearnerPerfomanceData'
-        db.create_table(u'data_learnerperfomancedata', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('gender', self.gf('django.db.models.fields.CharField')(max_length=6)),
-            ('total_number_pupils', self.gf('django.db.models.fields.IntegerField')()),
-            ('phonetic_awareness', self.gf('django.db.models.fields.IntegerField')()),
-            ('vocabulary', self.gf('django.db.models.fields.IntegerField')()),
-            ('reading_comprehension', self.gf('django.db.models.fields.IntegerField')()),
-            ('writing_diction', self.gf('django.db.models.fields.IntegerField')()),
-            ('below_minimum_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('minimum_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('desirable_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('outstanding_results', self.gf('django.db.models.fields.IntegerField')()),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('emis', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['hierarchy.School'])),
-            ('created_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['data.HeadTeacher'])),
-        ))
-        db.send_create_signal(u'data', ['LearnerPerfomanceData'])
+        # Deleting field 'AcademicAchievementCode.junior_secondary_school'
+        db.delete_column(u'data_academicachievementcode', 'junior_secondary_school')
+
+        # Deleting field 'AcademicAchievementCode.primary_school'
+        db.delete_column(u'data_academicachievementcode', 'primary_school')
+
+        # Deleting field 'AcademicAchievementCode.diploma'
+        db.delete_column(u'data_academicachievementcode', 'diploma')
+
+        # Deleting field 'AcademicAchievementCode.secondary_school'
+        db.delete_column(u'data_academicachievementcode', 'secondary_school')
+
+        # Deleting field 'AcademicAchievementCode.primary_school_teacher_diploma'
+        db.delete_column(u'data_academicachievementcode', 'primary_school_teacher_diploma')
+
+        # Deleting field 'AcademicAchievementCode.masters'
+        db.delete_column(u'data_academicachievementcode', 'masters')
+
+        # Deleting field 'AcademicAchievementCode.other'
+        db.delete_column(u'data_academicachievementcode', 'other')
+
+        # Deleting field 'AcademicAchievementCode.bachelors'
+        db.delete_column(u'data_academicachievementcode', 'bachelors')
+
+        # Deleting field 'AcademicAchievementCode.secondary_school_teacher_diploma'
+        db.delete_column(u'data_academicachievementcode', 'secondary_school_teacher_diploma')
+
+        # Deleting field 'AcademicAchievementCode.primary_school_teacher_certificate'
+        db.delete_column(u'data_academicachievementcode', 'primary_school_teacher_certificate')
+
+        # Adding field 'AcademicAchievementCode.achievement'
+        db.add_column(u'data_academicachievementcode', 'achievement',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=50),
+                      keep_default=False)
+
+        from django.core.management import call_command
+        call_command('loaddata', 'academic_achievement_code.json')
 
 
     def backwards(self, orm):
-        # Deleting model 'LearnerPerfomanceData'
-        db.delete_table(u'data_learnerperfomancedata')
+        # Adding field 'AcademicAchievementCode.junior_secondary_school'
+        db.add_column(u'data_academicachievementcode', 'junior_secondary_school',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.primary_school'
+        db.add_column(u'data_academicachievementcode', 'primary_school',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.diploma'
+        db.add_column(u'data_academicachievementcode', 'diploma',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.secondary_school'
+        db.add_column(u'data_academicachievementcode', 'secondary_school',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.primary_school_teacher_diploma'
+        db.add_column(u'data_academicachievementcode', 'primary_school_teacher_diploma',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.masters'
+        db.add_column(u'data_academicachievementcode', 'masters',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.other'
+        db.add_column(u'data_academicachievementcode', 'other',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.bachelors'
+        db.add_column(u'data_academicachievementcode', 'bachelors',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.secondary_school_teacher_diploma'
+        db.add_column(u'data_academicachievementcode', 'secondary_school_teacher_diploma',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Adding field 'AcademicAchievementCode.primary_school_teacher_certificate'
+        db.add_column(u'data_academicachievementcode', 'primary_school_teacher_certificate',
+                      self.gf('django.db.models.fields.IntegerField')(default=''),
+                      keep_default=False)
+
+        # Deleting field 'AcademicAchievementCode.achievement'
+        db.delete_column(u'data_academicachievementcode', 'achievement')
 
 
     models = {
+        u'data.academicachievementcode': {
+            'Meta': {'object_name': 'AcademicAchievementCode'},
+            'achievement': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
         u'data.headteacher': {
             'Meta': {'object_name': 'HeadTeacher'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
