@@ -1,4 +1,3 @@
-from django.test import TestCase
 from tastypie.test import ResourceTestCase
 from django.core.urlresolvers import reverse
 import json
@@ -357,7 +356,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(4813, json_item["emis"]["emis"])
         self.assertEqual("Musungu", json_item["emis"]["name"])
 
-        teacher = TeacherPerfomanceData.objects.get(pk=1)
+        teacher = TeacherPerfomanceData.objects.all()[0]
         self.assertEqual(None, teacher.gender)
         self.assertEqual(30, teacher.age)
         self.assertEqual(5, teacher.years_experience)
@@ -442,7 +441,7 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(4813, json_item["emis"]["emis"])
         self.assertEqual("Musungu", json_item["emis"]["name"])
 
-        learner = LearnerPerfomanceData.objects.get(pk=1)
+        learner = LearnerPerfomanceData.objects.all()[0]
         self.assertEqual("female", learner.gender)
         self.assertEqual(40, learner.total_number_pupils)
         self.assertEqual(50, learner.phonetic_awareness)
