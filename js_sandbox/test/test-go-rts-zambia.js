@@ -892,13 +892,45 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         p.then(done, done);
     });
 
-    it("selecting to report on teacher performance should ask for gender", function (done) {
+    it("selecting to report on teacher performance should ask for teacher TS number", function (done) {
         var user = {
             current_state: 'initial_state'
         };
         var p = tester.check_state({
             user: user,
             content: "1",
+            next_state: "perf_teacher_ts_number",
+            response: "^Please enter the teacher's TS number$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher TS number incorrectly should ask for teacher TS number again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_ts_number',
+            answers: {
+                initial_state: 'perf_teacher_ts_number'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "One Hundred and Six",
+            next_state: "perf_teacher_ts_number",
+            response: "^Please provide a number value for the teacher's TS number$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher TS number should ask for gender", function (done) {
+        var user = {
+            current_state: 'perf_teacher_ts_number',
+            answers: {
+                initial_state: 'perf_teacher_ts_number'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "106",
             next_state: "perf_teacher_gender",
             response: "^Please enter 1 if the teacher is a man or 2 if she is a woman[^]" +
             "1. Male[^]" +
@@ -911,7 +943,8 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         var user = {
             current_state: 'perf_teacher_gender',
             answers: {
-                initial_state: 'perf_teacher_gender'
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106'
             }
         };
         var p = tester.check_state({
@@ -928,6 +961,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_age',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female'
             }
         };
@@ -945,6 +979,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_age',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female'
             }
         };
@@ -972,6 +1007,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_academic_level',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30'
             }
@@ -994,6 +1030,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_years_experience',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3'
@@ -1014,6 +1051,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_g2_pupils_present',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1034,6 +1072,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_g2_pupils_present',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1054,6 +1093,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_g2_pupils_registered',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1075,6 +1115,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_g2_pupils_registered',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1096,6 +1137,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_classroom_environment_score',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1118,6 +1160,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_classroom_environment_score',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1141,6 +1184,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_t_l_materials',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1164,6 +1208,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_t_l_materials',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1188,6 +1233,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_pupils_books_number',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1212,6 +1258,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_pupils_books_number',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1237,6 +1284,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_pupils_materials_score',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1262,6 +1310,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_pupils_materials_score',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1288,6 +1337,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_reading_lesson',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1314,6 +1364,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             current_state: 'perf_teacher_reading_lesson',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1341,6 +1392,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             current_state: 'perf_teacher_pupil_engagement_score',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1368,6 +1420,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             current_state: 'perf_teacher_pupil_engagement_score',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1396,6 +1449,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             current_state: 'perf_teacher_attitudes_and_beliefs',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1424,6 +1478,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             current_state: 'perf_teacher_attitudes_and_beliefs',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1453,6 +1508,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             current_state: 'perf_teacher_training_subtotal',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
@@ -1482,6 +1538,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             current_state: 'perf_teacher_training_subtotal',
             answers: {
                 initial_state: 'perf_teacher_gender',
+                perf_teacher_ts_number: '106',
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',

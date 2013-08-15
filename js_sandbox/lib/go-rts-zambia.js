@@ -177,6 +177,7 @@ function GoRtsZambia() {
 
     self.performance_data_teacher_collect = function(emis, id){
         var data = {
+            "ts_number": im.get_user_answer('perf_teacher_ts_number'),
             "gender": im.get_user_answer('perf_teacher_gender'),
             "age": im.get_user_answer('perf_teacher_age'),
             "years_experience": im.get_user_answer('perf_teacher_years_experience'),
@@ -347,7 +348,7 @@ function GoRtsZambia() {
                     },
                     "Welcome to SPERT. What would you like to do?",
                     [
-                        new Choice("perf_teacher_gender", "Add a classroom observation report"),
+                        new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
                         new Choice("perf_learner_total_boys", "Add a learner performance report"),
                         new Choice("manage_change_emis", "Change my school")
                         
@@ -601,6 +602,17 @@ function GoRtsZambia() {
     /////////////////////////////////////////////////////////////////
     // Start of Performance Management - Teachers
     /////////////////////////////////////////////////////////////////
+
+    self.add_state(new FreeText(
+        "perf_teacher_ts_number",
+        "perf_teacher_gender",
+        "Please enter the teacher's TS number",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for the teacher's TS number"
+    ));
 
     self.add_state(new ChoiceState(
         'perf_teacher_gender',
