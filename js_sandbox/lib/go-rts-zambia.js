@@ -311,10 +311,10 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome! What would you like to do?",
+                    "Welcome to SPERT. What would you like to do?",
                     [
-                        new Choice("perf_teacher_gender", "Add and report on teacher performance"),
-                        new Choice("perf_learner_total_boys", "Report on learner performance"),
+                        new Choice("perf_teacher_gender", "Add a classroom observation report"),
+                        new Choice("perf_learner_total_boys", "Add a learner performance report"),
                         new Choice("manage_change_emis", "Change my school")
                         
                     ]
@@ -571,17 +571,17 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         'perf_teacher_gender',
         'perf_teacher_age',
-        "Gender?",
+        "Please enter 1 if the teacher is a man or 2 if she is a woman",
         [
-            new Choice("female", "Female"),
-            new Choice("male", "Male")
+            new Choice("male", "Male"),
+            new Choice("female", "Female")
         ]
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_age",
         "perf_teacher_academic_level",
-        "What is the age of the teacher?",
+        "Please enter the teacher's age in years e.g. 26",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
@@ -592,81 +592,89 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         "perf_teacher_academic_level",
         "perf_teacher_years_experience",
-        "Highest academic achievement of teacher",
+        "What is the teacher's highest education level?",
         [
-            new Choice("1", "Primary school"),
-            new Choice("2", "Secondary school"),
-            new Choice("3", "Diploma"),
-            new Choice("4", "Bachelors"),
-            new Choice("5", "Masters"),
-            new Choice("6", "Other"),
+            new Choice("1", "Gr 7"),
+            new Choice("2", "Gr 9"),
+            new Choice("3", "Gr 12"),
+            new Choice("4", "PTC"),
+            new Choice("5", "PTD"),
+            new Choice("6", "Dip Ed"),
+            new Choice("7", "Other diploma"),
+            new Choice("8", "BA Degree"),
+            new Choice("9", "MA Degree"),
+            new Choice("10", "Other"),
         ]
     ));
 
-    self.add_state(new FreeText(
+    self.add_state(new ChoiceState(
         "perf_teacher_years_experience",
         "perf_teacher_g2_pupils_present",
-        "Number of years experience teaching",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
-        },
-        'Please provide a number value for years experience teaching'
+        "How many years of teaching experience does this teacher have?",
+        [
+            new Choice("0-3", "0 - 3 years"),
+            new Choice("4-8", "4 - 8 years"),
+            new Choice("9-12", "9 - 12 years"),
+            new Choice("13+", "13 years or more"),
+        ]
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_g2_pupils_present",
         "perf_teacher_g2_pupils_registered",
-        "Number of G2 pupils present",
+        "How many children were PRESENT during the observed lesson?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for G2 pupils present'
+        'Please provide a number value for pupils present'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_g2_pupils_registered",
         "perf_teacher_classroom_environment_score",
-        "Number of G2 pupils registered",
+        "How many children are ENROLLED in the Grade 2 class that was observed?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for G2 pupils registered'
+        'Please provide a number value for pupils enrolled'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_classroom_environment_score",
         "perf_teacher_t_l_materials",
-        "Classroom Environment Score",
+        "Enter the subtotal that the teacher achieved during the classroom " +
+            "observation for Section 2 (Classroom Environment)",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for Classroom Environment Score'
+        'Please provide a number value for classroom environment'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_t_l_materials",
         "perf_teacher_pupils_materials_score",
-        "T&L Materials Score",
+        "Enter the subtotal that the teacher achieved during the classroom " +
+            "observation for Section 3 (Teaching and Learning Materials)",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for T&L Materials Score'
+        'Please provide a number value for Teaching and Learning Materials'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_pupils_materials_score",
         "perf_teacher_pupils_books_number",
-        "Pupil Materials Score",
+        "Enter the number of learners' books (text books) for literacy that were " +
+            "available in the classroom during the lesson observation.",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for Pupil Materials Score'
+        "Please provide a number value for number of learners' books"
     ));
 
     /////////////////////////////////////////////////////////////////

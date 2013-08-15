@@ -883,9 +883,9 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome! What would you like to do\\?[^]" +
-                    "1. Add and report on teacher performance[^]" +
-                    "2. Report on learner performance[^]" +
+            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
+                    "1. Add a classroom observation report[^]" +
+                    "2. Add a learner performance report[^]" +
                     "3. Change my school$"
         });
         p.then(done, done);
@@ -899,9 +899,9 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "perf_teacher_gender",
-            response: "^Gender\\?[^]" +
-            "1. Female[^]" +
-            "2. Male$"
+            response: "^Please enter 1 if the teacher is a man or 2 if she is a woman[^]" +
+            "1. Male[^]" +
+            "2. Female$"
         });
         p.then(done, done);
     });
@@ -915,9 +915,9 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "1",
+            content: "2",
             next_state: "perf_teacher_age",
-            response: "^What is the age of the teacher\\?$"
+            response: "^Please enter the teacher's age in years e.g. 26$"
         });
         p.then(done, done);
     });
@@ -951,13 +951,17 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "30",
             next_state: "perf_teacher_academic_level",
-            response: "^Highest academic achievement of teacher[^]" +
-            "1. Primary school[^]" +
-            "2. Secondary school[^]" +
-            "3. Diploma[^]" +
-            "4. Bachelors[^]" +
-            "5. Masters[^]" +
-            "6. Other$"
+            response: "^What is the teacher's highest education level\\?[^]" +
+            "1. Gr 7[^]" +
+            "2. Gr 9[^]" +
+            "3. Gr 12[^]" +
+            "4. PTC[^]" +
+            "5. PTD[^]" +
+            "6. Dip Ed[^]" +
+            "7. Other diploma[^]" +
+            "8. BA Degree[^]" +
+            "9. MA Degree[^]" +
+            "10. Other$"
         });
         p.then(done, done);
     });
@@ -975,26 +979,11 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "3",
             next_state: "perf_teacher_years_experience",
-            response: "^Number of years experience teaching$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering years experience incorrectly should ask for years experience again", function (done) {
-        var user = {
-            current_state: 'perf_teacher_years_experience',
-            answers: {
-                initial_state: 'perf_teacher_gender',
-                perf_teacher_gender: 'female',
-                perf_teacher_age: '30',
-                perf_teacher_academic_level: '3'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "Four",
-            next_state: "perf_teacher_years_experience",
-            response: "^Please provide a number value for years experience teaching$"
+            response: "^How many years of teaching experience does this teacher have\\?[^]" +
+                "1. 0 - 3 years[^]" +
+                "2. 4 - 8 years[^]" +
+                "3. 9 - 12 years[^]" +
+                "4. 13 years or more$"
         });
         p.then(done, done);
     });
@@ -1011,9 +1000,9 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "4",
+            content: "1",
             next_state: "perf_teacher_g2_pupils_present",
-            response: "^Number of G2 pupils present$"
+            response: "^How many children were PRESENT during the observed lesson\\?$"
         });
         p.then(done, done);
     });
@@ -1027,14 +1016,14 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4'
+                perf_teacher_years_experience: '0-3'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "forty",
             next_state: "perf_teacher_g2_pupils_present",
-            response: "^Please provide a number value for G2 pupils present$"
+            response: "^Please provide a number value for pupils present$"
         });
         p.then(done, done);
     });
@@ -1047,14 +1036,14 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4'
+                perf_teacher_years_experience: '0-3'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "40",
             next_state: "perf_teacher_g2_pupils_registered",
-            response: "^Number of G2 pupils registered$"
+            response: "^How many children are ENROLLED in the Grade 2 class that was observed\\?$"
         });
         p.then(done, done);
     });
@@ -1067,7 +1056,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40'
             }
         };
@@ -1075,7 +1064,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "fifty",
             next_state: "perf_teacher_g2_pupils_registered",
-            response: "^Please provide a number value for G2 pupils registered$"
+            response: "^Please provide a number value for pupils enrolled$"
         });
         p.then(done, done);
     });
@@ -1088,7 +1077,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40'
             }
         };
@@ -1096,7 +1085,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "50",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Classroom Environment Score$"
+            response: "^Enter the subtotal that the teacher achieved during the classroom observation for Section 2 \\(Classroom Environment\\)$"
         });
         p.then(done, done);
     });
@@ -1109,7 +1098,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40',
                 perf_teacher_g2_pupils_registered: '50'
             }
@@ -1118,7 +1107,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "great",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Please provide a number value for Classroom Environment Score$"
+            response: "^Please provide a number value for classroom environment$"
         });
         p.then(done, done);
     });
@@ -1131,7 +1120,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40',
                 perf_teacher_g2_pupils_registered: '50'
             }
@@ -1140,7 +1129,8 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "10",
             next_state: "perf_teacher_t_l_materials",
-            response: "^T&L Materials Score$"
+            response: "^Enter the subtotal that the teacher achieved during the classroom " +
+                "observation for Section 3 \\(Teaching and Learning Materials\\)$"
         });
         p.then(done, done);
     });
@@ -1153,7 +1143,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40',
                 perf_teacher_g2_pupils_registered: '50',
                 perf_teacher_classroom_environment_score: '10'
@@ -1163,7 +1153,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "rubbish",
             next_state: "perf_teacher_t_l_materials",
-            response: "^Please provide a number value for T&L Materials Score$"
+            response: "^Please provide a number value for Teaching and Learning Materials$"
         });
         p.then(done, done);
     });
@@ -1176,7 +1166,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40',
                 perf_teacher_g2_pupils_registered: '50',
                 perf_teacher_classroom_environment_score: '10'
@@ -1186,7 +1176,8 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "5",
             next_state: "perf_teacher_pupils_materials_score",
-            response: "^Pupil Materials Score$"
+            response: "^Enter the number of learners' books \\(text books\\) for literacy that " +
+                "were available in the classroom during the lesson observation.$"
         });
         p.then(done, done);
     });
@@ -1199,7 +1190,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
                 perf_teacher_gender: 'female',
                 perf_teacher_age: '30',
                 perf_teacher_academic_level: '3',
-                perf_teacher_years_experience: '4',
+                perf_teacher_years_experience: '0-3',
                 perf_teacher_g2_pupils_present: '40',
                 perf_teacher_g2_pupils_registered: '50',
                 perf_teacher_classroom_environment_score: '10',
@@ -1210,7 +1201,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
             user: user,
             content: "fab",
             next_state: "perf_teacher_pupils_materials_score",
-            response: "^Please provide a number value for Pupil Materials Score$"
+            response: "^Please provide a number value for number of learners' books$"
         });
         p.then(done, done);
     });
