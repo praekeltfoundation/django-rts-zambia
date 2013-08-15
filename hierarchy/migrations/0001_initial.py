@@ -40,6 +40,9 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'hierarchy', ['School'])
 
+        from django.core.management import call_command
+        call_command('loaddata', 'hierarchy_upload.json')
+
 
     def backwards(self, orm):
         # Deleting model 'Province'
