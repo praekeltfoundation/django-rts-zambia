@@ -18,3 +18,4 @@ python-mimeparse
 pep8
 pyflakes
 fabric
+xlrd

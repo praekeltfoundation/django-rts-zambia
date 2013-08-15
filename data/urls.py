@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, url, include
-from data.api import HeadTeacherResource, SchoolDataResource, InboundSMSResource
+from data.api import (HeadTeacherResource, SchoolDataResource, InboundSMSResource,
+                      TeacherPerfomanceDataResource, LearnerPerfomanceDataResource,
+                      AcademicAchievementCodeResource)
 from tastypie.api import Api
 
 
@@ -8,7 +10,10 @@ from tastypie.api import Api
 api_resources = Api(api_name='api')
 api_resources.register(HeadTeacherResource())
 api_resources.register(SchoolDataResource())
+api_resources.register(TeacherPerfomanceDataResource())
+api_resources.register(LearnerPerfomanceDataResource())
 api_resources.register(InboundSMSResource())
+api_resources.register(AcademicAchievementCodeResource())
 api_resources.prepend_urls()
 
 # Setting the urlpatterns to hook into the api urls
