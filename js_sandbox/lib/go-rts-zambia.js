@@ -564,6 +564,115 @@ function GoRtsZambia() {
         return p;
     });
 
+    /////////////////////////////////////////////////////////////////
+    // Start of Performance Management - Teachers
+    /////////////////////////////////////////////////////////////////
+
+    self.add_state(new ChoiceState(
+        'perf_teacher_gender',
+        'perf_teacher_age',
+        "Gender?",
+        [
+            new Choice("female", "Female"),
+            new Choice("male", "Male")
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_age",
+        "perf_teacher_academic_level",
+        "What is the age of the teacher?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for the teachers age'
+    ));
+
+    self.add_state(new ChoiceState(
+        "perf_teacher_academic_level",
+        "perf_teacher_years_experience",
+        "Highest academic achievement of teacher",
+        [
+            new Choice("1", "Primary school"),
+            new Choice("2", "Secondary school"),
+            new Choice("3", "Diploma"),
+            new Choice("4", "Bachelors"),
+            new Choice("5", "Masters"),
+            new Choice("6", "Other"),
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_years_experience",
+        "perf_teacher_g2_pupils_present",
+        "Number of years experience teaching",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for years experience teaching'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_g2_pupils_present",
+        "perf_teacher_g2_pupils_registered",
+        "Number of G2 pupils present",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for G2 pupils present'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_g2_pupils_registered",
+        "perf_teacher_classroom_environment_score",
+        "Number of G2 pupils registered",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for G2 pupils registered'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_classroom_environment_score",
+        "perf_teacher_t_l_materials",
+        "Classroom Environment Score",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for Classroom Environment Score'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_t_l_materials",
+        "perf_teacher_pupils_materials_score",
+        "T&L Materials Score",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for T&L Materials Score'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_pupils_materials_score",
+        "perf_teacher_pupils_books_number",
+        "Pupil Materials Score",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for Pupil Materials Score'
+    ));
+
+    /////////////////////////////////////////////////////////////////
+    // Start of Performance Management - Learners
+    /////////////////////////////////////////////////////////////////
+
     self.add_state(new EndState(
         "end_state",
         "Thank you and bye bye!",
