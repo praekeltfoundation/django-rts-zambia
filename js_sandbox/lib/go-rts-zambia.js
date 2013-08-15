@@ -272,10 +272,23 @@ function GoRtsZambia() {
     self.cms_performance_teacher = function(im) {
         var p = self.get_contact(im);
         p.add_callback(function(result) {
-            var emis = result.contact["extras-rts_emis"]
-            var id = result.contact["extras-rts_id"]
-            var data = self.performance_data_teacher_collect(emis, id);
-            return self.cms_post("data/teacherperformance/", data);
+            var emis = result.contact["extras-rts_emis"];
+            var id = result.contact["extras-rts_id"];
+            // Need to ensure no double save
+            var contact_key = result.contact.key;
+            if (result.contact["extras-rts_last_save_performance_teacher"] != im.get_user_answer('perf_teacher_ts_number')) {
+                var data = self.performance_data_teacher_collect(emis, id);
+                var p_tp = self.cms_post("data/teacherperformance/", data);
+                p_tp.add_callback(function(contact_key) {
+                    return im.api_request('contacts.update_extras', {
+                        key: result.contact.key,
+                        fields: {
+                            "rts_last_save_performance_teacher": im.get_user_answer('perf_teacher_ts_number')
+                        }
+                    });
+                });
+                return p_tp;
+            }
         });
         return p;
     };
