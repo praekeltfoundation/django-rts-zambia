@@ -1,7 +1,7 @@
 from tastypie.resources import ModelResource
 from tastypie import fields
 from models import (Province, District, Zone, School)
-from tastypie.resources import ALL, ALL_WITH_RELATIONS
+from tastypie.resources import ALL_WITH_RELATIONS
 from django.conf.urls import url
 
 
@@ -13,6 +13,9 @@ class ProvinceResource(ModelResource):
         based on the url
     """
     class Meta:
+        resource_name = "province"
+        allowed_methods = ['get']
+        include_resource_uri = True
         queryset = Province.objects.all()
 
 
@@ -25,6 +28,9 @@ class DistrictResource(ModelResource):
     """
     province = fields.ForeignKey(ProvinceResource, 'province', full=True)
     class Meta:
+        resource_name = "district"
+        allowed_methods = ['get']
+        include_resource_uri = True
         queryset = District.objects.all()
 
 
@@ -37,6 +43,9 @@ class ZoneResource(ModelResource):
     """
     district = fields.ForeignKey(DistrictResource, 'district', full=True)
     class Meta:
+        resource_name = "zone"
+        allowed_methods = ['get']
+        include_resource_uri = True
         queryset = Zone.objects.all()
 
 
@@ -54,7 +63,7 @@ class SchoolResource(ModelResource):
         include_resource_uri = True
         queryset = School.objects.all()
         filtering = {
-            'emis': ALL}
+            'emis': ALL_WITH_RELATIONS}
 
     def prepend_urls(self):
         return [
