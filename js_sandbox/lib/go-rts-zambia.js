@@ -175,6 +175,29 @@ function GoRtsZambia() {
         return [headteacher_data, school_data];
     };
 
+    self.performance_data_teacher_collect = function(emis, id){
+        var data = {
+            "gender": im.get_user_answer('perf_teacher_gender'),
+            "age": im.get_user_answer('perf_teacher_age'),
+            "years_experience": im.get_user_answer('perf_teacher_years_experience'),
+            "g2_pupils_present": im.get_user_answer('perf_teacher_g2_pupils_present'),
+            "g2_pupils_registered": im.get_user_answer('perf_teacher_g2_pupils_registered'),
+            "classroom_environment_score": im.get_user_answer('perf_teacher_classroom_environment_score'),
+            "t_l_materials": im.get_user_answer('perf_teacher_t_l_materials'),
+            "pupils_materials_score": im.get_user_answer('perf_teacher_pupils_materials_score'),
+            "pupils_books_number": im.get_user_answer('perf_teacher_pupils_books_number'),
+            "reading_lesson": im.get_user_answer('perf_teacher_reading_lesson'),
+            "pupil_engagement_score": im.get_user_answer('perf_teacher_pupil_engagement_score'),
+            "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
+            "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
+            "academic_level": im.get_user_answer('perf_teacher_academic_level'),
+            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+        
+        return data;
+    };
+
     self.get_contact = function(im){
         var p = im.api_request('contacts.get_or_create', {
             delivery_class: 'ussd',
@@ -241,6 +264,17 @@ function GoRtsZambia() {
                 array_emis.push(result.objects[i].EMIS);
             }
             im.config.array_emis = array_emis;
+        });
+        return p;
+    };
+
+    self.cms_performance_teacher = function(im) {
+        var p = self.get_contact(im);
+        p.add_callback(function(result) {
+            var emis = result.contact["extras-rts_emis"]
+            var id = result.contact["extras-rts_id"]
+            var data = self.performance_data_teacher_collect(emis, id);
+            return self.cms_post("data/teacherperformance/", data);
         });
         return p;
     };
@@ -655,7 +689,7 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "perf_teacher_t_l_materials",
-        "perf_teacher_pupils_materials_score",
+        "perf_teacher_pupils_books_number",
         "Enter the subtotal that the teacher achieved during the classroom " +
             "observation for Section 3 (Teaching and Learning Materials)",
         function(content) {
@@ -666,8 +700,8 @@ function GoRtsZambia() {
     ));
 
     self.add_state(new FreeText(
-        "perf_teacher_pupils_materials_score",
         "perf_teacher_pupils_books_number",
+        "perf_teacher_pupils_materials_score",
         "Enter the number of learners' books (text books) for literacy that were " +
             "available in the classroom during the lesson observation.",
         function(content) {
@@ -677,13 +711,96 @@ function GoRtsZambia() {
         "Please provide a number value for number of learners' books"
     ));
 
+    self.add_state(new FreeText(
+        "perf_teacher_pupils_materials_score",
+        "perf_teacher_reading_lesson",
+        "Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 4 (Learner Materials)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for learner materials subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_reading_lesson",
+        "perf_teacher_pupil_engagement_score",
+        "Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 5 (Time on Task and Reading Practice)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for time on task subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_pupil_engagement_score",
+        "perf_teacher_attitudes_and_beliefs",
+        "Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 6 (Learner Engagement)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for learner engagement subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_attitudes_and_beliefs",
+        "perf_teacher_training_subtotal",
+        "Enter the subtotal that the teacher achieved during the interview on Section " +
+            "7.1. (Teacher Attitudes and Beliefs)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for teacher attitudes and beliefs subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_training_subtotal",
+        "perf_teacher_completed",
+        "Enter the subtotal that the teacher achieved during the interview on Section " +
+            "7.2. (Teacher Training)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for teacher training interview subtotal"
+    ));
+
+    self.add_creator('perf_teacher_completed', function(state_name, im) {
+        // Log the users data
+        var p = self.cms_performance_teacher(im);
+        // Generate the EndState
+        p.add_callback(function(result) {
+            return new ChoiceState(
+                state_name,
+                function(choice) {
+                        return choice.value;
+                    },
+                "You have successfully added and assessed this teacher. " +
+                    "What would you like to do now?",
+                [
+                    new Choice("perf_teacher_ts_number", "Add another teacher"),
+                    new Choice("initial_state", "Go back to the main menu"),
+                    new Choice("end_state", "Exit")
+                ]
+            );
+        });
+        return p;
+    });
+
+
     /////////////////////////////////////////////////////////////////
     // Start of Performance Management - Learners
     /////////////////////////////////////////////////////////////////
 
     self.add_state(new EndState(
         "end_state",
-        "Thank you and bye bye!",
+        "Goodbye! Thank you for using SPERT.",
         "initial_state"
     ));
 

@@ -24,6 +24,7 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_headteacher.json',
     'test/fixtures/post_registration_headteacher_zonal.json',
     'test/fixtures/post_registration_school.json',
+    'test/fixtures/post_performance_teacher.json',
 ];
 
 var tester;
@@ -1158,7 +1159,7 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         p.then(done, done);
     });
 
-    it("entering T&L Materials Score should ask Pupil Materials Score", function (done) {
+    it("entering T&L Materials Score should ask Pupil Books Number", function (done) {
         var user = {
             current_state: 'perf_teacher_t_l_materials',
             answers: {
@@ -1175,16 +1176,16 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "5",
-            next_state: "perf_teacher_pupils_materials_score",
+            next_state: "perf_teacher_pupils_books_number",
             response: "^Enter the number of learners' books \\(text books\\) for literacy that " +
                 "were available in the classroom during the lesson observation.$"
         });
         p.then(done, done);
     });
 
-    it("entering T&L Materials Score incorrectly should ask Pupil Materials Score again", function (done) {
+    it("entering Pupil Books Number incorrectly should ask Pupil Books Number again", function (done) {
         var user = {
-            current_state: 'perf_teacher_pupils_materials_score',
+            current_state: 'perf_teacher_pupils_books_number',
             answers: {
                 initial_state: 'perf_teacher_gender',
                 perf_teacher_gender: 'female',
@@ -1200,8 +1201,311 @@ describe("When using the USSD line as an recognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "fab",
-            next_state: "perf_teacher_pupils_materials_score",
+            next_state: "perf_teacher_pupils_books_number",
             response: "^Please provide a number value for number of learners' books$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Pupil Books Number should ask Learner Materials number", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupils_books_number',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "90",
+            next_state: "perf_teacher_pupils_materials_score",
+            response: "^Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 4 \\(Learner Materials\\)$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Learner Materials number incorrectly should ask Learner Materials number again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupils_materials_score',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "score is seventy five",
+            next_state: "perf_teacher_pupils_materials_score",
+            response: "^Please provide a number value for learner materials subtotal$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Learner Materials number should ask Time on Task", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupils_materials_score',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "75",
+            next_state: "perf_teacher_reading_lesson",
+            response: "^Enter the subtotal that the teacher achieved during the classroom " +
+                "observation for Section 5 \\(Time on Task and Reading Practice\\)$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Time on Task subtotal incorrectly should ask Time on Task again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_lesson',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "forty five mins",
+            next_state: "perf_teacher_reading_lesson",
+            response: "^Please provide a number value for time on task subtotal$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Time on Task subtotal should ask pupil engagement score", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_lesson',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "45",
+            next_state: "perf_teacher_pupil_engagement_score",
+            response: "^Enter the subtotal that the teacher achieved during the " +
+                "classroom observation for Section 6 \\(Learner Engagement\\)$"
+        });
+        p.then(done, done);
+    });
+
+it("entering pupil engagement score subtotal incorrectly should ask pupil engagement score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupil_engagement_score',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "low",
+            next_state: "perf_teacher_pupil_engagement_score",
+            response: "^Please provide a number value for learner engagement subtotal$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering pupil engagement score subtotal should ask attitudes and beliefs", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupil_engagement_score',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "22",
+            next_state: "perf_teacher_attitudes_and_beliefs",
+            response: "^Enter the subtotal that the teacher achieved during the interview " +
+                "on Section 7.1. \\(Teacher Attitudes and Beliefs\\)$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering attitudes and beliefs subtotal incorrectly should ask attitudes and beliefs again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_attitudes_and_beliefs',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "great",
+            next_state: "perf_teacher_attitudes_and_beliefs",
+            response: "^Please provide a number value for teacher attitudes and beliefs subtotal$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering attitudes and beliefs subtotal should ask teacher training subtotal", function (done) {
+        var user = {
+            current_state: 'perf_teacher_attitudes_and_beliefs',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "17",
+            next_state: "perf_teacher_training_subtotal",
+            response: "^Enter the subtotal that the teacher achieved during the interview on " +
+                "Section 7.2. \\(Teacher Training\\)$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher training subtotal incorrectly should ask teacher training subtotal again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_training_subtotal',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "five",
+            next_state: "perf_teacher_training_subtotal",
+            response: "^Please provide a number value for teacher training interview subtotal$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher training subtotal should ask show success and options", function (done) {
+        var user = {
+            current_state: 'perf_teacher_training_subtotal',
+            answers: {
+                initial_state: 'perf_teacher_gender',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "5",
+            next_state: "perf_teacher_completed",
+            response: "^You have successfully added and assessed this teacher. " +
+                "What would you like to do now\\?[^]" +
+                "1. Add another teacher[^]" +
+                "2. Go back to the main menu[^]" +
+                "3. Exit$"
         });
         p.then(done, done);
     });
