@@ -6,98 +6,71 @@ import csv
 
 
 """
-    - > Output for province
-
+SAMPLE OUTPUT
     [
         {
             "pk": 1,
             "model": "hierarchy.province",
             "fields": {
-                "name": "Northern Province"
-            }
-        }
-    ]
-
-    - > Output for District
-
-    [
-        {
-            "pk": 1,
-            "model": "hierarchy.district",
-            "fields": {
-                "province": 1,
-                "name": "Mungwi"
-            }
-        }
-    ]
-
-    - > Output for zone
-
-    [
-        {
-            "pk": 1,
-            "model": "hierarchy.zone",
-            "fields": {
-                "name": "Mesenge",
-                "district": 1
+                "name": "Northern"
             }
         },
         {
             "pk": 2,
-            "model": "hierarchy.zone",
+            "model": "hierarchy.province",
             "fields": {
-                "name": "Kasama",
-                "district": 1
-            }
-        }
-    ]
-
-    - > output for school
-
-    [
-        {
-            "pk": 1,
-            "model": "hierarchy.school",
-            "fields": {
-                "emis": 4811,
-                "name": "Chibile",
-                "zone": 1
-            }
-        },
-        {
-            "pk": 2,
-            "model": "hierarchy.school",
-            "fields": {
-                "emis": 4813,
-                "name": "Musungu",
-                "zone": 1
+                "name": ""
             }
         },
         {
             "pk": 3,
-            "model": "hierarchy.school",
+            "model": "hierarchy.province",
             "fields": {
-                "emis": 4815,
-                "name": "Mkwara",
-                "zone": 2
+                "name": "Luapula"
             }
         },
         {
             "pk": 4,
-            "model": "hierarchy.school",
+            "model": "hierarchy.province",
             "fields": {
-                "emis": 4817,
-                "name": "Kasama Girls",
-                "zone": 2
+                "name": "MUCHINGA"
+            }
+        },
+        {
+            "pk": 5,
+            "model": "hierarchy.province",
+            "fields": {
+                "name": "EASTERN"
+            }
+        },
+        {
+            "pk": 6,
+            "model": "hierarchy.province",
+            "fields": {
+                "name": "WESTERN"
+            }
+        },
+        {
+            "pk": 7,
+            "model": "hierarchy.province",
+            "fields": {
+                "name": "North Western"
+            }
+        },
+        {
+            "pk": 8,
+            "model": "hierarchy.province",
+            "fields": {
+                "name": "Totals"
             }
         }
     ]
 """
-owner = "marcha@praekeltfoundation.org"
-
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+# The source file for the input can be found in:
+# https://docs.google.com/a/westerncapelabs.com/spreadsheet/ccc?key=0AtPQAkHlG50UdGFURjNwNzlhOGFuU3pKY2RTUHBDU0E&usp=drive_web
+# and the file should be placed in the project root
 input_file = os.path.join(PROJECT_ROOT, "RTS- Final EMIS list.xlsx")
-# input_file = os.path.join(PROJECT_ROOT, "test.xlsx")
 output_file = os.path.join(PROJECT_ROOT, "hierarchy", "fixtures", "hierarchy_upload.json")
 output_file_incomplete = os.path.join(PROJECT_ROOT, "hierarchy_incomplete.csv")
 
