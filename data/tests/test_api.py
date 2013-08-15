@@ -29,7 +29,7 @@ class TestHeadteacherAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"first_name": "test_first_name",
@@ -67,7 +67,7 @@ class TestHeadteacherAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"first_name": "test_first_name",
@@ -86,7 +86,7 @@ class TestHeadteacherAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"first_name": "test_first_name",
@@ -109,7 +109,7 @@ class TestSchoolDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/schooldata',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
         self.assertEqual(response.status_code, 200)
@@ -123,7 +123,7 @@ class TestSchoolDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.get("%s?emis__emis=4813" % (url))
         json_item = json.loads(response.content)
         self.assertEqual(1, json_item["meta"]["total_count"])
@@ -145,7 +145,7 @@ class TestSchoolDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.get("%s?emis__emis=4813" % (url))
         json_item = json.loads(response.content)
         headteacher_uri = json_item['objects'][0]['resource_uri']
@@ -153,7 +153,7 @@ class TestSchoolDataAPI(ResourceTestCase):
 
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/schooldata',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"name": "test_name",
@@ -199,7 +199,7 @@ class TestSchoolDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/schooldata',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"name": "test_name",
@@ -209,7 +209,7 @@ class TestSchoolDataAPI(ResourceTestCase):
                                     "teachers_g2": 8,
                                     "boys_g2": 15,
                                     "girls_g2": 12,
-                                    "created_by": "/api/data/schooldata/9999/",
+                                    "created_by": "/api/v1/data/schooldata/9999/",
                                     "emis": "/api/v1/school/emis/4813/"
                                     })
         json_item = json.loads(response.content)
@@ -225,7 +225,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/teacherperfomance',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
         self.assertEqual(response.status_code, 200)
@@ -239,7 +239,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.get("%s?emis__emis=4813" % (url))
         json_item = json.loads(response.content)
         headteacher_uri = json_item['objects'][0]['resource_uri']
@@ -247,7 +247,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
 
         url = reverse('api_dispatch_detail',
                       kwargs={'resource_name': 'data/achievement',
-                      'api_name': 'api', "pk": 8})
+                      'api_name': 'v1', "pk": 8})
         response = self.api_client.get((url))
         json_item = json.loads(response.content)
         achievement_uri = json_item['resource_uri']
@@ -255,7 +255,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
 
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/teacherperfomance',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"gender": "male",
@@ -328,7 +328,7 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/learnerperfomance',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
         self.assertEqual(response.status_code, 200)
@@ -342,7 +342,7 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.get("%s?emis__emis=4813" % (url))
         json_item = json.loads(response.content)
         headteacher_uri = json_item['objects'][0]['resource_uri']
@@ -350,7 +350,7 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
 
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/learnerperfomance',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"gender": "female",
@@ -408,7 +408,7 @@ class TestInboudSMSAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/sms',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
         self.assertEqual(response.status_code, 200)
@@ -423,7 +423,7 @@ class TestInboudSMSAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.get("%s?emis__emis=4813" % (url))
         json_item = json.loads(response.content)
         headteacher_uri = json_item['objects'][0]['resource_uri']
@@ -431,7 +431,7 @@ class TestInboudSMSAPI(ResourceTestCase):
 
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/sms',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"message": "This is the sms",
@@ -440,7 +440,7 @@ class TestInboudSMSAPI(ResourceTestCase):
 
         json_item = json.loads(response.content)
         self.assertEqual("This is the sms", json_item["message"])
-        self.assertEqual("/api/data/sms/1/", json_item["resource_uri"])
+        self.assertEqual("/api/v1/data/sms/1/", json_item["resource_uri"])
         self.assertEqual(4813, json_item["created_by"]["emis"]["emis"])
         self.assertEqual("Musungu", json_item["created_by"]["emis"]["name"])
 
@@ -457,11 +457,11 @@ class TestInboudSMSAPI(ResourceTestCase):
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/sms',
-                      'api_name': 'api'})
+                      'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
                                     data={"message": "This is the sms",
-                                    "created_by": "/api/data/headteacher/121212/",
+                                    "created_by": "/api/v1/data/headteacher/121212/",
                                     })
         json_item = json.loads(response.content)
         self.assertIn("error", json_item)
