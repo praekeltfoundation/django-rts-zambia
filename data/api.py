@@ -1,7 +1,8 @@
 from tastypie.resources import ModelResource, ALL_WITH_RELATIONS
 from tastypie.authorization import Authorization
 from tastypie import fields
-from models import (HeadTeacher, SchoolData, InboundSMS)
+from models import (HeadTeacher, SchoolData, TeacherPerfomanceData,
+                    LearnerPerfomanceData, InboundSMS, AcademicAchievementCode)
 from django.conf.urls import url
 
 
@@ -74,6 +75,77 @@ class SchoolDataResource(ModelResource):
         include_resource_uri = True
         always_return_data = True
         filtering = {
+            'created_by': ALL_WITH_RELATIONS,
+            'emis': ALL_WITH_RELATIONS}
+
+
+class AcademicAchievementCodeResource(ModelResource):
+    """
+    GET SPECIFIC HEADTEACHER ON EMIS
+
+    "url": "<base_url>/api/data/achievement/<id>/,,
+    "method": "GET",
+    """
+    class Meta:
+        queryset = AcademicAchievementCode.objects.all()
+        resource_name = "data/achievement"
+        list_allowed_methods = ['get'] 
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
+
+
+class TeacherPerfomanceDataResource(ModelResource):
+    """
+    POSTING DATA
+
+    "url": "<base_url>/api/data/teacherperfomance/",
+    "body": {
+                "data": "data",
+                "academic_level": "/api/data/achievement/8/",
+                "created_by": "/api/data/headteacher/emis/4813/",
+                "emis": "/api/v1/school/emis/4813/"
+            }
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    academic_level = fields.ForeignKey(AcademicAchievementCodeResource, 'academic_level', full=True)
+
+    class Meta:
+        queryset = TeacherPerfomanceData.objects.all()
+        resource_name = "data/teacherperfomance"
+        list_allowed_methods = ['post', 'get'] 
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
+        filtering = {
+            'created_by': ALL_WITH_RELATIONS,
+            'emis': ALL_WITH_RELATIONS}
+
+
+class LearnerPerfomanceDataResource(ModelResource):
+    """
+    POSTING DATA
+    
+    "url": "<base_url>/api/data/learnerperfomance/",
+    "body": {
+                "data": "data",
+                "created_by": "/api/data/headteacher/emis/4813/",
+                "emis": "/api/v1/school/emis/4813/"
+            }
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+
+    class Meta:
+        queryset = LearnerPerfomanceData.objects.all()
+        resource_name = "data/learnerperfomance"
+        list_allowed_methods = ['post', 'get'] 
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
+        filtering = {
+            'created_by': ALL_WITH_RELATIONS,
             'emis': ALL_WITH_RELATIONS}
 
 
@@ -86,9 +158,7 @@ class InboundSMSResource(ModelResource):
 
     POSTING DATA
     
-    "url": "<base_url>/api/data/schooldata/",
-    "method": "POST",
-    "content_type": "application/json",
+    "url": "<base_url>/api/data/sms/",
     "body": {
                 "message": "test_name",
                 "created_by": "/api/data/headteacher/1/",
