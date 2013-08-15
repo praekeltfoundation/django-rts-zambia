@@ -175,6 +175,30 @@ function GoRtsZambia() {
         return [headteacher_data, school_data];
     };
 
+    self.performance_data_teacher_collect = function(emis, id){
+        var data = {
+            "ts_number": im.get_user_answer('perf_teacher_ts_number'),
+            "gender": im.get_user_answer('perf_teacher_gender'),
+            "age": im.get_user_answer('perf_teacher_age'),
+            "years_experience": im.get_user_answer('perf_teacher_years_experience'),
+            "g2_pupils_present": im.get_user_answer('perf_teacher_g2_pupils_present'),
+            "g2_pupils_registered": im.get_user_answer('perf_teacher_g2_pupils_registered'),
+            "classroom_environment_score": im.get_user_answer('perf_teacher_classroom_environment_score'),
+            "t_l_materials": im.get_user_answer('perf_teacher_t_l_materials'),
+            "pupils_materials_score": im.get_user_answer('perf_teacher_pupils_materials_score'),
+            "pupils_books_number": im.get_user_answer('perf_teacher_pupils_books_number'),
+            "reading_lesson": im.get_user_answer('perf_teacher_reading_lesson'),
+            "pupil_engagement_score": im.get_user_answer('perf_teacher_pupil_engagement_score'),
+            "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
+            "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
+            "academic_level": im.get_user_answer('perf_teacher_academic_level'),
+            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+        
+        return data;
+    };
+
     self.get_contact = function(im){
         var p = im.api_request('contacts.get_or_create', {
             delivery_class: 'ussd',
@@ -245,6 +269,30 @@ function GoRtsZambia() {
         return p;
     };
 
+    self.cms_performance_teacher = function(im) {
+        var p = self.get_contact(im);
+        p.add_callback(function(result) {
+            var emis = result.contact["extras-rts_emis"];
+            var id = result.contact["extras-rts_id"];
+            // Need to ensure no double save
+            var contact_key = result.contact.key;
+            if (result.contact["extras-rts_last_save_performance_teacher"] != im.get_user_answer('perf_teacher_ts_number')) {
+                var data = self.performance_data_teacher_collect(emis, id);
+                var p_tp = self.cms_post("data/teacherperformance/", data);
+                p_tp.add_callback(function(contact_key) {
+                    return im.api_request('contacts.update_extras', {
+                        key: result.contact.key,
+                        fields: {
+                            "rts_last_save_performance_teacher": im.get_user_answer('perf_teacher_ts_number')
+                        }
+                    });
+                });
+                return p_tp;
+            }
+        });
+        return p;
+    };
+
     // END CMS Interactions
 
     // START Shared creators
@@ -287,18 +335,41 @@ function GoRtsZambia() {
     // END Shared creators
 
     self.add_creator('initial_state', function(state_name, im) {
-        return new ChoiceState(
-            state_name,
-            function(choice) {
-                return choice.value;
-            },
-            "Welcome to the Gateway! What would you like to do?",
-            [
-                new Choice("reg_emis", "Register as a new user"),
-                new Choice("manage_change_emis", "Change my school"),
-                new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
-            ]
-        );
+        var p = self.get_contact(im);
+
+        p.add_callback(function(result) {
+            if (result.contact["extras-rts_id"] === undefined){
+                // unrecognised user
+                return new ChoiceState(
+                    state_name,
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "Welcome to the Gateway! What would you like to do?",
+                    [
+                        new Choice("reg_emis", "Register as a new user"),
+                        new Choice("manage_change_emis", "Change my school"),
+                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
+                    ]
+                );
+            } else {
+                // recognised user
+                return new ChoiceState(
+                    state_name,
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "Welcome to SPERT. What would you like to do?",
+                    [
+                        new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
+                        new Choice("perf_learner_total_boys", "Add a learner performance report"),
+                        new Choice("manage_change_emis", "Change my school")
+                        
+                    ]
+                );
+            }
+        });
+        return p;
     });
 
     self.add_state(new FreeText(
@@ -541,9 +612,220 @@ function GoRtsZambia() {
         return p;
     });
 
+    /////////////////////////////////////////////////////////////////
+    // Start of Performance Management - Teachers
+    /////////////////////////////////////////////////////////////////
+
+    self.add_state(new FreeText(
+        "perf_teacher_ts_number",
+        "perf_teacher_gender",
+        "Please enter the teacher's TS number",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for the teacher's TS number"
+    ));
+
+    self.add_state(new ChoiceState(
+        'perf_teacher_gender',
+        'perf_teacher_age',
+        "Please enter 1 if the teacher is a man or 2 if she is a woman",
+        [
+            new Choice("male", "Male"),
+            new Choice("female", "Female")
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_age",
+        "perf_teacher_academic_level",
+        "Please enter the teacher's age in years e.g. 26",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for the teachers age'
+    ));
+
+    self.add_state(new ChoiceState(
+        "perf_teacher_academic_level",
+        "perf_teacher_years_experience",
+        "What is the teacher's highest education level?",
+        [
+            new Choice("1", "Gr 7"),
+            new Choice("2", "Gr 9"),
+            new Choice("3", "Gr 12"),
+            new Choice("4", "PTC"),
+            new Choice("5", "PTD"),
+            new Choice("6", "Dip Ed"),
+            new Choice("7", "Other diploma"),
+            new Choice("8", "BA Degree"),
+            new Choice("9", "MA Degree"),
+            new Choice("10", "Other"),
+        ]
+    ));
+
+    self.add_state(new ChoiceState(
+        "perf_teacher_years_experience",
+        "perf_teacher_g2_pupils_present",
+        "How many years of teaching experience does this teacher have?",
+        [
+            new Choice("0-3", "0 - 3 years"),
+            new Choice("4-8", "4 - 8 years"),
+            new Choice("9-12", "9 - 12 years"),
+            new Choice("13+", "13 years or more"),
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_g2_pupils_present",
+        "perf_teacher_g2_pupils_registered",
+        "How many children were PRESENT during the observed lesson?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for pupils present'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_g2_pupils_registered",
+        "perf_teacher_classroom_environment_score",
+        "How many children are ENROLLED in the Grade 2 class that was observed?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for pupils enrolled'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_classroom_environment_score",
+        "perf_teacher_t_l_materials",
+        "Enter the subtotal that the teacher achieved during the classroom " +
+            "observation for Section 2 (Classroom Environment)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for classroom environment'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_t_l_materials",
+        "perf_teacher_pupils_books_number",
+        "Enter the subtotal that the teacher achieved during the classroom " +
+            "observation for Section 3 (Teaching and Learning Materials)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        'Please provide a number value for Teaching and Learning Materials'
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_pupils_books_number",
+        "perf_teacher_pupils_materials_score",
+        "Enter the number of learners' books (text books) for literacy that were " +
+            "available in the classroom during the lesson observation.",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for number of learners' books"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_pupils_materials_score",
+        "perf_teacher_reading_lesson",
+        "Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 4 (Learner Materials)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for learner materials subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_reading_lesson",
+        "perf_teacher_pupil_engagement_score",
+        "Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 5 (Time on Task and Reading Practice)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for time on task subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_pupil_engagement_score",
+        "perf_teacher_attitudes_and_beliefs",
+        "Enter the subtotal that the teacher achieved during the classroom observation " +
+            "for Section 6 (Learner Engagement)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for learner engagement subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_attitudes_and_beliefs",
+        "perf_teacher_training_subtotal",
+        "Enter the subtotal that the teacher achieved during the interview on Section " +
+            "7.1. (Teacher Attitudes and Beliefs)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for teacher attitudes and beliefs subtotal"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_training_subtotal",
+        "perf_teacher_completed",
+        "Enter the subtotal that the teacher achieved during the interview on Section " +
+            "7.2. (Teacher Training)",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for teacher training interview subtotal"
+    ));
+
+    self.add_creator('perf_teacher_completed', function(state_name, im) {
+        // Log the users data
+        var p = self.cms_performance_teacher(im);
+        // Generate the EndState
+        p.add_callback(function(result) {
+            return new ChoiceState(
+                state_name,
+                function(choice) {
+                        return choice.value;
+                    },
+                "You have successfully added and assessed this teacher. " +
+                    "What would you like to do now?",
+                [
+                    new Choice("perf_teacher_ts_number", "Add another teacher"),
+                    new Choice("initial_state", "Go back to the main menu"),
+                    new Choice("end_state", "Exit")
+                ]
+            );
+        });
+        return p;
+    });
+
+
+    /////////////////////////////////////////////////////////////////
+    // Start of Performance Management - Learners
+    /////////////////////////////////////////////////////////////////
+
     self.add_state(new EndState(
         "end_state",
-        "Thank you and bye bye!",
+        "Goodbye! Thank you for using SPERT.",
         "initial_state"
     ));
 

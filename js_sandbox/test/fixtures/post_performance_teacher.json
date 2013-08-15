@@ -1,0 +1,25 @@
+{
+    "url": "http://qa/api/data/teacherperformance/",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+        "academic_level": "3",
+        "age": "30",
+        "attitudes_and_beliefs": "17",
+        "classroom_environment_score": "10",
+        "created_by": "/api/v1/data/headteacher/2/",
+        "emis": "/api/v1/hierarchy/school/emis/1/",
+        "g2_pupils_present": "40",
+        "g2_pupils_registered": "50",
+        "gender": "female",
+        "pupil_engagement_score": "22",
+        "pupils_books_number": "90",
+        "pupils_materials_score": "75",
+        "reading_lesson": "45",
+        "t_l_materials": "5",
+        "training_subtotal": "5",
+        "ts_number": "106",
+        "years_experience": "0-3"
+    },
+    "body": {}
+}
