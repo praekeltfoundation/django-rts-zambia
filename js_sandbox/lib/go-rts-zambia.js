@@ -287,18 +287,41 @@ function GoRtsZambia() {
     // END Shared creators
 
     self.add_creator('initial_state', function(state_name, im) {
-        return new ChoiceState(
-            state_name,
-            function(choice) {
-                return choice.value;
-            },
-            "Welcome to the Gateway! What would you like to do?",
-            [
-                new Choice("reg_emis", "Register as a new user"),
-                new Choice("manage_change_emis", "Change my school"),
-                new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
-            ]
-        );
+        var p = self.get_contact(im);
+
+        p.add_callback(function(result) {
+            if (result.contact["extras-rts_id"] === undefined){
+                // unrecognised user
+                return new ChoiceState(
+                    state_name,
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "Welcome to the Gateway! What would you like to do?",
+                    [
+                        new Choice("reg_emis", "Register as a new user"),
+                        new Choice("manage_change_emis", "Change my school"),
+                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
+                    ]
+                );
+            } else {
+                // recognised user
+                return new ChoiceState(
+                    state_name,
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "Welcome! What would you like to do?",
+                    [
+                        new Choice("perf_teacher_gender", "Add and report on teacher performance"),
+                        new Choice("perf_learner_total_boys", "Report on learner performance"),
+                        new Choice("manage_change_emis", "Change my school")
+                        
+                    ]
+                );
+            }
+        });
+        return p;
     });
 
     self.add_state(new FreeText(
