@@ -175,6 +175,14 @@ function GoRtsZambia() {
         return [headteacher_data, school_data];
     };
 
+    self.get_contact = function(im){
+        var p = im.api_request('contacts.get_or_create', {
+            delivery_class: 'ussd',
+            addr: im.user_addr
+        });
+        return p;
+    };
+
     // END Shared helpers
 
     // START CMS Interactions
@@ -191,6 +199,20 @@ function GoRtsZambia() {
         p.add_callback(function(){
             var p_ht = self.cms_post("headteacher/", headteacher_data);
             return p_ht;
+        });
+        p.add_callback(function(result){
+            var fields = {
+                "rts_id": result.id,
+                "rts_emis": result.emis.emis
+            };
+            var p_c = self.get_contact(im);
+            p_c.add_callback(function(result) {
+                return im.api_request('contacts.update_extras', {
+                    key: result.contact.key,
+                    fields: fields
+                });
+            });
+            return p_c;
         });
         p.callback();
         return p;
