@@ -127,16 +127,10 @@ for worksheet_name in worksheets:
             if data[3] in data_footer or data[4] in data_footer or type(data[3]) != float:
                 output_incomplete_data.append(data)
                 continue
-            # print type(data[3]), " : ", data[3]
-            # print data
             else:
-                # print type(data[3]), " : ", data[3]
-                # print data
                 output_json.append({"pk": school_pk, "model": "hierarchy.school", "fields": {"emis": int(data[3]), "name": data[4], "zone": zone_temp_pk}})
                 school_temp.append(data[3])
                 school_pk = school_pk + 1
-
-# print output_json
 
 with open(output_file, 'w') as outfile:
         json.dump(output_json, outfile, indent=4, separators=(',', ': '))
