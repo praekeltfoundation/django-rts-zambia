@@ -7,14 +7,17 @@ from actions import export_as_csv_action
 
 class SchoolDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
 class HeadTeacherAdmin(admin.ModelAdmin):
     list_display = ["emis", "first_name", "last_name", "msisdn", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
 class TeacherPerfomanceDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "created_by", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
 class LearnerPerfomanceDataAdmin(admin.ModelAdmin):
