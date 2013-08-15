@@ -362,7 +362,7 @@ function GoRtsZambia() {
                     "Welcome to SPERT. What would you like to do?",
                     [
                         new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
-                        new Choice("perf_learner_total_boys", "Add a learner performance report"),
+                        new Choice("perf_learner_boys_total", "Add a learner performance report"),
                         new Choice("manage_change_emis", "Change my school")
                         
                     ]
@@ -821,6 +821,123 @@ function GoRtsZambia() {
 
     /////////////////////////////////////////////////////////////////
     // Start of Performance Management - Learners
+    /////////////////////////////////////////////////////////////////
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_total",
+        "perf_learner_girls_total",
+        "How many boys took part in the learner assessment?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys assessed"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_total",
+        "perf_learner_boys_phonetic_awareness",
+        "How many girls took part in the learner assessment?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls assessed"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_phonetic_awareness",
+        "perf_learner_girls_phonetic_awareness",
+        "How many boys achieved at least 4 out of 6 correct answers for Section " + 
+            "1 (Phonics and Phonemic Awareness)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 4 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_phonetic_awareness",
+        "perf_learner_boys_vocabulary",
+        "How many girls achieved at least 4 out of 6 correct answers for Section " + 
+            "1 (Phonics and Phonemic Awareness)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 4 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_vocabulary",
+        "perf_learner_girls_vocabulary",
+        "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 3 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_vocabulary",
+        "perf_learner_boys_reading_comprehension",
+        "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 3 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_reading_comprehension",
+        "perf_learner_girls_reading_comprehension",
+        "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_reading_comprehension",
+        "perf_learner_boys_writing_diction",
+        "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_writing_diction",
+        "perf_learner_girls_writing_diction",
+        "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_writing_diction",
+        "perf_learner_boys_outstanding_results",
+        "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+    ));
+
+
+    /////////////////////////////////////////////////////////////////
+    // End of Performance Management - Learners
     /////////////////////////////////////////////////////////////////
 
     self.add_state(new EndState(
