@@ -61,7 +61,7 @@ function GoRtsZambia() {
         var p = im.api_request("http.post", {
             url: url,
             headers: self.post_headers,
-            data: data
+            data: JSON.stringify(data)
         });
         p.add_callback(function(result) {
             var json = self.check_reply(result, url, 'POST', data, false);
