@@ -935,6 +935,94 @@ function GoRtsZambia() {
         "Please provide a number value for total girls achieving 2 out of 4 correct answers"
     ));
 
+    self.add_state(new FreeText(
+        "perf_learner_boys_outstanding_results",
+        "perf_learner_girls_outstanding_results",
+        "In total, how many boys achieved 16 out of 20 or more?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 16 out of 20 or more"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_outstanding_results",
+        "perf_learner_boys_desirable_results",
+        "In total, how many girls achieved 16 out of 20 or more?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 16 out of 20 or more"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_desirable_results",
+        "perf_learner_girls_desirable_results",
+        "In total, how many boys achieved between 12 and 15 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving between 12 and 15 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_desirable_results",
+        "perf_learner_boys_minimum_results",
+        "In total, how many girls achieved between 12 and 15 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving between 12 and 15 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_minimum_results",
+        "perf_learner_girls_minimum_results",
+        "In total, how many boys achieved between 8 and 11 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving between 8 and 11 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_minimum_results",
+        "perf_learner_boys_below_minimum_results",
+        "In total, how many girls achieved between 8 and 11 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving between 8 and 11 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_below_minimum_results",
+        "perf_learner_girls_below_minimum_results",
+        "In total, how many boys achieved between 0 and 7 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving between 0 and 7 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_below_minimum_results",
+        "perf_learner_completed",
+        "In total, how many girls achieved between 0 and 7 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving between 0 and 7 out of 20"
+    ));
+
 
     /////////////////////////////////////////////////////////////////
     // End of Performance Management - Learners
