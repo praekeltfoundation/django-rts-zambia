@@ -199,6 +199,40 @@ function GoRtsZambia() {
         return data;
     };
 
+    self.performance_data_learner_collect = function(emis, id){
+        var data_boys = {
+            "gender": "boys",
+            "total_number_pupils": im.get_user_answer('perf_learner_boys_total'),
+            "phonetic_awareness": im.get_user_answer('perf_learner_boys_phonetic_awareness'),
+            "vocabulary": im.get_user_answer('perf_learner_boys_vocabulary'),
+            "reading_comprehension": im.get_user_answer('perf_learner_boys_reading_comprehension'),
+            "writing_diction": im.get_user_answer('perf_learner_boys_writing_diction'),
+            "outstanding_results": im.get_user_answer('perf_learner_boys_outstanding_results'),
+            "desirable_results": im.get_user_answer('perf_learner_boys_desirable_results'),
+            "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
+            "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
+            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+
+        var data_girls = {
+            "gender": "girls",
+            "total_number_pupils": im.get_user_answer('perf_learner_girls_total'),
+            "phonetic_awareness": im.get_user_answer('perf_learner_girls_phonetic_awareness'),
+            "vocabulary": im.get_user_answer('perf_learner_girls_vocabulary'),
+            "reading_comprehension": im.get_user_answer('perf_learner_girls_reading_comprehension'),
+            "writing_diction": im.get_user_answer('perf_learner_girls_writing_diction'),
+            "outstanding_results": im.get_user_answer('perf_learner_girls_outstanding_results'),
+            "desirable_results": im.get_user_answer('perf_learner_girls_desirable_results'),
+            "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
+            "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
+            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+        
+        return [data_boys, data_girls];
+    };
+
     self.get_contact = function(im){
         var p = im.api_request('contacts.get_or_create', {
             delivery_class: 'ussd',
@@ -288,6 +322,36 @@ function GoRtsZambia() {
                     });
                 });
                 return p_tp;
+            }
+        });
+        return p;
+    };
+
+    self.cms_performance_learner = function(im) {
+        var p = self.get_contact(im);
+        p.add_callback(function(result) {
+            var emis = result.contact["extras-rts_emis"];
+            var id = result.contact["extras-rts_id"];
+            var data = self.performance_data_learner_collect(emis, id);
+            var data_boys = data[0];
+            var data_girls = data[1];
+            // Need to ensure no double save
+            var contact_key = result.contact.key;
+            if (result.contact["extras-rts_last_save_performance_learner"] != 'true') {
+                var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
+                p_lp_boys.add_callback(function(){
+                    var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
+                    p_lp_girls.add_callback(function(contact_key) {
+                        return im.api_request('contacts.update_extras', {
+                            key: result.contact.key,
+                            fields: {
+                                "rts_last_save_performance_learner": 'true'
+                            }
+                        });
+                    });
+                    return p_lp_girls;
+                });
+                return p_lp_boys;
             }
         });
         return p;
@@ -1022,6 +1086,26 @@ function GoRtsZambia() {
         },
         "Please provide a number value for total girls achieving between 0 and 7 out of 20"
     ));
+
+    self.add_creator('perf_learner_completed', function(state_name, im) {
+        // Log the users data
+        var p = self.cms_performance_learner(im);
+        // Generate the EndState
+        p.add_callback(function(result) {
+            return new ChoiceState(
+                state_name,
+                function(choice) {
+                        return choice.value;
+                    },
+                "Congratulations. You have finished reporting on the learner assessment.",
+                [
+                    new Choice("initial_state", "Go back to the main menu"),
+                    new Choice("end_state", "Exit")
+                ]
+            );
+        });
+        return p;
+    });
 
 
     /////////////////////////////////////////////////////////////////

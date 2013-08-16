@@ -25,6 +25,8 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_headteacher_zonal.json',
     'test/fixtures/post_registration_school.json',
     'test/fixtures/post_performance_teacher.json',
+    'test/fixtures/post_performance_learner_boys.json',
+    'test/fixtures/post_performance_learner_girls.json',
 ];
 
 var tester;
@@ -1816,7 +1818,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_total',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52'
+                perf_learner_boys_total: '52'
             }
         };
         var p = tester.check_state({
@@ -1851,7 +1853,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42'
             }
         };
@@ -1869,7 +1871,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42'
             }
         };
@@ -1888,7 +1890,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31'
             }
@@ -1907,7 +1909,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31'
             }
@@ -1927,7 +1929,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32'
@@ -1947,7 +1949,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32'
@@ -1968,7 +1970,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -1989,7 +1991,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2011,7 +2013,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2033,7 +2035,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2056,7 +2058,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2079,7 +2081,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2103,7 +2105,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_writing_diction',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2127,7 +2129,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_writing_diction',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2152,7 +2154,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_writing_diction',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2177,7 +2179,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_writing_diction',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2202,7 +2204,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_outstanding_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2228,7 +2230,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_outstanding_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2254,7 +2256,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_outstanding_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2281,7 +2283,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_outstanding_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2308,7 +2310,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_desirable_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2336,7 +2338,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_desirable_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2364,7 +2366,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_desirable_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2393,7 +2395,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_desirable_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2422,7 +2424,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2453,7 +2455,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2483,7 +2485,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2516,7 +2518,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2547,7 +2549,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_below_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2579,7 +2581,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_boys_below_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2611,7 +2613,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_total_boys: '52',
+                perf_learner_boys_total: '52',
                 perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
@@ -2639,4 +2641,156 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    it("entering teacher training subtotal should ask show success and options", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_boys_writing_diction: '37',
+                perf_learner_girls_writing_diction: '38',
+                perf_learner_boys_outstanding_results: '39',
+                perf_learner_girls_outstanding_results: '40',
+                perf_learner_boys_desirable_results: '41',
+                perf_learner_girls_desirable_results: '42',
+                perf_learner_boys_minimum_results: '43',
+                perf_learner_girls_minimum_results: '44',
+                perf_learner_boys_below_minimum_results: '45'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "46",
+            next_state: "perf_learner_completed",
+            response: "^Congratulations. You have finished reporting on the learner assessment.[^]" +
+                "1. Go back to the main menu[^]" +
+                "2. Exit$"
+        });
+        p.then(done, done);
+    });
+});
+
+describe("When using the USSD line as an recognised MSISDN - completed Learner review", function() {
+
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 2,
+                    "rts_emis": 1,
+                    "rts_last_save_performance_teacher": "106",
+                    "rts_last_save_performance_learner": "true"
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    it("selecting to go to main menu should show it", function (done) {
+        var user = {
+            current_state: 'perf_learner_completed',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_boys_writing_diction: '37',
+                perf_learner_girls_writing_diction: '38',
+                perf_learner_boys_outstanding_results: '39',
+                perf_learner_girls_outstanding_results: '40',
+                perf_learner_boys_desirable_results: '41',
+                perf_learner_girls_desirable_results: '42',
+                perf_learner_boys_minimum_results: '43',
+                perf_learner_girls_minimum_results: '44',
+                perf_learner_boys_below_minimum_results: '45',
+                perf_learner_girls_below_minimum_results: '46'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "initial_state",
+            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
+                    "1. Add a classroom observation report[^]" +
+                    "2. Add a learner performance report[^]" +
+                    "3. Change my school$"
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to go to exit should thank and close", function (done) {
+        var user = {
+            current_state: 'perf_learner_completed',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_boys_writing_diction: '37',
+                perf_learner_girls_writing_diction: '38',
+                perf_learner_boys_outstanding_results: '39',
+                perf_learner_girls_outstanding_results: '40',
+                perf_learner_boys_desirable_results: '41',
+                perf_learner_girls_desirable_results: '42',
+                perf_learner_boys_minimum_results: '43',
+                perf_learner_girls_minimum_results: '44',
+                perf_learner_boys_below_minimum_results: '45',
+                perf_learner_girls_below_minimum_results: '46'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "end_state",
+            response: "^Goodbye! Thank you for using SPERT.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
 });
