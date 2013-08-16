@@ -249,31 +249,26 @@ function GoRtsZambia() {
         var data = self.registration_data_collect();
         var headteacher_data = data[0];
         var school_data = data[1];
-        var p = new Promise();
-        p.add_callback(function(){
-            var p_s = self.cms_post("school/", school_data);
-            return p_s;
-        });
-        p.add_callback(function(){
+        var p_school = self.cms_post("school/", school_data);
+        p_school.add_callback(function(){
             var p_ht = self.cms_post("headteacher/", headteacher_data);
+            p_ht.add_callback(function(result){
+                var fields = {
+                    "rts_id": result.id,
+                    "rts_emis": result.emis.emis
+                };
+                var p_c = self.get_contact(im);
+                p_c.add_callback(function(result) {
+                    return im.api_request('contacts.update_extras', {
+                        key: result.contact.key,
+                        fields: fields
+                    });
+                });
+                return p_c;
+            });
             return p_ht;
         });
-        p.add_callback(function(result){
-            var fields = {
-                "rts_id": result.id,
-                "rts_emis": result.emis.emis
-            };
-            var p_c = self.get_contact(im);
-            p_c.add_callback(function(result) {
-                return im.api_request('contacts.update_extras', {
-                    key: result.contact.key,
-                    fields: fields
-                });
-            });
-            return p_c;
-        });
-        p.callback();
-        return p;
+        return p_school;
     };
 
     self.cms_registration_update_msisdn = function(im) {
