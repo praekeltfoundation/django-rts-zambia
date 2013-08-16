@@ -241,6 +241,17 @@ function GoRtsZambia() {
         return p;
     };
 
+    self.clear_contact_extra = function(extra){
+        var p = self.get_contact(im);
+        p.add_callback(function(result) {
+            return im.api_request('contacts.update_extras', {
+                key: result.contact.key,
+                fields: {extra: ""}
+            });
+        });
+        return p;
+    };
+
     // END Shared helpers
 
     // START CMS Interactions
@@ -683,7 +694,13 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for the teacher's TS number"
+        "Please provide a number value for the teacher's TS number",
+        {
+            on_enter: function(){
+                var p = self.clear_contact_extra("rts_last_save_performance_teacher");
+                return p;
+            }
+        }
     ));
 
     self.add_state(new ChoiceState(
@@ -890,7 +907,13 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys assessed"
+        "Please provide a number value for total boys assessed",
+        {
+            on_enter: function(){
+                var p = self.clear_contact_extra("rts_last_save_performance_learner");
+                return p;
+            }
+        }
     ));
 
     self.add_state(new FreeText(
