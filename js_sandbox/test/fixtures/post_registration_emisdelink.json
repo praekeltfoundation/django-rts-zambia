@@ -1,5 +1,5 @@
 {
-    "url": "http://qa/api/registration/emisdelink/",
+    "url": "http://qa/api/v1/registration/emisdelink/",
     "method": "POST",
     "content_type": "application/json",
     "data": {"emis": 1},

@@ -1,5 +1,5 @@
 {
-    "url": "http://qa/api/headteacher/",
+    "url": "http://qa/api/v1/data/headteacher/",
     "method": "POST",
     "content_type": "application/json",
     "data": {
