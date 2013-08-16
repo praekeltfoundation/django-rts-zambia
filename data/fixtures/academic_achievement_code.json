@@ -1,1 +1,72 @@
-[{"pk": 1, "model": "data.academicachievementcode", "fields": {"achievement": "Primary School"}}, {"pk": 2, "model": "data.academicachievementcode", "fields": {"achievement": "Junior Secondary School"}}, {"pk": 3, "model": "data.academicachievementcode", "fields": {"achievement": "Secondary School"}}, {"pk": 4, "model": "data.academicachievementcode", "fields": {"achievement": "Primary School Teacher Certificate"}}, {"pk": 5, "model": "data.academicachievementcode", "fields": {"achievement": "Primary School Teacher Diploma"}}, {"pk": 6, "model": "data.academicachievementcode", "fields": {"achievement": "Secondary School Teacher Diploma"}}, {"pk": 7, "model": "data.academicachievementcode", "fields": {"achievement": "Diploma"}}, {"pk": 8, "model": "data.academicachievementcode", "fields": {"achievement": "Bachelors"}}, {"pk": 9, "model": "data.academicachievementcode", "fields": {"achievement": "Masters"}}, {"pk": 10, "model": "data.academicachievementcode", "fields": {"achievement": "Other"}}]
+[
+    {
+        "pk": 1,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "Gr 7"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "Gr 9"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "Gr 12"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "PTC"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "PTD"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "Dip Ed"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "Other diploma"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "BA Degree"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "MA Degree"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "data.academicachievementcode",
+        "fields": {
+            "achievement": "Other"
+        }
+    }
+]
