@@ -1,0 +1,20 @@
+{
+    "url": "http://qa/api/data/learnerperformance/",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+        "below_minimum_results": "46",
+        "created_by": "/api/v1/data/headteacher/2/",
+        "desirable_results": "42",
+        "emis": "/api/v1/hierarchy/school/emis/1/",
+        "gender": "girls",
+        "minimum_results": "44",
+        "outstanding_results": "40",
+        "phonetic_awareness": "32",
+        "reading_comprehension": "36",
+        "total_number_pupils": "42",
+        "vocabulary": "34",
+        "writing_diction": "38"
+    },
+    "body": {}
+}

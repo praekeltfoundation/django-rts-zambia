@@ -199,10 +199,55 @@ function GoRtsZambia() {
         return data;
     };
 
+    self.performance_data_learner_collect = function(emis, id){
+        var data_boys = {
+            "gender": "boys",
+            "total_number_pupils": im.get_user_answer('perf_learner_boys_total'),
+            "phonetic_awareness": im.get_user_answer('perf_learner_boys_phonetic_awareness'),
+            "vocabulary": im.get_user_answer('perf_learner_boys_vocabulary'),
+            "reading_comprehension": im.get_user_answer('perf_learner_boys_reading_comprehension'),
+            "writing_diction": im.get_user_answer('perf_learner_boys_writing_diction'),
+            "outstanding_results": im.get_user_answer('perf_learner_boys_outstanding_results'),
+            "desirable_results": im.get_user_answer('perf_learner_boys_desirable_results'),
+            "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
+            "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
+            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+
+        var data_girls = {
+            "gender": "girls",
+            "total_number_pupils": im.get_user_answer('perf_learner_girls_total'),
+            "phonetic_awareness": im.get_user_answer('perf_learner_girls_phonetic_awareness'),
+            "vocabulary": im.get_user_answer('perf_learner_girls_vocabulary'),
+            "reading_comprehension": im.get_user_answer('perf_learner_girls_reading_comprehension'),
+            "writing_diction": im.get_user_answer('perf_learner_girls_writing_diction'),
+            "outstanding_results": im.get_user_answer('perf_learner_girls_outstanding_results'),
+            "desirable_results": im.get_user_answer('perf_learner_girls_desirable_results'),
+            "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
+            "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
+            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+        
+        return [data_boys, data_girls];
+    };
+
     self.get_contact = function(im){
         var p = im.api_request('contacts.get_or_create', {
             delivery_class: 'ussd',
             addr: im.user_addr
+        });
+        return p;
+    };
+
+    self.clear_contact_extra = function(extra){
+        var p = self.get_contact(im);
+        p.add_callback(function(result) {
+            return im.api_request('contacts.update_extras', {
+                key: result.contact.key,
+                fields: {extra: ""}
+            });
         });
         return p;
     };
@@ -215,31 +260,26 @@ function GoRtsZambia() {
         var data = self.registration_data_collect();
         var headteacher_data = data[0];
         var school_data = data[1];
-        var p = new Promise();
-        p.add_callback(function(){
-            var p_s = self.cms_post("school/", school_data);
-            return p_s;
-        });
-        p.add_callback(function(){
+        var p_school = self.cms_post("school/", school_data);
+        p_school.add_callback(function(){
             var p_ht = self.cms_post("headteacher/", headteacher_data);
+            p_ht.add_callback(function(result){
+                var fields = {
+                    "rts_id": result.id,
+                    "rts_emis": result.emis.emis
+                };
+                var p_c = self.get_contact(im);
+                p_c.add_callback(function(result) {
+                    return im.api_request('contacts.update_extras', {
+                        key: result.contact.key,
+                        fields: fields
+                    });
+                });
+                return p_c;
+            });
             return p_ht;
         });
-        p.add_callback(function(result){
-            var fields = {
-                "rts_id": result.id,
-                "rts_emis": result.emis.emis
-            };
-            var p_c = self.get_contact(im);
-            p_c.add_callback(function(result) {
-                return im.api_request('contacts.update_extras', {
-                    key: result.contact.key,
-                    fields: fields
-                });
-            });
-            return p_c;
-        });
-        p.callback();
-        return p;
+        return p_school;
     };
 
     self.cms_registration_update_msisdn = function(im) {
@@ -288,6 +328,36 @@ function GoRtsZambia() {
                     });
                 });
                 return p_tp;
+            }
+        });
+        return p;
+    };
+
+    self.cms_performance_learner = function(im) {
+        var p = self.get_contact(im);
+        p.add_callback(function(result) {
+            var emis = result.contact["extras-rts_emis"];
+            var id = result.contact["extras-rts_id"];
+            var data = self.performance_data_learner_collect(emis, id);
+            var data_boys = data[0];
+            var data_girls = data[1];
+            // Need to ensure no double save
+            var contact_key = result.contact.key;
+            if (result.contact["extras-rts_last_save_performance_learner"] != 'true') {
+                var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
+                p_lp_boys.add_callback(function(){
+                    var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
+                    p_lp_girls.add_callback(function(contact_key) {
+                        return im.api_request('contacts.update_extras', {
+                            key: result.contact.key,
+                            fields: {
+                                "rts_last_save_performance_learner": 'true'
+                            }
+                        });
+                    });
+                    return p_lp_girls;
+                });
+                return p_lp_boys;
             }
         });
         return p;
@@ -362,7 +432,7 @@ function GoRtsZambia() {
                     "Welcome to SPERT. What would you like to do?",
                     [
                         new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
-                        new Choice("perf_learner_total_boys", "Add a learner performance report"),
+                        new Choice("perf_learner_boys_total", "Add a learner performance report"),
                         new Choice("manage_change_emis", "Change my school")
                         
                     ]
@@ -624,7 +694,13 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for the teacher's TS number"
+        "Please provide a number value for the teacher's TS number",
+        {
+            on_enter: function(){
+                var p = self.clear_contact_extra("rts_last_save_performance_teacher");
+                return p;
+            }
+        }
     ));
 
     self.add_state(new ChoiceState(
@@ -821,6 +897,237 @@ function GoRtsZambia() {
 
     /////////////////////////////////////////////////////////////////
     // Start of Performance Management - Learners
+    /////////////////////////////////////////////////////////////////
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_total",
+        "perf_learner_girls_total",
+        "How many boys took part in the learner assessment?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys assessed",
+        {
+            on_enter: function(){
+                var p = self.clear_contact_extra("rts_last_save_performance_learner");
+                return p;
+            }
+        }
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_total",
+        "perf_learner_boys_phonetic_awareness",
+        "How many girls took part in the learner assessment?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls assessed"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_phonetic_awareness",
+        "perf_learner_girls_phonetic_awareness",
+        "How many boys achieved at least 4 out of 6 correct answers for Section " + 
+            "1 (Phonics and Phonemic Awareness)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 4 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_phonetic_awareness",
+        "perf_learner_boys_vocabulary",
+        "How many girls achieved at least 4 out of 6 correct answers for Section " + 
+            "1 (Phonics and Phonemic Awareness)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 4 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_vocabulary",
+        "perf_learner_girls_vocabulary",
+        "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 3 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_vocabulary",
+        "perf_learner_boys_reading_comprehension",
+        "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 3 out of 6 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_reading_comprehension",
+        "perf_learner_girls_reading_comprehension",
+        "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_reading_comprehension",
+        "perf_learner_boys_writing_diction",
+        "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_writing_diction",
+        "perf_learner_girls_writing_diction",
+        "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_writing_diction",
+        "perf_learner_boys_outstanding_results",
+        "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_outstanding_results",
+        "perf_learner_girls_outstanding_results",
+        "In total, how many boys achieved 16 out of 20 or more?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving 16 out of 20 or more"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_outstanding_results",
+        "perf_learner_boys_desirable_results",
+        "In total, how many girls achieved 16 out of 20 or more?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving 16 out of 20 or more"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_desirable_results",
+        "perf_learner_girls_desirable_results",
+        "In total, how many boys achieved between 12 and 15 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving between 12 and 15 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_desirable_results",
+        "perf_learner_boys_minimum_results",
+        "In total, how many girls achieved between 12 and 15 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving between 12 and 15 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_minimum_results",
+        "perf_learner_girls_minimum_results",
+        "In total, how many boys achieved between 8 and 11 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving between 8 and 11 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_minimum_results",
+        "perf_learner_boys_below_minimum_results",
+        "In total, how many girls achieved between 8 and 11 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving between 8 and 11 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_boys_below_minimum_results",
+        "perf_learner_girls_below_minimum_results",
+        "In total, how many boys achieved between 0 and 7 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total boys achieving between 0 and 7 out of 20"
+    ));
+
+    self.add_state(new FreeText(
+        "perf_learner_girls_below_minimum_results",
+        "perf_learner_completed",
+        "In total, how many girls achieved between 0 and 7 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(parseInt(content));
+        },
+        "Please provide a number value for total girls achieving between 0 and 7 out of 20"
+    ));
+
+    self.add_creator('perf_learner_completed', function(state_name, im) {
+        // Log the users data
+        var p = self.cms_performance_learner(im);
+        // Generate the EndState
+        p.add_callback(function(result) {
+            return new ChoiceState(
+                state_name,
+                function(choice) {
+                        return choice.value;
+                    },
+                "Congratulations. You have finished reporting on the learner assessment.",
+                [
+                    new Choice("initial_state", "Go back to the main menu"),
+                    new Choice("end_state", "Exit")
+                ]
+            );
+        });
+        return p;
+    });
+
+
+    /////////////////////////////////////////////////////////////////
+    // End of Performance Management - Learners
     /////////////////////////////////////////////////////////////////
 
     self.add_state(new EndState(
