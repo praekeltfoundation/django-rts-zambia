@@ -38,14 +38,15 @@ Head Teacher
 
 - `<base_url>/api/v1/data/headteacher/`
 - `<base_url>/api/v1/data/headteacher/<id>/`
-- `<base_url>/api/v1/data/headteacher/emis/<emis>/` (headteacher by emis)
+- `<base_url>/api/v1/data/headteacher/emis/<emis>/` (to be used to post data)
+- `<base_url>/api/v1/data/headteacher/?emis__emis=4817` (filter for specific teacher emis [GET])
 
 School Data
 
 - `<base_url>/api/v1/data/schooldata/`
 - `<base_url>/api/v1/data/schooldata/<id>/`
 
-Academic Achievemnet Code
+Academic Achievement Code
 
 - `<base_url>/api/v1/data/achievement/`
 - `<base_url>/api/v1/data/achievement/<id>/`
