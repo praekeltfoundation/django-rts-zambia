@@ -425,7 +425,7 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to the Gateway! What would you like to do?",
+                    "Welcome to SPERT. What would you like to do?",
                     [
                         new Choice("reg_emis", "Register as a new user"),
                         new Choice("manage_change_emis", "Change my school"),
@@ -455,19 +455,19 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_emis",
         "reg_school_name",
-        "What is your school EMIS number?"
+        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
         "manage_change_msisdn_emis_lookup",
         "manage_change_msisdn_confirm",
-        "What is your school EMIS number?"
+        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
         "manage_change_emis",
         "reg_school_name",
-        "What is your school EMIS number?"
+        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
     ));
 
     self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
@@ -508,7 +508,7 @@ function GoRtsZambia() {
                     return new FreeText(
                         state_name,
                         "reg_first_name",
-                        "What is your school name?"
+                        "Please enter the name of your school, e.g. Kapililonga"
                     );
                 });
                 return p;
@@ -516,7 +516,7 @@ function GoRtsZambia() {
                 return new FreeText(
                     state_name,
                     "reg_first_name",
-                    "What is your school name?"
+                    "Please enter the name of your school, e.g. Kapililonga"
                 );
             }
         } else {
@@ -546,19 +546,20 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_first_name",
         "reg_surname",
-        "What is your name?"
+        "Please enter your FIRST name."
     ));
 
     self.add_state(new FreeText(
         "reg_surname",
         "reg_date_of_birth",
-        "What is your surname?"
+        "Now please enter your SURNAME."
     ));
 
     self.add_state(new FreeText(
         "reg_date_of_birth",
         "reg_gender",
-        "What is your date of birth? (example 21071980)",
+        "Please enter your date of birth. Start with the day, followed by " +
+            "the month and year, e.g. 27111980",
         function(content) {
             // check that the value provided is date format we expect
             return self.check_and_parse_date(content);
@@ -569,10 +570,10 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         'reg_gender',
         'reg_school_classrooms',
-        "What is your gender?",
+        "Enter 1 if you are a woman or 2 if you are a man.",
         [
-            new Choice("female", "Female"),
-            new Choice("male", "Male")
+            new Choice("female", "Woman"),
+            new Choice("male", "Man")
         ]
     ));
 
@@ -591,7 +592,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_school_teachers",
         "reg_school_teachers_g1",
-        "How many teachers in total do you have in your school?",
+        "How many teachers are presently working in your school, including the head teacher?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
@@ -602,7 +603,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_school_teachers_g1",
         "reg_school_teachers_g2",
-        "How many teachers teach G1 local language literacy?",
+        "How many teachers teach Grade 1 local language?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
@@ -613,7 +614,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_school_teachers_g2",
         "reg_school_students_g2_boys",
-        "How many teachers teach G2 local language literacy?",
+        "How many teachers teach Grade 2 local language?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
@@ -624,23 +625,23 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_school_students_g2_boys",
         "reg_school_students_g2_girls",
-        "Total number of G2 boys registered/enrolled?",
+        "How many boys are ENROLLED in Grade 2 at your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for total number of G2 boys registered/enrolled'
+        'Please provide a number value for total number of G2 boys enrolled'
     ));
 
     self.add_state(new FreeText(
         "reg_school_students_g2_girls",
         "reg_zonal_head",
-        "Total number of G2 girls registered/enrolled?",
+        "How many girls are ENROLLED in Grade 2 at your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for total number of G2 girls registered/enrolled'
+        'Please provide a number value for total number of G2 girls enrolled'
     ));
 
     self.add_state(new ChoiceState(
@@ -648,7 +649,7 @@ function GoRtsZambia() {
         function(choice) {
             return choice.value;
         },
-        "Are you a Zonal Head?",
+        "Are you a Zonal Head Teacher?",
         [
             new Choice("reg_thanks_zonal_head", "Yes"),
             new Choice("reg_zonal_head_name", "No")
@@ -658,7 +659,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_zonal_head_name",
         "reg_thanks_head_teacher",
-        "What is the name and surname of your Zonal Head?"
+        "Please enter the name and surname of your ZONAL HEAD TEACHER."
     ));
 
     self.add_creator('reg_thanks_head_teacher', function(state_name, im) {

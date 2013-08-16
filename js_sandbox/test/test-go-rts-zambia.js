@@ -91,7 +91,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Gateway! What would you like to do\\?[^]" +
+            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
                     "1. Register as a new user[^]" +
                     "2. Change my school[^]" +
                     "3. Change my primary mobile number$"
@@ -107,7 +107,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_emis",
-            response: "^What is your school EMIS number\\?$"
+            response: "^Please enter your school's EMIS number. " +
+                "This should have 4 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -123,7 +124,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "0001",
             next_state: "reg_school_name",
-            response: "^What is your school name\\?$"
+            response: "^Please enter the name of your school, e.g. Kapililonga$"
         });
         p.then(done, done);
     });
@@ -179,7 +180,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_emis",
-            response: "^What is your school EMIS number\\?$"
+            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -196,7 +197,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "School One",
             next_state: "reg_first_name",
-            response: "^What is your name\\?$"
+            response: "^Please enter your FIRST name.$"
         });
         p.then(done, done);
     });
@@ -214,7 +215,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "Jack",
             next_state: "reg_surname",
-            response: "^What is your surname\\?$"
+            response: "^Now please enter your SURNAME.$"
         });
         p.then(done, done);
     });
@@ -233,7 +234,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "Black",
             next_state: "reg_date_of_birth",
-            response: "^What is your date of birth\\? \\(example 21071980\\)$"
+            response: "^Please enter your date of birth. Start with the day, followed by " +
+                "the month and year, e.g. 27111980$"
         });
         p.then(done, done);
     });
@@ -253,9 +255,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "11091980",
             next_state: "reg_gender",
-            response: "^What is your gender\\?[^]" +
-            "1. Female[^]" +
-            "2. Male$"
+            response: "^Enter 1 if you are a woman or 2 if you are a man.[^]" +
+            "1. Woman[^]" +
+            "2. Man$"
         });
         p.then(done, done);
     });
@@ -318,7 +320,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "5",
             next_state: "reg_school_teachers",
-            response: "^How many teachers in total do you have in your school\\?$"
+            response: "^How many teachers are presently working in your school, including " +
+                "the head teacher\\?$"
         });
         p.then(done, done);
     });
@@ -363,7 +366,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "5",
             next_state: "reg_school_teachers_g1",
-            response: "^How many teachers teach G1 local language literacy\\?$"
+            response: "^How many teachers teach Grade 1 local language\\?$"
         });
         p.then(done, done);
     });
@@ -410,7 +413,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_school_teachers_g2",
-            response: "^How many teachers teach G2 local language literacy\\?$"
+            response: "^How many teachers teach Grade 2 local language\\?$"
         });
         p.then(done, done);
     });
@@ -459,7 +462,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_school_students_g2_boys",
-            response: "^Total number of G2 boys registered/enrolled\\?$"
+            response: "^How many boys are ENROLLED in Grade 2 at your school\\?$"
         });
         p.then(done, done);
     });
@@ -510,7 +513,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "10",
             next_state: "reg_school_students_g2_girls",
-            response: "^Total number of G2 girls registered/enrolled\\?$"
+            response: "^How many girls are ENROLLED in Grade 2 at your school\\?$"
         });
         p.then(done, done);
     });
@@ -536,7 +539,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "ten",
             next_state: "reg_school_students_g2_boys",
-            response: "^Please provide a number value for total number of G2 boys registered/enrolled$"
+            response: "^Please provide a number value for total number of G2 boys enrolled$"
         });
         p.then(done, done);
     });
@@ -563,7 +566,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "11",
             next_state: "reg_zonal_head",
-            response: "^Are you a Zonal Head\\?[^]" +
+            response: "^Are you a Zonal Head Teacher\\?[^]" +
                     "1. Yes[^]" +
                     "2. No$"
         });
@@ -592,7 +595,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "eleven",
             next_state: "reg_school_students_g2_girls",
-            response: "^Please provide a number value for total number of G2 girls registered/enrolled$"
+            response: "^Please provide a number value for total number of G2 girls enrolled$"
         });
         p.then(done, done);
     });
@@ -620,7 +623,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_zonal_head_name",
-            response: "^What is the name and surname of your Zonal Head\\?$"
+            response: "^Please enter the name and surname of your ZONAL HEAD TEACHER.$"
         });
         p.then(done, done);
     });
@@ -695,7 +698,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "3",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^What is your school EMIS number\\?$"
+            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -769,7 +772,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^What is your school EMIS number\\?$"
+            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -782,7 +785,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "manage_change_emis",
-            response: "^What is your school EMIS number\\?$"
+            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -798,7 +801,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "0001",
             next_state: "reg_school_name",
-            response: "^What is your school name\\?$"
+            response: "^Please enter the name of your school, e.g. Kapililonga$"
         });
         p.then(done, done);
     });
