@@ -10,7 +10,7 @@ class HeadTeacherResource(ModelResource):
     """
     POSTING DATA
     {
-    "url": "<base_url>/api/data/headteacher/",,
+    "url": "<base_url>/api/v1/data/headteacher/",,
     "method": "POST",
     "content_type": "application/json",
     "body": {
@@ -24,7 +24,7 @@ class HeadTeacherResource(ModelResource):
             }
 
     GET SPECIFIC EMIS
-    "url": "<base_url>/api/data/headteacher/?emis__emis=4817",,
+    "url": "<base_url>/api/v1/data/headteacher/?emis__emis=4817",,
     "method": "GET",
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
@@ -49,7 +49,7 @@ class SchoolDataResource(ModelResource):
     """
     POSTING DATA
 
-    "url": "<base_url>/api/data/schooldata/",
+    "url": "<base_url>/api/v1/data/schooldata/",
     "method": "POST",
     "content_type": "application/json",
     "body": {
@@ -83,7 +83,7 @@ class AcademicAchievementCodeResource(ModelResource):
     """
     GET SPECIFIC HEADTEACHER ON EMIS
 
-    "url": "<base_url>/api/data/achievement/<id>/,,
+    "url": "<base_url>/api/v1/data/achievement/<id>/,,
     "method": "GET",
     """
     class Meta:
@@ -99,7 +99,7 @@ class TeacherPerfomanceDataResource(ModelResource):
     """
     POSTING DATA
 
-    "url": "<base_url>/api/data/teacherperfomance/",
+    "url": "<base_url>/api/v1/data/teacherperfomance/",
     "body": {
                 "data": "data",
                 "academic_level": "/api/data/achievement/8/",
@@ -127,10 +127,10 @@ class LearnerPerfomanceDataResource(ModelResource):
     """
     POSTING DATA
     
-    "url": "<base_url>/api/data/learnerperfomance/",
+    "url": "<base_url>/api/v1/data/learnerperfomance/",
     "body": {
                 "data": "data",
-                "created_by": "/api/data/headteacher/emis/4813/",
+                "created_by": "/api/v1/data/headteacher/emis/4813/",
                 "emis": "/api/v1/school/emis/4813/"
             }
     """
@@ -153,15 +153,15 @@ class InboundSMSResource(ModelResource):
     """
     GET SPECIFIC HEADTEACHER ON EMIS
 
-    "url": "<base_url>/api/data/headteacher/?emis__emis=4817",,
+    "url": "<base_url>/api/v1/data/headteacher/?emis__emis=4817",,
     "method": "GET",
 
     POSTING DATA
     
-    "url": "<base_url>/api/data/sms/",
+    "url": "<base_url>/api/v1/data/sms/",
     "body": {
                 "message": "test_name",
-                "created_by": "/api/data/headteacher/1/",
+                "created_by": "/api/v1/data/headteacher/1/",
             }
     """
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
