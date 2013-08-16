@@ -13,7 +13,7 @@ for var in expected_vars:
 PROJECT = os.environ['PROJECT']
 USER = os.environ.get('USER', 'jmbo')
 
-env.path = os.path.join('var', 'praekelt', PROJECT)
+env.path = os.path.join('/', 'var', 'praekelt', PROJECT)
 
 
 def restart():
