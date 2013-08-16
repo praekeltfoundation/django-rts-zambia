@@ -56,7 +56,7 @@ class AcademicAchievementCode(models.Model):
 class TeacherPerfomanceData(models.Model):
     gender = models.CharField(max_length=6, verbose_name=u'Gender')
     age = models.IntegerField()
-    years_experience = models.IntegerField()
+    years_experience = models.CharField(max_length=5)
     g2_pupils_present = models.IntegerField()
     g2_pupils_registered = models.IntegerField()
     classroom_environment_score = models.IntegerField()
@@ -67,7 +67,7 @@ class TeacherPerfomanceData(models.Model):
     pupil_engagment_score = models.IntegerField()
     attitudes_and_beliefs = models.IntegerField()
     training_subtotal = models.IntegerField()
-    local_reading_score = models.IntegerField()
+    ts_number = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     academic_level = models.ForeignKey(AcademicAchievementCode,
                                     verbose_name=u'Academic Achievment Code')
