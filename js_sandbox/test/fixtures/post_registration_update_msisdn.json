@@ -1,5 +1,5 @@
 {
-    "url": "http://qa/api/registration/msisdn/",
+    "url": "http://qa/api/v1/registration/msisdn/",
     "method": "POST",
     "content_type": "application/json",
     "data": {

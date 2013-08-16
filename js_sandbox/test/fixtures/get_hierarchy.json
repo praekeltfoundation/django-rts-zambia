@@ -1,5 +1,5 @@
 {
-    "url": "http://qa/api/hierarchy/",
+    "url": "http://qa/api/v1/school/",
     "method": "GET",
     "body": {
         "meta": {

@@ -1,5 +1,5 @@
 {
-    "url": "http://qa/api/data/teacherperformance/",
+    "url": "http://qa/api/v1/data/teacherperformance/",
     "method": "POST",
     "content_type": "application/json",
     "data": {

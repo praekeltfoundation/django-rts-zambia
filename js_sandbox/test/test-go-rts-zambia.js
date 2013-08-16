@@ -41,7 +41,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/'
+                    cms_api_root: 'http://qa/api/v1/'
                 });
 
                 var dummy_contact = {
@@ -849,7 +849,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/'
+                    cms_api_root: 'http://qa/api/v1/'
                 });
 
                 var dummy_contact = {
@@ -1583,7 +1583,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/'
+                    cms_api_root: 'http://qa/api/v1/'
                 });
 
                 var dummy_contact = {
@@ -1723,7 +1723,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/'
+                    cms_api_root: 'http://qa/api/v1/'
                 });
 
                 var dummy_contact = {
@@ -2690,7 +2690,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/'
+                    cms_api_root: 'http://qa/api/v1/'
                 });
 
                 var dummy_contact = {

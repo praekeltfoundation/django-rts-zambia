@@ -260,9 +260,9 @@ function GoRtsZambia() {
         var data = self.registration_data_collect();
         var headteacher_data = data[0];
         var school_data = data[1];
-        var p_school = self.cms_post("school/", school_data);
+        var p_school = self.cms_post("data/school/", school_data);
         p_school.add_callback(function(){
-            var p_ht = self.cms_post("headteacher/", headteacher_data);
+            var p_ht = self.cms_post("data/headteacher/", headteacher_data);
             p_ht.add_callback(function(result){
                 var fields = {
                     "rts_id": result.id,
@@ -308,7 +308,7 @@ function GoRtsZambia() {
     };
 
     self.cms_hierarchy_load = function() {
-        var p = self.cms_get("hierarchy/");
+        var p = self.cms_get("school/");
         p.add_callback(function(result){
             var array_emis = []
             for (var i=0;i<result.objects.length;i++){
