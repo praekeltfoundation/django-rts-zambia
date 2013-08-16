@@ -43,8 +43,8 @@ Head Teacher
 
 School Data
 
-- `<base_url>/api/v1/data/schooldata/`
-- `<base_url>/api/v1/data/schooldata/<id>/`
+- `<base_url>/api/v1/data/school/`
+- `<base_url>/api/v1/data/school/<id>/`
 
 Academic Achievement Code
 

@@ -108,7 +108,7 @@ class TestSchoolDataAPI(ResourceTestCase):
             Testing basic schooldata API functionality.
         """
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/schooldata',
+                      kwargs={'resource_name': 'data/school',
                       'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
@@ -152,7 +152,7 @@ class TestSchoolDataAPI(ResourceTestCase):
         headteacher_id = json_item['objects'][0]['id']
 
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/schooldata',
+                      kwargs={'resource_name': 'data/school',
                       'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
@@ -198,7 +198,7 @@ class TestSchoolDataAPI(ResourceTestCase):
             Testing headteacher post data.
         """
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/schooldata',
+                      kwargs={'resource_name': 'data/school',
                       'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
@@ -209,7 +209,7 @@ class TestSchoolDataAPI(ResourceTestCase):
                                     "teachers_g2": 8,
                                     "boys_g2": 15,
                                     "girls_g2": 12,
-                                    "created_by": "/api/v1/data/schooldata/9999/",
+                                    "created_by": "/api/v1/data/school/9999/",
                                     "emis": "/api/v1/school/emis/4813/"
                                     })
         json_item = json.loads(response.content)

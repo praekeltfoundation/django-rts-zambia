@@ -49,7 +49,7 @@ class SchoolDataResource(ModelResource):
     """
     POSTING DATA
 
-    "url": "<base_url>/api/v1/data/schooldata/",
+    "url": "<base_url>/api/v1/data/school/",
     "method": "POST",
     "content_type": "application/json",
     "body": {
@@ -69,7 +69,7 @@ class SchoolDataResource(ModelResource):
 
     class Meta:
         queryset = SchoolData.objects.all()
-        resource_name = "data/schooldata"
+        resource_name = "data/school"
         list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
         include_resource_uri = True
