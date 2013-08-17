@@ -32,7 +32,7 @@ class HeadTeacherResource(ModelResource):
     class Meta:
         queryset = HeadTeacher.objects.all()
         resource_name = "data/headteacher"
-        list_allowed_methods = ['post', 'get'] 
+        list_allowed_methods = ['post', 'get', 'put'] 
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
