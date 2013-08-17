@@ -308,7 +308,7 @@ function GoRtsZambia() {
     };
 
     self.cms_hierarchy_load = function() {
-        var p = self.cms_get("school/");
+        var p = self.cms_get("school/?limit=0");
         p.add_callback(function(result){
             var array_emis = []
             for (var i=0;i<result.objects.length;i++){
