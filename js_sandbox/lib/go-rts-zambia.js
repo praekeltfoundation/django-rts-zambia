@@ -327,11 +327,11 @@ function GoRtsZambia() {
     };
 
     self.cms_hierarchy_load = function() {
-        var p = self.cms_get("school/?limit=0");
+        var p = self.cms_get("hierarchy/");
         p.add_callback(function(result){
             var array_emis = []
             for (var i=0;i<result.objects.length;i++){
-                array_emis.push(result.objects[i].EMIS);
+                array_emis.push(result.objects[i].emis);
             }
             im.config.array_emis = array_emis;
         });

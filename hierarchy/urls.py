@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url, include
-from hierarchy.api import ProvinceResource, DistrictResource, ZoneResource, SchoolResource
+from hierarchy.api import (ProvinceResource, DistrictResource,
+                        ZoneResource, SchoolResource, EmisResource)
 from tastypie.api import Api
 
 
@@ -10,6 +11,7 @@ api_resources.register(ProvinceResource())
 api_resources.register(DistrictResource())
 api_resources.register(ZoneResource())
 api_resources.register(SchoolResource())
+api_resources.register(EmisResource())
 api_resources.prepend_urls()
 
 # Setting the urlpatterns to hook into the api urls
