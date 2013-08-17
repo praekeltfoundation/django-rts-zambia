@@ -1,9 +1,9 @@
 {
-    "url": "http://qa/api/v1/school/?limit=0",
+    "url": "http://qa/api/v1/hierarchy/",
     "method": "GET",
     "body": {
         "meta": {
-            "limit": 20,
+            "limit": 1000,
             "next": null,
             "offset": 0,
             "previous": null,
@@ -11,132 +11,28 @@
         },
         "objects": [
             {
-                "EMIS": 1,
-                "name": "fsas",
-                "zone_id": {
-                    "district_id": {
-                        "id": 1,
-                        "name": "District A1",
-                        "province_id": {
-                            "id": 1,
-                            "name": "Province A"
-                        }
-                    },
-                    "id": 1,
-                    "name": "Zone A11"
-                }
+                "emis": 1
             },
             {
-                "EMIS": 12,
-                "name": "fsasgv",
-                "zone_id": {
-                    "district_id": {
-                        "id": 1,
-                        "name": "District A1",
-                        "province_id": {
-                            "id": 1,
-                            "name": "Province A"
-                        }
-                    },
-                    "id": 1,
-                    "name": "Zone A11"
-                }
+                "emis": 2
             },
             {
-                "EMIS": 1234,
-                "name": "fsasgvchange",
-                "zone_id": {
-                    "district_id": {
-                        "id": 1,
-                        "name": "District A1",
-                        "province_id": {
-                            "id": 1,
-                            "name": "Province A"
-                        }
-                    },
-                    "id": 1,
-                    "name": "Zone A11"
-                }
+                "emis": 45
             },
             {
-                "EMIS": 4556,
-                "name": "fgbsgbsbsfbsd",
-                "zone_id": {
-                    "district_id": {
-                        "id": 1,
-                        "name": "District A1",
-                        "province_id": {
-                            "id": 1,
-                            "name": "Province A"
-                        }
-                    },
-                    "id": 1,
-                    "name": "Zone A11"
-                }
+                "emis": 777
             },
             {
-                "EMIS": 7686,
-                "name": "name 1",
-                "zone_id": {
-                    "district_id": {
-                        "id": 1,
-                        "name": "District A1",
-                        "province_id": {
-                            "id": 1,
-                            "name": "Province A"
-                        }
-                    },
-                    "id": 1,
-                    "name": "Zone A11"
-                }
+                "emis": 7764
             },
             {
-                "EMIS": 2,
-                "name": "sacasc",
-                "zone_id": {
-                    "district_id": {
-                        "id": 2,
-                        "name": "District A2",
-                        "province_id": {
-                            "id": 1,
-                            "name": "Province A"
-                        }
-                    },
-                    "id": 2,
-                    "name": "Zone A21"
-                }
+                "emis": 2334
             },
             {
-                "EMIS": 123,
-                "name": "fsasgv",
-                "zone_id": {
-                    "district_id": {
-                        "id": 4,
-                        "name": "District B1",
-                        "province_id": {
-                            "id": 2,
-                            "name": "Province B"
-                        }
-                    },
-                    "id": 4,
-                    "name": "Zone B11"
-                }
+                "emis": 2342
             },
             {
-                "EMIS": 3,
-                "name": "a",
-                "zone_id": {
-                    "district_id": {
-                        "id": 5,
-                        "name": "District B2",
-                        "province_id": {
-                            "id": 2,
-                            "name": "Province B"
-                        }
-                    },
-                    "id": 5,
-                    "name": "Zone B21"
-                }
+                "emis": 4342
             }
         ]
     }
