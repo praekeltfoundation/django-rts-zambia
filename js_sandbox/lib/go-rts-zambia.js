@@ -70,6 +70,20 @@ function GoRtsZambia() {
         return p;
     };
 
+    self.cms_put = function(path, data) {
+        var url = im.config.cms_api_root + path;
+        var p = im.api_request("http.put", {
+            url: url,
+            headers: self.post_headers,
+            data: JSON.stringify(data)
+        });
+        p.add_callback(function(result) {
+            var json = self.check_reply(result, url, 'PUT', data, false);
+            return json;
+        });
+        return p;
+    };
+
     self.url_encode = function(params) {
         var items = [];
         for (var key in params) {
@@ -293,11 +307,16 @@ function GoRtsZambia() {
     };
 
     self.cms_registration_update_msisdn = function(im) {
-        var data = {
-            emis: parseInt(im.get_user_answer('manage_change_msisdn_emis_lookup')),
-            msisdn: im.user_addr
-        };
-        return self.cms_post("registration/msisdn/", data);
+        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis_lookup'));
+        var p = self.cms_get("data/headteacher/?emis__emis=" + emis);
+        p.add_callback(function(result){
+            var headteacher_id = result.id;
+            var data = {
+                msisdn: im.user_addr
+            };
+            return self.cms_put("data/headteacher/" + headteacher_id + "/", data);
+        });
+        return p;
     };
 
     self.cms_registration_emis_delink = function(im, emis) {
