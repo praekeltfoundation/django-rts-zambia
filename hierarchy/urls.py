@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url, include
-from hierarchy.api import ProvinceResource, DistrictResource, ZoneResource, SchoolResource, EmisResource
+from hierarchy.api import (ProvinceResource, DistrictResource,
+                        ZoneResource, SchoolResource, EmisResource)
 from tastypie.api import Api
 
 
