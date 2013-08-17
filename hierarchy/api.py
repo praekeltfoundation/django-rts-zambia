@@ -78,7 +78,6 @@ class EmisResource(ModelResource):
         - Returns the required data for the API via Foreign key association,
         based on the url
     """
-    # zone = fields.ForeignKey(ZoneResource, 'zone', full=True)
     class Meta:
         resource_name = "hierarchy"
         allowed_methods = ['get']
