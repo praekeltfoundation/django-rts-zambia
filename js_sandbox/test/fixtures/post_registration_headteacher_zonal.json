@@ -4,7 +4,7 @@
     "content_type": "application/json",
     "data": {
         "date_of_birth": "1980-09-11",
-        "emis": 1,
+        "emis": "/api/v1/school/emis/1/",
         "first_name": "Jack",
         "gender": "male",
         "is_zonal_head": true,
