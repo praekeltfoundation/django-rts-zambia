@@ -5,7 +5,8 @@
     "data": {
         "boys_g2": 10,
         "classrooms": 5,
-        "emis": 1,
+        "created_by": "/api/v1/data/headteacher/2/",
+        "emis": "/api/v1/school/emis/1/",
         "girls_g2": 11,
         "name":"School One",
         "teachers": 5,
