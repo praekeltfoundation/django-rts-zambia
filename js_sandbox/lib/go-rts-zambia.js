@@ -179,11 +179,11 @@ function GoRtsZambia() {
         };
         
         if (im.get_user_answer('initial_state') == 'manage_change_emis'){
-            school_data['emis'] = parseInt(im.get_user_answer('manage_change_emis'));
-            headteacher_data['emis'] = parseInt(im.get_user_answer('manage_change_emis'));
+            school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
+            headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
         } else {
-            school_data['emis'] = parseInt(im.get_user_answer('reg_emis'));
-            headteacher_data['emis'] = parseInt(im.get_user_answer('reg_emis'));
+            school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
+            headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
         }
         
         return [headteacher_data, school_data];
@@ -274,13 +274,16 @@ function GoRtsZambia() {
         var data = self.registration_data_collect();
         var headteacher_data = data[0];
         var school_data = data[1];
-        var p_school = self.cms_post("data/school/", school_data);
-        p_school.add_callback(function(){
-            var p_ht = self.cms_post("data/headteacher/", headteacher_data);
-            p_ht.add_callback(function(result){
+        var p_ht = self.cms_post("data/headteacher/", headteacher_data);
+        p_ht.add_callback(function(result){
+            var headteacher_id = result.id;
+            var emis = result.emis.emis;
+            school_data["created_by"] = "/api/v1/data/headteacher/" + headteacher_id + "/";
+            var p_school = self.cms_post("data/school/", school_data);
+            p_school.add_callback(function(){
                 var fields = {
-                    "rts_id": result.id,
-                    "rts_emis": result.emis.emis
+                    "rts_id": headteacher_id,
+                    "rts_emis": emis
                 };
                 var p_c = self.get_contact(im);
                 p_c.add_callback(function(result) {
@@ -301,9 +304,9 @@ function GoRtsZambia() {
                 });
                 return p_c;
             });
-            return p_ht;
+            return p_school;
         });
-        return p_school;
+        return p_ht;
     };
 
     self.cms_registration_update_msisdn = function(im) {
