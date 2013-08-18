@@ -124,7 +124,7 @@ class InboundSMS(models.Model):
 # custom mockups for data generation
 
 class GenderGenerator(ChoiceGenerator):
-    choices = [u"male", u"female", u"other"]
+    choices = [u"male", u"female"]
 
 
 class TeacherPerfomanceDataFactory(mockups.Factory):
