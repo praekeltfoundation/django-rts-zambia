@@ -14,6 +14,7 @@ django-debug-toolbar
 django-celery
 django-celery-email
 django-tastypie
+django-mockups
 python-mimeparse
 pep8
 pyflakes
