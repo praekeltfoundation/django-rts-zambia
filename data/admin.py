@@ -1,6 +1,6 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, InboundSMS, AcademicAchievementCode,
-                    TeacherPerfomanceData, LearnerPerfomanceData)
+                    TeacherPerformanceData, LearnerPerformanceData)
 from actions import export_as_csv_action
 
 
@@ -16,7 +16,7 @@ class HeadTeacherAdmin(admin.ModelAdmin):
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
-class TeacherPerfomanceDataAdmin(admin.ModelAdmin):
+class TeacherPerformanceDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "gender", "age", "years_experience", "g2_pupils_present", "g2_pupils_registered",
                     "classroom_environment_score", "t_l_materials", "pupils_materials_score",
                     "pupils_books_number", "reading_lesson", "pupil_engagment_score", "attitudes_and_beliefs",
@@ -24,7 +24,7 @@ class TeacherPerfomanceDataAdmin(admin.ModelAdmin):
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
-class LearnerPerfomanceDataAdmin(admin.ModelAdmin):
+class LearnerPerformanceDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "gender", "total_number_pupils", "phonetic_awareness", "vocabulary",
                     "reading_comprehension", "writing_diction", "below_minimum_results", "minimum_results",
                     "desirable_results", "outstanding_results", "created_by", "created_at"]
@@ -49,7 +49,7 @@ class AcademicAchievementCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
-admin.site.register(TeacherPerfomanceData, TeacherPerfomanceDataAdmin)
-admin.site.register(LearnerPerfomanceData, LearnerPerfomanceDataAdmin)
+admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
+admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
 admin.site.register(InboundSMS, InboundSMSAdmin)
 admin.site.register(AcademicAchievementCode, AcademicAchievementCodeAdmin)

@@ -51,15 +51,15 @@ Academic Achievement Code
 - `<base_url>/api/v1/data/achievement/`
 - `<base_url>/api/v1/data/achievement/<id>/`
 
-Learner Perfomance
+Learner Performance
 
-- `<base_url>/api/v1/data/learnerperfomance/`
-- `<base_url>/api/v1/data/learnerperfomance/<id>/`
+- `<base_url>/api/v1/data/learnerperformance/`
+- `<base_url>/api/v1/data/learnerperformance/<id>/`
 
-Teacher Perfomance
+Teacher Performance
 
-- `<base_url>/api/v1/data/teacherperfomance/`
-- `<base_url>/api/v1/data/teacherperfomance/<id>/`
+- `<base_url>/api/v1/data/teacherperformance/`
+- `<base_url>/api/v1/data/teacherperformance/<id>/`
 
 SMS
 
