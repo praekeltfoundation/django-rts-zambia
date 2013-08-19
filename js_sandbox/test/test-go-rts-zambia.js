@@ -652,9 +652,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_thanks_zonal_head",
-            response: "^Thank you for registering! When you are ready you can " +
-            "dial in again to start reporting. You will also start receiving the " +
-            "monthly SMS's from your Headteachers.$",
+            response: "^Well done! You are now registered as a Zonal Head" +
+                " Teacher\\. When you are ready, dial in to start" +
+                " reporting\\. You will also receive monthly SMS's from" +
+                " your zone\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -684,8 +685,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "Jim Carey",
             next_state: "reg_thanks_head_teacher",
-            response: "^Thank you for registering! When you are ready you can dial " +
-            "in again to start reporting.$",
+            response: "^Congratulations! You are now registered as a user of" +
+                " the Gateway! Please dial in again when you are ready to" +
+                " start reporting on teacher and learner performance\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -831,9 +833,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_thanks_zonal_head",
-            response: "^Thank you for registering! When you are ready you can " +
-            "dial in again to start reporting. You will also start receiving the " +
-            "monthly SMS's from your Headteachers.$",
+            response: "^Well done! You are now registered as a Zonal Head" +
+                " Teacher\\. When you are ready, dial in to start" +
+                " reporting\\. You will also receive monthly SMS's from" +
+                " your zone\\.$",
             continue_session: false
         });
         p.then(done, done);
