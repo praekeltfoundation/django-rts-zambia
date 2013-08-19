@@ -8,7 +8,7 @@ class Province(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "Province"
+        verbose_name = "1. Province"
 
 
 class District(models.Model):
@@ -20,7 +20,7 @@ class District(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "District"
+        verbose_name = "2. District"
 
 
 
@@ -33,7 +33,7 @@ class Zone(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "Zone"
+        verbose_name = "3. Zone"
 
 
 class School(models.Model):
@@ -46,4 +46,4 @@ class School(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "School"
+        verbose_name = "4. School"

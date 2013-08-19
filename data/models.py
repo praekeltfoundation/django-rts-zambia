@@ -43,7 +43,7 @@ class SchoolData(models.Model):
         return "%s" % self.emis
 
     class Meta:
-        verbose_name = "School Data"
+        verbose_name_plural = "School Data"
 
 
 class AcademicAchievementCode(models.Model):
@@ -82,7 +82,7 @@ class TeacherPerfomanceData(models.Model):
         return "%s" % self.emis
 
     class Meta:
-        verbose_name = "Teacher Perfomance Data"
+        verbose_name_plural = "Teacher Perfomance Data"
 
 
 class LearnerPerfomanceData(models.Model):
@@ -105,7 +105,7 @@ class LearnerPerfomanceData(models.Model):
         return "%s" % self.emis
 
     class Meta:
-        verbose_name = "Learner Perfomance Data"
+        verbose_name_plural = "Learner Perfomance Data"
 
 
 class InboundSMS(models.Model):
