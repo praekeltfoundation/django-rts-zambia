@@ -344,7 +344,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "five",
             next_state: "reg_school_classrooms",
-            response: "^Please provide a number value for how many classrooms you have in your school$"
+            response: "^Please provide a number value for how many classrooms you have in your school\\.$"
         });
         p.then(done, done);
     });
@@ -390,7 +390,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "five",
             next_state: "reg_school_teachers",
-            response: "^Please provide a number value for how many teachers in total do you have in your school$"
+            response: "^Please provide a number value for how many teachers in total you have in your school\\.$"
         });
         p.then(done, done);
     });
@@ -438,7 +438,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "two",
             next_state: "reg_school_teachers_g1",
-            response: "^Please provide a number value for how many teachers teach G1 local language literacy$"
+            response: "^Please provide a number value for how many teachers teach G1 local language literacy\\.$"
         });
         p.then(done, done);
     });
@@ -488,7 +488,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "two",
             next_state: "reg_school_teachers_g2",
-            response: "^Please provide a number value for how many teachers teach G2 local language literacy$"
+            response: "^Please provide a number value for how many teachers teach G2 local language literacy\\.$"
         });
         p.then(done, done);
     });
@@ -540,7 +540,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "ten",
             next_state: "reg_school_students_g2_boys",
-            response: "^Please provide a number value for total number of G2 boys enrolled$"
+            response: "^Please provide a number value for the total number of G2 boys enrolled\\.$"
         });
         p.then(done, done);
     });
@@ -596,7 +596,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "eleven",
             next_state: "reg_school_students_g2_girls",
-            response: "^Please provide a number value for total number of G2 girls enrolled$"
+            response: "^Please provide a number value for the total number of G2 girls enrolled\\.$"
         });
         p.then(done, done);
     });
