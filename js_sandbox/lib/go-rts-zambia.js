@@ -461,11 +461,11 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to SPERT. What would you like to do?",
+                    "Welcome to the Zambia School Gateway! What would you like to do?",
                     [
-                        new Choice("reg_emis", "Register as a new user"),
-                        new Choice("manage_change_emis", "Change my school"),
-                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
+                        new Choice("reg_emis", "Register as a new user."),
+                        new Choice("manage_change_emis", "Change my school."),
+                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary cell phone number.")
                     ]
                 );
             } else {
@@ -475,11 +475,11 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to SPERT. What would you like to do?",
+                    "Welcome to the Zambia School Gateway. What would you like to do?",
                     [
-                        new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
-                        new Choice("perf_learner_boys_total", "Add a learner performance report"),
-                        new Choice("manage_change_emis", "Change my school")
+                        new Choice("perf_teacher_ts_number", "Report on teacher performance."),
+                        new Choice("perf_learner_boys_total", "Report on learner performance."),
+                        new Choice("manage_change_emis", "Change my school.")
                     ]
                 );
             }
