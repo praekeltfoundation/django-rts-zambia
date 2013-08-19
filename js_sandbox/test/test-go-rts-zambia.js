@@ -1710,7 +1710,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "3",
             next_state: "end_state",
-            response: "^Goodbye! Thank you for using SPERT.$",
+            response: "^Goodbye! Thank you for using the Gateway\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -2796,7 +2796,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             user: user,
             content: "2",
             next_state: "end_state",
-            response: "^Goodbye! Thank you for using SPERT.$",
+            response: "^Goodbye! Thank you for using the Gateway\\.$",
             continue_session: false
         });
         p.then(done, done);
