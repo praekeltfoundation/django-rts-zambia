@@ -92,10 +92,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Register as a new user[^]" +
-                    "2. Change my school[^]" +
-                    "3. Change my primary mobile number$"
+            response: "^Welcome to the Zambia School Gateway! What would you like to do\\?[^]" +
+                    "1. Register as a new user\\.[^]" +
+                    "2. Change my school\\.[^]" +
+                    "3. Change my primary cell phone number\\.$"
         });
         p.then(done, done);
     });
@@ -890,10 +890,10 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -1673,10 +1673,10 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "2",
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -1764,10 +1764,10 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -2755,10 +2755,10 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             user: user,
             content: "1",
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
