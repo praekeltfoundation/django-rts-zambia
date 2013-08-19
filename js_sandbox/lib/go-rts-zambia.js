@@ -282,8 +282,8 @@ function GoRtsZambia() {
             var p_school = self.cms_post("data/school/", school_data);
             p_school.add_callback(function(){
                 var fields = {
-                    "rts_id": headteacher_id,
-                    "rts_emis": emis
+                    "rts_id": JSON.stringify(headteacher_id),
+                    "rts_emis": JSON.stringify(emis)
                 };
                 var p_c = self.get_contact(im);
                 p_c.add_callback(function(result) {
@@ -292,13 +292,18 @@ function GoRtsZambia() {
                         fields: fields
                     });
                     p_extra.add_callback(function(result) {
-                        var contact = result.contact;
-                        contact['name'] = im.get_user_answer('reg_first_name');
-                        contact['surname'] = im.get_user_answer('reg_surname');
-                        return im.api_request('contacts.update', {
-                            key: result.contact.key,
-                            fields: contact
-                        });
+                        if (result.success === true){
+                            var contact = result.contact;
+                            contact['name'] = im.get_user_answer('reg_first_name');
+                            contact['surname'] = im.get_user_answer('reg_surname');
+                            return im.api_request('contacts.update', {
+                                key: result.contact.key,
+                                fields: contact
+                            });
+                        } else {
+                            var p_log = im.log(result);
+                            return p_log;
+                        }
                     });
                     return p_extra;
                 });
