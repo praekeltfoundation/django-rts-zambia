@@ -268,7 +268,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
                                     "pupils_materials_score": 13,
                                     "pupils_books_number": 14,
                                     "reading_lesson": 15,
-                                    "pupil_engagment_score": 16,
+                                    "pupil_engagement_score": 16,
                                     "attitudes_and_beliefs": 17,
                                     "training_subtotal": 18,
                                     "ts_number": 19,
@@ -288,7 +288,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(13, json_item["pupils_materials_score"])
         self.assertEqual(14, json_item["pupils_books_number"])
         self.assertEqual(15, json_item["reading_lesson"])
-        self.assertEqual(16, json_item["pupil_engagment_score"])
+        self.assertEqual(16, json_item["pupil_engagement_score"])
         self.assertEqual(17, json_item["attitudes_and_beliefs"])
         self.assertEqual(18, json_item["training_subtotal"])
         self.assertEqual(19, json_item["ts_number"])
@@ -307,7 +307,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(13, teacher.pupils_materials_score)
         self.assertEqual(14, teacher.pupils_books_number)
         self.assertEqual(15, teacher.reading_lesson)
-        self.assertEqual(16, teacher.pupil_engagment_score)
+        self.assertEqual(16, teacher.pupil_engagement_score)
         self.assertEqual(17, teacher.attitudes_and_beliefs)
         self.assertEqual(18, teacher.training_subtotal)
         self.assertEqual(19, teacher.ts_number)

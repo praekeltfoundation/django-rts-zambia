@@ -19,7 +19,7 @@ class HeadTeacherAdmin(admin.ModelAdmin):
 class TeacherPerformanceDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "gender", "age", "years_experience", "g2_pupils_present", "g2_pupils_registered",
                     "classroom_environment_score", "t_l_materials", "pupils_materials_score",
-                    "pupils_books_number", "reading_lesson", "pupil_engagment_score", "attitudes_and_beliefs",
+                    "pupils_books_number", "reading_lesson", "pupil_engagement_score", "attitudes_and_beliefs",
                     "training_subtotal", "ts_number", "academic_level", "created_by", "created_at"]
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
