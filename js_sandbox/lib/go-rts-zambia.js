@@ -264,11 +264,13 @@ function GoRtsZambia() {
     };
 
     self.clear_contact_extra = function(extra){
+        var fields = {};
+        fields[extra] = "";
         var p = self.get_contact(im);
         p.add_callback(function(result) {
             return im.api_request('contacts.update_extras', {
                 key: result.contact.key,
-                fields: {extra: ""}
+                fields: fields
             });
         });
         return p;
