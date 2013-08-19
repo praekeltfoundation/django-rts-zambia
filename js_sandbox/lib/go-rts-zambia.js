@@ -1176,7 +1176,7 @@ function GoRtsZambia() {
 
     self.add_state(new EndState(
         "end_state",
-        "Goodbye! Thank you for using SPERT.",
+        "Goodbye! Thank you for using the Gateway.",
         "initial_state"
     ));
 
