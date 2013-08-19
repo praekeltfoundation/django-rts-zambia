@@ -926,12 +926,11 @@ function GoRtsZambia() {
                 function(choice) {
                         return choice.value;
                     },
-                "You have successfully added and assessed this teacher. " +
-                    "What would you like to do now?",
+                "Congratulations, you have finished reporting on this teacher.",
                 [
-                    new Choice("perf_teacher_ts_number", "Add another teacher"),
-                    new Choice("initial_state", "Go back to the main menu"),
-                    new Choice("end_state", "Exit")
+                    new Choice("perf_teacher_ts_number", "Add another teacher."),
+                    new Choice("initial_state", "Go back to the main menu."),
+                    new Choice("end_state", "Exit.")
                 ]
             );
         });

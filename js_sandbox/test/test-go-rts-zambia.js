@@ -1568,11 +1568,10 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "5",
             next_state: "perf_teacher_completed",
-            response: "^You have successfully added and assessed this teacher. " +
-                "What would you like to do now\\?[^]" +
-                "1. Add another teacher[^]" +
-                "2. Go back to the main menu[^]" +
-                "3. Exit$"
+            response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
+                "1. Add another teacher\\.[^]" +
+                "2. Go back to the main menu\\.[^]" +
+                "3. Exit\\.$"
         });
         p.then(done, done);
     });
