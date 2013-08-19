@@ -602,10 +602,10 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         'reg_gender',
         'reg_school_classrooms',
-        "Enter 1 if you are a woman or 2 if you are a man.",
+        "What is your gender?",
         [
-            new Choice("female", "Woman"),
-            new Choice("male", "Man")
+            new Choice("female", "Female"),
+            new Choice("male", "Male")
         ]
     ));
 

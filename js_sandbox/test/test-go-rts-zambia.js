@@ -256,9 +256,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "11091980",
             next_state: "reg_gender",
-            response: "^Enter 1 if you are a woman or 2 if you are a man.[^]" +
-            "1. Woman[^]" +
-            "2. Man$"
+            response: "^What is your gender\\?[^]" +
+            "1. Female[^]" +
+            "2. Male$"
         });
         p.then(done, done);
     });
