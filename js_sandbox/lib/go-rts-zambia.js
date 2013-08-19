@@ -511,8 +511,8 @@ function GoRtsZambia() {
             // EMIS valid
             return new EndState(
                 state_name,
-                "Thank you! We have now allocated your new contact mobile number " +
-                "to your current school.",
+                "Thank you! Your cell phone number is now the official number" +
+                " that your school will use to communicate with the Gateway.",
                 "initial_state",
                 {
                     on_enter: function() {
