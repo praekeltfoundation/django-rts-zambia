@@ -910,7 +910,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "1",
             next_state: "perf_teacher_ts_number",
-            response: "^Please enter the teacher's TS number$"
+            response: "^Please enter the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
@@ -926,7 +926,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One Hundred and Six",
             next_state: "perf_teacher_ts_number",
-            response: "^Please provide a number value for the teacher's TS number$"
+            response: "^Please provide a number value for the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
@@ -942,7 +942,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "106",
             next_state: "perf_teacher_gender",
-            response: "^Please enter 1 if the teacher is a man or 2 if she is a woman[^]" +
+            response: "^What is the gender of the teacher\\?[^]" +
             "1. Male[^]" +
             "2. Female$"
         });
@@ -961,7 +961,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "2",
             next_state: "perf_teacher_age",
-            response: "^Please enter the teacher's age in years e.g. 26$"
+            response: "^Please enter the teacher's age in years e\\.g\\. 26\\.$"
         });
         p.then(done, done);
     });
@@ -979,7 +979,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One",
             next_state: "perf_teacher_age",
-            response: "^Please provide a number value for the teachers age$"
+            response: "^Please provide a number value for the teacher's age\\.$"
         });
         p.then(done, done);
     });
@@ -1072,7 +1072,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "forty",
             next_state: "perf_teacher_g2_pupils_present",
-            response: "^Please provide a number value for pupils present$"
+            response: "^Please provide a number value for pupils present\\.$"
         });
         p.then(done, done);
     });
@@ -1115,7 +1115,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "fifty",
             next_state: "perf_teacher_g2_pupils_registered",
-            response: "^Please provide a number value for pupils enrolled$"
+            response: "^Please provide a number value for pupils enrolled\\.$"
         });
         p.then(done, done);
     });
@@ -1137,7 +1137,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "50",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Enter the subtotal that the teacher achieved during the classroom observation for Section 2 \\(Classroom Environment\\)$"
+            response: "^Enter the subtotal that the teacher achieved during the classroom observation for Section 2 \\(Classroom Environment\\)\\.$"
         });
         p.then(done, done);
     });
@@ -1160,7 +1160,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "great",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Please provide a number value for classroom environment$"
+            response: "^Please provide a number value for the Classroom Environment subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1184,7 +1184,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             content: "10",
             next_state: "perf_teacher_t_l_materials",
             response: "^Enter the subtotal that the teacher achieved during the classroom " +
-                "observation for Section 3 \\(Teaching and Learning Materials\\)$"
+                "observation for Section 3 \\(Teaching and Learning Materials\\)\\.$"
         });
         p.then(done, done);
     });
@@ -1208,7 +1208,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "rubbish",
             next_state: "perf_teacher_t_l_materials",
-            response: "^Please provide a number value for Teaching and Learning Materials$"
+            response: "^Please provide a number value for the Teaching and Learning Materials subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1258,7 +1258,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "fab",
             next_state: "perf_teacher_pupils_books_number",
-            response: "^Please provide a number value for number of learners' books$"
+            response: "^Please provide a number value for number of learners' books\\.$"
         });
         p.then(done, done);
     });
@@ -1284,7 +1284,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             content: "90",
             next_state: "perf_teacher_pupils_materials_score",
             response: "^Enter the subtotal that the teacher achieved during the classroom observation " +
-            "for Section 4 \\(Learner Materials\\)$"
+            "for Section 4 \\(Learner Materials\\)\\.$"
         });
         p.then(done, done);
     });
@@ -1310,7 +1310,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "score is seventy five",
             next_state: "perf_teacher_pupils_materials_score",
-            response: "^Please provide a number value for learner materials subtotal$"
+            response: "^Please provide a number value for the Learner Materials subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1364,7 +1364,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "forty five mins",
             next_state: "perf_teacher_reading_lesson",
-            response: "^Please provide a number value for time on task subtotal$"
+            response: "^Please provide a number value for the Time on Task and Reading Practice subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1420,7 +1420,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "low",
             next_state: "perf_teacher_pupil_engagement_score",
-            response: "^Please provide a number value for learner engagement subtotal$"
+            response: "^Please provide a number value for the Learner Engagement subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1478,7 +1478,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "great",
             next_state: "perf_teacher_attitudes_and_beliefs",
-            response: "^Please provide a number value for teacher attitudes and beliefs subtotal$"
+            response: "^Please provide a number value for the Teacher Attitudes and Beliefs subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1538,7 +1538,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "five",
             next_state: "perf_teacher_training_subtotal",
-            response: "^Please provide a number value for teacher training interview subtotal$"
+            response: "^Please provide a number value for the Teacher Training interview subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1647,7 +1647,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "1",
             next_state: "perf_teacher_ts_number",
-            response: "^Please enter the teacher's TS number$"
+            response: "^Please enter the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
