@@ -480,7 +480,6 @@ function GoRtsZambia() {
                         new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
                         new Choice("perf_learner_boys_total", "Add a learner performance report"),
                         new Choice("manage_change_emis", "Change my school")
-                        
                     ]
                 );
             }
@@ -566,8 +565,6 @@ function GoRtsZambia() {
     });
 
     self.add_state(self.make_emis_error_state('reg_emis_error', 'reg_emis'));
-
-    
 
     self.add_creator('reg_exit_emis', function(state_name, im) {
         return new EndState(
@@ -977,7 +974,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_learner_boys_phonetic_awareness",
         "perf_learner_girls_phonetic_awareness",
-        "How many boys achieved at least 4 out of 6 correct answers for Section " + 
+        "How many boys achieved at least 4 out of 6 correct answers for Section " +
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -989,7 +986,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_learner_girls_phonetic_awareness",
         "perf_learner_boys_vocabulary",
-        "How many girls achieved at least 4 out of 6 correct answers for Section " + 
+        "How many girls achieved at least 4 out of 6 correct answers for Section " +
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1193,4 +1190,3 @@ function GoRtsZambia() {
 var states = new GoRtsZambia();
 var im = new InteractionMachine(api, states);
 im.attach();
- 
