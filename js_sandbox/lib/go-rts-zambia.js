@@ -43,6 +43,14 @@ function GoRtsZambia() {
 
     // START Shared helpers
 
+    self.log_result = function() {
+        return function (result) {
+            var p = im.log('Got result ' + JSON.stringify(result));
+            p.add_callback(function() { return result; });
+            return p;
+        };
+    };
+
     self.cms_get = function(path) {
         var url = im.config.cms_api_root + path;
         var p = im.api_request("http.get", {
@@ -349,18 +357,19 @@ function GoRtsZambia() {
     self.cms_performance_teacher = function(im) {
         var p = self.get_contact(im);
         p.add_callback(function(result) {
-            var emis = result.contact["extras-rts_emis"];
-            var id = result.contact["extras-rts_id"];
+            var emis = parseInt(result.contact["extras-rts_emis"]);
+            var id = parseInt(result.contact["extras-rts_id"]);
             // Need to ensure no double save
             var contact_key = result.contact.key;
             if (result.contact["extras-rts_last_save_performance_teacher"] != im.get_user_answer('perf_teacher_ts_number')) {
                 var data = self.performance_data_teacher_collect(emis, id);
                 var p_tp = self.cms_post("data/teacherperformance/", data);
+
                 p_tp.add_callback(function(contact_key) {
                     return im.api_request('contacts.update_extras', {
                         key: result.contact.key,
                         fields: {
-                            "rts_last_save_performance_teacher": im.get_user_answer('perf_teacher_ts_number')
+                            "rts_last_save_performance_teacher": JSON.stringify(im.get_user_answer('perf_teacher_ts_number'))
                         }
                     });
                 });

@@ -11,12 +11,12 @@ class HeadTeacher(models.Model):
     msisdn = models.CharField(max_length=20)
     date_of_birth = models.DateField()
     is_zonal_head = models.BooleanField()
-    zonal_head_name = models.CharField(max_length=100, verbose_name=u'Zonal Head Name')
+    zonal_head_name = models.CharField(max_length=100, verbose_name=u'Zonal Head')
     created_at = models.DateTimeField(auto_now_add=True)
     emis = models.ForeignKey('hierarchy.School',
                              null=True,
                              blank=True,
-                             verbose_name=u'EMIS Number')
+                             verbose_name=u'EMIS')
 
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -27,8 +27,8 @@ class HeadTeacher(models.Model):
 
 class SchoolData(models.Model):
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'EMIS Number')
-    name = models.CharField(max_length=100, verbose_name=u'Name of School')
+                             verbose_name=u'EMIS')
+    name = models.CharField(max_length=100, verbose_name=u'Name')
     classrooms = models.IntegerField()
     teachers = models.IntegerField()
     teachers_g1 = models.IntegerField()
@@ -73,9 +73,9 @@ class TeacherPerfomanceData(models.Model):
     ts_number = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     academic_level = models.ForeignKey(AcademicAchievementCode,
-                                    verbose_name=u'Academic Achievment Code')
+                                    verbose_name=u'Academic Achievement')
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'emis Number')
+                             verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Head Teacher')
     def __unicode__(self):
@@ -98,7 +98,7 @@ class LearnerPerfomanceData(models.Model):
     outstanding_results = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'EMIS Number')
+                             verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
     def __unicode__(self):
