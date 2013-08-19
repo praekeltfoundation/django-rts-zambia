@@ -733,12 +733,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_teacher_ts_number",
         "perf_teacher_gender",
-        "Please enter the teacher's TS number",
+        "Please enter the teacher's TS number.",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for the teacher's TS number",
+        "Please provide a number value for the teacher's TS number.",
         {
             on_enter: function(){
                 var p = self.clear_contact_extra("rts_last_save_performance_teacher");
@@ -750,7 +750,7 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         'perf_teacher_gender',
         'perf_teacher_age',
-        "Please enter 1 if the teacher is a man or 2 if she is a woman",
+        "What is the gender of the teacher?",
         [
             new Choice("male", "Male"),
             new Choice("female", "Female")
@@ -760,12 +760,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_teacher_age",
         "perf_teacher_academic_level",
-        "Please enter the teacher's age in years e.g. 26",
+        "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for the teachers age'
+        "Please provide a number value for the teacher's age."
     ));
 
     self.add_state(new ChoiceState(
@@ -806,7 +806,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for pupils present'
+        'Please provide a number value for pupils present.'
     ));
 
     self.add_state(new FreeText(
@@ -817,31 +817,31 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for pupils enrolled'
+        'Please provide a number value for pupils enrolled.'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_classroom_environment_score",
         "perf_teacher_t_l_materials",
         "Enter the subtotal that the teacher achieved during the classroom " +
-            "observation for Section 2 (Classroom Environment)",
+            "observation for Section 2 (Classroom Environment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for classroom environment'
+        'Please provide a number value for the Classroom Environment subtotal.'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_t_l_materials",
         "perf_teacher_pupils_books_number",
         "Enter the subtotal that the teacher achieved during the classroom " +
-            "observation for Section 3 (Teaching and Learning Materials)",
+            "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for Teaching and Learning Materials'
+        'Please provide a number value for the Teaching and Learning Materials subtotal.'
     ));
 
     self.add_state(new FreeText(
@@ -853,19 +853,19 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for number of learners' books"
+        "Please provide a number value for number of learners' books."
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_pupils_materials_score",
         "perf_teacher_reading_lesson",
         "Enter the subtotal that the teacher achieved during the classroom observation " +
-            "for Section 4 (Learner Materials)",
+            "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for learner materials subtotal"
+        "Please provide a number value for the Learner Materials subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -877,7 +877,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for time on task subtotal"
+        "Please provide a number value for the Time on Task and Reading Practice subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -889,7 +889,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for learner engagement subtotal"
+        "Please provide a number value for the Learner Engagement subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -901,7 +901,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for teacher attitudes and beliefs subtotal"
+        "Please provide a number value for the Teacher Attitudes and Beliefs subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -913,7 +913,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for teacher training interview subtotal"
+        "Please provide a number value for the Teacher Training interview subtotal."
     ));
 
     self.add_creator('perf_teacher_completed', function(state_name, im) {
