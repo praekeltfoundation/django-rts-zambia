@@ -427,8 +427,7 @@ function GoRtsZambia() {
             function(choice) {
                 return choice.value;
             },
-            "Sorry!\nThat is not a EMIS we recognise. Make sure you have " +
-            "entered the number correctly.",
+            "There is a problem with the EMIS number you have entered.",
             [
                 new Choice(retry_state, "Try again"),
                 new Choice("reg_exit_emis", "Exit")
@@ -569,9 +568,9 @@ function GoRtsZambia() {
     self.add_creator('reg_exit_emis', function(state_name, im) {
         return new EndState(
             state_name,
-            "There seems to be a problem with the EMIS number. Please send a SMS " +
-            "with the code EMIS ERROR to " + im.config.sms_short_code + " " +
-            "and your district officer will be in touch.",
+            "We don't recognise your EMIS number. Please send a SMS with" +
+            " the words EMIS ERROR to 739 and your DEST will contact you" +
+            " to resolve the problem.",
             "initial_state"
         );
     });

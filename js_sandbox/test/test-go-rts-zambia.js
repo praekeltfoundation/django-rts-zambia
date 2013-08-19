@@ -141,8 +141,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "000A",
             next_state: "reg_emis_error",
-            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
-                "you have entered the number correctly.[^]" +
+            response: "^There is a problem with the EMIS number you" +
+                " have entered\\.[^]" +
                 "1. Try again[^]" +
                 "2. Exit$"
         });
@@ -161,9 +161,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_exit_emis",
-            response: "^There seems to be a problem with the EMIS number. " +
-                "Please send a SMS with the code EMIS ERROR to 1234 " +
-                "and your district officer will be in touch.$",
+            response: "^We don't recognise your EMIS number\\. Please send a" +
+                " SMS with the words EMIS ERROR to 739 and your DEST will" +
+                " contact you to resolve the problem\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -734,8 +734,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "000A",
             next_state: "manage_change_msisdn_emis_error",
-            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
-                "you have entered the number correctly.[^]" +
+            response: "^There is a problem with the EMIS number you" +
+                " have entered\\.[^]" +
                 "1. Try again[^]" +
                 "2. Exit$"
         });
@@ -754,9 +754,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_exit_emis",
-            response: "^There seems to be a problem with the EMIS number. " +
-                "Please send a SMS with the code EMIS ERROR to 1234 " +
-                "and your district officer will be in touch.$",
+            response: "^We don't recognise your EMIS number\\. Please send" +
+                " a SMS with the words EMIS ERROR to 739 and your DEST will" +
+                " contact you to resolve the problem\\.$",
             continue_session: false
         });
         p.then(done, done);
