@@ -1,4 +1,7 @@
 from django.db import models
+import mockups
+from mockups.generators import ChoiceGenerator
+
 
 
 class HeadTeacher(models.Model):
@@ -116,3 +119,31 @@ class InboundSMS(models.Model):
 
     class Meta:
         verbose_name = "Inbound SMS"
+
+
+# custom mockups for data generation
+
+class GenderGenerator(ChoiceGenerator):
+    choices = [u"male", u"female"]
+
+
+class TeacherPerfomanceDataFactory(mockups.Factory):
+    gender = GenderGenerator()
+
+
+class TeacherPerfomanceDataMockup(mockups.Mockup):
+    factory = TeacherPerfomanceDataFactory
+
+
+mockups.register(TeacherPerfomanceData, TeacherPerfomanceDataMockup)
+
+
+class LearnerPerfomanceDataFactory(mockups.Factory):
+    gender = GenderGenerator()
+
+
+class LearnerPerfomanceDataMockup(mockups.Mockup):
+    factory = LearnerPerfomanceDataFactory
+
+
+mockups.register(LearnerPerfomanceData, LearnerPerfomanceDataMockup)

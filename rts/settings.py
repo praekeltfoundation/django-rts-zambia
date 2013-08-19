@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'djcelery_email',
     'debug_toolbar',
     'tastypie',
+    'mockups',
     # sample apps to explain usage
     'hierarchy',
     'data',
