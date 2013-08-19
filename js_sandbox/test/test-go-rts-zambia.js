@@ -715,8 +715,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "0001",
             next_state: "manage_change_msisdn_confirm",
-            response: "^Thank you! We have now allocated your new contact mobile number " +
-            "to your current school.$",
+            response: "^Thank you! Your cell phone number is now the official" +
+                " number that your school will use to communicate with the" +
+                " Gateway\\.$",
             continue_session: false
         });
         p.then(done, done);
