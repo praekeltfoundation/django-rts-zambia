@@ -701,8 +701,9 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             return new EndState(
                 state_name,
-                "Thank you for registering! When you are ready you can dial in again " +
-                "to start reporting.",
+                "Congratulations! You are now registered as a user of the" +
+                " Gateway! Please dial in again when you are ready to start" +
+                " reporting on teacher and learner performance.",
                 "initial_state"
             );
         });
@@ -716,9 +717,9 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             return new EndState(
                 state_name,
-                "Thank you for registering! When you are ready you can dial in again " +
-                "to start reporting. You will also start receiving the monthly SMS's " +
-                "from your Headteachers.",
+                "Well done! You are now registered as a Zonal Head Teacher." +
+                " When you are ready, dial in to start reporting. You will" +
+                " also receive monthly SMS's from your zone.",
                 "initial_state"
             );
         });
