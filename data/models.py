@@ -1,6 +1,6 @@
 from django.db import models
 import mockups
-from mockups.generators import ChoiceGenerator
+from mockups.generators import ChoiceGenerator, IntegerGenerator
 
 
 
@@ -129,6 +129,19 @@ class GenderGenerator(ChoiceGenerator):
 
 class TeacherPerfomanceDataFactory(mockups.Factory):
     gender = GenderGenerator()
+    age = IntegerGenerator(min_value=29, max_value=50)
+    years_experience = IntegerGenerator(min_value=1, max_value=30)
+    g2_pupils_present = IntegerGenerator(min_value=30, max_value=50)
+    g2_pupils_registered = IntegerGenerator(min_value=30, max_value=50)
+    classroom_environment_score = IntegerGenerator(min_value=1, max_value=10)
+    t_l_materials = IntegerGenerator(min_value=1, max_value=10)
+    pupils_materials_score = IntegerGenerator(min_value=1, max_value=10)
+    pupils_books_number = IntegerGenerator(min_value=0, max_value=20)
+    reading_lesson = IntegerGenerator(min_value=1, max_value=10)
+    pupil_engagment_score = IntegerGenerator(min_value=1, max_value=10)
+    attitudes_and_beliefs = IntegerGenerator(min_value=1, max_value=10)
+    training_subtotal = IntegerGenerator(min_value=1, max_value=10)
+    ts_number = IntegerGenerator(min_value=10000, max_value=99999)
 
 
 class TeacherPerfomanceDataMockup(mockups.Mockup):
@@ -140,6 +153,15 @@ mockups.register(TeacherPerfomanceData, TeacherPerfomanceDataMockup)
 
 class LearnerPerfomanceDataFactory(mockups.Factory):
     gender = GenderGenerator()
+    total_number_pupils = IntegerGenerator(min_value=1, max_value=30)
+    phonetic_awareness = IntegerGenerator(min_value=1, max_value=10)
+    vocabulary = IntegerGenerator(min_value=1, max_value=10)
+    reading_comprehension = IntegerGenerator(min_value=1, max_value=10)
+    writing_diction = IntegerGenerator(min_value=1, max_value=10)
+    below_minimum_results = IntegerGenerator(min_value=1, max_value=30)
+    minimum_results = IntegerGenerator(min_value=1, max_value=10)
+    desirable_results = IntegerGenerator(min_value=1, max_value=10)
+    outstanding_results = IntegerGenerator(min_value=1, max_value=10)
 
 
 class LearnerPerfomanceDataMockup(mockups.Mockup):
