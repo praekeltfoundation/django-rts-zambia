@@ -213,8 +213,8 @@ function GoRtsZambia() {
             "pupil_engagement_score": im.get_user_answer('perf_teacher_pupil_engagement_score'),
             "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
             "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
-            "academic_level": im.get_user_answer('perf_teacher_academic_level'),
-            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "academic_level": "/api/v1/data/achievement/" + im.get_user_answer('perf_teacher_academic_level') + "/",
+            "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
         
@@ -233,7 +233,7 @@ function GoRtsZambia() {
             "desirable_results": im.get_user_answer('perf_learner_boys_desirable_results'),
             "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
-            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
 
@@ -248,7 +248,7 @@ function GoRtsZambia() {
             "desirable_results": im.get_user_answer('perf_learner_girls_desirable_results'),
             "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
-            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
         
