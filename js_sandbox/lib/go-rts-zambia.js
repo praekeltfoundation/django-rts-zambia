@@ -617,7 +617,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many classrooms you have in your school'
+        'Please provide a number value for how many classrooms you have in your school.'
     ));
 
 
@@ -629,7 +629,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many teachers in total do you have in your school'
+        'Please provide a number value for how many teachers in total you have in your school.'
     ));
 
     self.add_state(new FreeText(
@@ -640,7 +640,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many teachers teach G1 local language literacy'
+        'Please provide a number value for how many teachers teach G1 local language literacy.'
     ));
 
     self.add_state(new FreeText(
@@ -651,7 +651,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many teachers teach G2 local language literacy'
+        'Please provide a number value for how many teachers teach G2 local language literacy.'
     ));
 
     self.add_state(new FreeText(
@@ -662,7 +662,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for total number of G2 boys enrolled'
+        'Please provide a number value for the total number of G2 boys enrolled.'
     ));
 
     self.add_state(new FreeText(
@@ -673,7 +673,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for total number of G2 girls enrolled'
+        'Please provide a number value for the total number of G2 girls enrolled.'
     ));
 
     self.add_state(new ChoiceState(
