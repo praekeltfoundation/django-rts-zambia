@@ -1799,7 +1799,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "Fifty two",
             next_state: "perf_learner_boys_total",
-            response: "^Please provide a number value for total boys assessed$"
+            response: "^Please provide a number value for total boys assessed\\.$"
         });
         p.then(done, done);
     });
@@ -1832,7 +1832,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "forty two",
             next_state: "perf_learner_girls_total",
-            response: "^Please provide a number value for total girls assessed$"
+            response: "^Please provide a number value for total girls assessed\\.$"
         });
         p.then(done, done);
     });
@@ -1868,7 +1868,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lots",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a number value for total boys achieving 4 out of 6 correct answers$"
+            response: "^Please provide a number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -1906,7 +1906,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "loads",
             next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a number value for total girls achieving 4 out of 6 correct answers$"
+            response: "^Please provide a number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -1946,7 +1946,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "less",
             next_state: "perf_learner_boys_vocabulary",
-            response: "^Please provide a number value for total boys achieving 3 out of 6 correct answers$"
+            response: "^Please provide a number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -1988,7 +1988,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_vocabulary",
-            response: "^Please provide a number value for total girls achieving 3 out of 6 correct answers$"
+            response: "^Please provide a number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -2032,7 +2032,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lessly",
             next_state: "perf_learner_boys_reading_comprehension",
-            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -2078,7 +2078,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_reading_comprehension",
-            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -2126,7 +2126,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_writing_diction",
-            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers for Writing\\.$"
         });
         p.then(done, done);
     });
@@ -2176,7 +2176,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_writing_diction",
-            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers for Writing\\.$"
         });
         p.then(done, done);
     });
@@ -2227,7 +2227,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_outstanding_results",
-            response: "^Please provide a number value for total boys achieving 16 out of 20 or more$"
+            response: "^Please provide a number value for total boys achieving 16 out of 20 or more\\.$"
         });
         p.then(done, done);
     });
@@ -2280,7 +2280,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_outstanding_results",
-            response: "^Please provide a number value for total girls achieving 16 out of 20 or more$"
+            response: "^Please provide a number value for total girls achieving 16 out of 20 or more\\.$"
         });
         p.then(done, done);
     });
@@ -2335,7 +2335,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_desirable_results",
-            response: "^Please provide a number value for total boys achieving between 12 and 15 out of 20$"
+            response: "^Please provide a number value for total boys achieving between 12 and 15 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2392,7 +2392,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_desirable_results",
-            response: "^Please provide a number value for total girls achieving between 12 and 15 out of 20$"
+            response: "^Please provide a number value for total girls achieving between 12 and 15 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2452,7 +2452,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_minimum_results",
-            response: "^Please provide a number value for total boys achieving between 8 and 11 out of 20$"
+            response: "^Please provide a number value for total boys achieving between 8 and 11 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2513,12 +2513,10 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_minimum_results",
-            response: "^Please provide a number value for total girls achieving between 8 and 11 out of 20$"
+            response: "^Please provide a number value for total girls achieving between 8 and 11 out of 20\\.$"
         });
         p.then(done, done);
     });
-
-    
 
     it("entering total girls minimum results should ask for total boys below minimum results", function (done) {
         var user = {
@@ -2578,7 +2576,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatering",
             next_state: "perf_learner_boys_below_minimum_results",
-            response: "^Please provide a number value for total boys achieving between 0 and 7 out of 20$"
+            response: "^Please provide a number value for total boys achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2643,7 +2641,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greating",
             next_state: "perf_learner_girls_below_minimum_results",
-            response: "^Please provide a number value for total girls achieving between 0 and 7 out of 20$"
+            response: "^Please provide a number value for total girls achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2677,8 +2675,8 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             content: "46",
             next_state: "perf_learner_completed",
             response: "^Congratulations. You have finished reporting on the learner assessment.[^]" +
-                "1. Go back to the main menu[^]" +
-                "2. Exit$"
+                "1. Go back to the main menu\\.[^]" +
+                "2. Exit\\.$"
         });
         p.then(done, done);
     });
