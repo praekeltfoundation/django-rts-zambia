@@ -109,7 +109,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             content: "1",
             next_state: "reg_emis",
             response: "^Please enter your school's EMIS number. " +
-                "This should have 4 digits e.g 4351.$"
+                "This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -181,7 +181,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_emis",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -699,7 +699,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "3",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -773,7 +773,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -786,7 +786,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "manage_change_emis",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });

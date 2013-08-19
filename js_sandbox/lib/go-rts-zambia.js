@@ -490,19 +490,19 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_emis",
         "reg_school_name",
-        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
         "manage_change_msisdn_emis_lookup",
         "manage_change_msisdn_confirm",
-        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
         "manage_change_emis",
         "reg_school_name",
-        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
