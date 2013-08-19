@@ -393,9 +393,9 @@ function GoRtsZambia() {
                 var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
                 p_lp_boys.add_callback(function(){
                     var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
-                    p_lp_girls.add_callback(function(contact_key) {
+                    p_lp_girls.add_callback(function() {
                         return im.api_request('contacts.update_extras', {
-                            key: result.contact.key,
+                            key: contact_key,
                             fields: {
                                 "rts_last_save_performance_learner": 'true'
                             }
