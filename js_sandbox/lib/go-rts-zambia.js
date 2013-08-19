@@ -950,7 +950,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys assessed",
+        "Please provide a number value for total boys assessed.",
         {
             on_enter: function(){
                 var p = self.clear_contact_extra("rts_last_save_performance_learner");
@@ -967,7 +967,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls assessed"
+        "Please provide a number value for total girls assessed."
     ));
 
     self.add_state(new FreeText(
@@ -979,7 +979,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 4 out of 6 correct answers"
+        "Please provide a number value for total boys achieving 4 out of 6" +
+        " correct answers for Phonics and Phonemic Awareness."
     ));
 
     self.add_state(new FreeText(
@@ -991,7 +992,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 4 out of 6 correct answers"
+        "Please provide a number value for total girls achieving 4 out of 6" +
+        " correct answers for Phonics and Phonemic Awareness."
     ));
 
     self.add_state(new FreeText(
@@ -1002,7 +1004,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 3 out of 6 correct answers"
+        "Please provide a number value for total boys achieving 3 out of 6" +
+        " correct answers for Vocabulary."
     ));
 
     self.add_state(new FreeText(
@@ -1013,7 +1016,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 3 out of 6 correct answers"
+        "Please provide a number value for total girls achieving 3 out of 6" +
+        " correct answers for Vocabulary."
     ));
 
     self.add_state(new FreeText(
@@ -1024,7 +1028,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+        "Please provide a number value for total boys achieving 2 out of 4" +
+        " correct answers for Comprehension."
     ));
 
     self.add_state(new FreeText(
@@ -1035,7 +1040,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+        "Please provide a number value for total girls achieving 2 out of 4" +
+        " correct answers for Comprehension."
     ));
 
     self.add_state(new FreeText(
@@ -1046,7 +1052,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+        "Please provide a number value for total boys achieving 2 out of 4" +
+        " correct answers for Writing."
     ));
 
     self.add_state(new FreeText(
@@ -1057,7 +1064,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+        "Please provide a number value for total girls achieving 2 out of 4" +
+        " correct answers for Writing."
     ));
 
     self.add_state(new FreeText(
@@ -1068,7 +1076,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 16 out of 20 or more"
+        "Please provide a number value for total boys achieving 16 out of 20 or more."
     ));
 
     self.add_state(new FreeText(
@@ -1079,7 +1087,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 16 out of 20 or more"
+        "Please provide a number value for total girls achieving 16 out of 20 or more."
     ));
 
     self.add_state(new FreeText(
@@ -1090,7 +1098,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving between 12 and 15 out of 20"
+        "Please provide a number value for total boys achieving between 12 and 15 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1101,7 +1109,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving between 12 and 15 out of 20"
+        "Please provide a number value for total girls achieving between 12 and 15 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1112,7 +1120,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving between 8 and 11 out of 20"
+        "Please provide a number value for total boys achieving between 8 and 11 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1123,7 +1131,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving between 8 and 11 out of 20"
+        "Please provide a number value for total girls achieving between 8 and 11 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1134,7 +1142,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving between 0 and 7 out of 20"
+        "Please provide a number value for total boys achieving between 0 and 7 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1145,7 +1153,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving between 0 and 7 out of 20"
+        "Please provide a number value for total girls achieving between 0 and 7 out of 20."
     ));
 
     self.add_creator('perf_learner_completed', function(state_name, im) {
@@ -1160,8 +1168,8 @@ function GoRtsZambia() {
                     },
                 "Congratulations. You have finished reporting on the learner assessment.",
                 [
-                    new Choice("initial_state", "Go back to the main menu"),
-                    new Choice("end_state", "Exit")
+                    new Choice("initial_state", "Go back to the main menu."),
+                    new Choice("end_state", "Exit.")
                 ]
             );
         });
