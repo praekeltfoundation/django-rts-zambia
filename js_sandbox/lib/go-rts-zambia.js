@@ -177,7 +177,7 @@ function GoRtsZambia() {
             headteacher_data['is_zonal_head'] = true;
         }
         var school_data = {
-            "name": im.get_user_answer('reg_school_name'),   
+            "name": im.get_user_answer('reg_school_name'),
             "classrooms": parseInt(im.get_user_answer('reg_school_classrooms')),
             "teachers": parseInt(im.get_user_answer('reg_school_teachers')),
             "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1')),
@@ -185,7 +185,7 @@ function GoRtsZambia() {
             "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys')),
             "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'))
         };
-        
+
         if (im.get_user_answer('initial_state') == 'manage_change_emis'){
             school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
             headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
@@ -193,7 +193,7 @@ function GoRtsZambia() {
             school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
             headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
         }
-        
+
         return [headteacher_data, school_data];
     };
 
@@ -217,7 +217,7 @@ function GoRtsZambia() {
             "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
-        
+
         return data;
     };
 
@@ -251,7 +251,7 @@ function GoRtsZambia() {
             "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
-        
+
         return [data_boys, data_girls];
     };
 
