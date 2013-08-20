@@ -14,6 +14,12 @@ class TestAdminView(TestCase):
         self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
         self.zones = ['Kikombe', 'LUKWETA', 'MADZIMOYO', 'KALELA', 'Mbaso', 'Bweupe']
         self.schools = [3633, 14090, 8682, 2064, 1774, 2525]
+        self.headteachers = [2064, 3633, 2525]
+        self.schooldatas = [2064, 3633, 2525]
+        self.teacherperformancedata = [2064, 3633, 2525]
+        self.learnerperformancedata = [2064, 2064, 3633,  3633, 2525, 2525]
+        self.inboundsms = [2064, 3633, 2525]
+
     def test_admin_can_view_all(self):
         self.client.login(username=self.admin.username,
                           password="pass123")
@@ -53,57 +59,220 @@ class TestAdminView(TestCase):
         self.assertEqual(sorted(school), sorted(self.schools))
 
 
+        url = reverse("admin:data_headteacher_changelist")
+        response = self.client.get(url)
+        headteacher_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        headteacher = []
+        [headteacher.append(k.emis.emis) for k in headteacher_result]
+        self.assertEqual(sorted(headteacher), sorted(self.headteachers))
+
+        url = reverse("admin:data_schooldata_changelist")
+        response = self.client.get(url)
+        schooldata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        schooldata = []
+        [schooldata.append(k.emis.emis) for k in schooldata_result]
+        self.assertEqual(sorted(schooldata), sorted(self.schooldatas))
+
+        url = reverse("admin:data_teacherperformancedata_changelist")
+        response = self.client.get(url)
+        teacherperformancedata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        teacherperformancedata = []
+        [teacherperformancedata.append(k.emis.emis) for k in teacherperformancedata_result]
+        self.assertEqual(sorted(teacherperformancedata), sorted(self.teacherperformancedata))
+
+        url = reverse("admin:data_learnerperformancedata_changelist")
+        response = self.client.get(url)
+        learnerperformancedata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        learnerperformancedata = []
+        [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
+        self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
+
+        url = reverse("admin:data_inboundsms_changelist")
+        response = self.client.get(url)
+        inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        inboundsms = []
+        [inboundsms.append(k.created_by.emis.emis) for k in inboundsms_result]
+        self.assertEqual(sorted(inboundsms), sorted(self.inboundsms))
+
+
 
 class TestDistrictAdmin1Area(TestCase):
-    fixtures = ['test_hierarchy.json', 'test_data.json']
+    fixtures = ['test_hierarchy.json', 'test_data.json', 'test_auth.json', 'test_users_district.json']
 
     def setUp(self):
-        self.d1 = User.objects.create_user('district_admin1',
-                                            'district_admin@test.com', 
-                                            'pass123',
-                                            )
+        self.d1 = User.objects.get(username="d1")
+                                            
         self.provinces = ['North Western', 'WESTERN', 'EASTERN', 'MUCHINGA', 'Luapula', 'Northern']
         self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
         self.zones = ['Kikombe', 'LUKWETA', 'MADZIMOYO', 'KALELA', 'Mbaso', 'Bweupe']
-        self.schools = [3633, 14090, 8682, 2064, 1774, 2525]
-    def test_admin_can_view_all(self):
-        print self.d1.__dict__['_state']
-        print dir(self.d1)
-        print self.d1.userdistrict
-        
-        # self.client.login(username=self.admin.username,
-        #                   password="pass123")
+        self.schools = [3633]
+        self.headteachers = [3633]
+        self.schooldatas = [3633]
+        self.teacherperformancedata = [3633]
+        self.learnerperformancedata = [3633, 3633]
+        self.inboundsms = [3633]
 
-        # url_index = reverse("admin:index")
-        # response = self.client.get(url_index)
+    def test_d2_can_view_all(self):
+        self.client.login(username=self.d1.username,
+                          password="d1")
 
-        # url = reverse("admin:hierarchy_province_changelist")
-        # response = self.client.get(url)
-        # province_result = response.__dict__['context_data']['cl'].__dict__['result_list']
-        # province = []
-        # [province.append(k.name) for k in province_result]
-        # self.assertEqual(sorted(province), sorted(self.provinces))
+        url_index = reverse("admin:index")
+        response = self.client.get(url_index)
 
-
-        # url = reverse("admin:hierarchy_district_changelist")
-        # response = self.client.get(url)
-        # district_result = response.__dict__['context_data']['cl'].__dict__['result_list']
-        # district = []
-        # [district.append(k.name) for k in district_result]
-        # self.assertEqual(sorted(district), sorted(self.districts))
+        url = reverse("admin:hierarchy_province_changelist")
+        response = self.client.get(url)
+        province_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        province = []
+        [province.append(k.name) for k in province_result]
+        self.assertEqual(sorted(province), sorted(self.provinces))
 
 
-        # url = reverse("admin:hierarchy_zone_changelist")
-        # response = self.client.get(url)
-        # zone_result =  response.__dict__['context_data']['cl'].__dict__['result_list']
-        # zone = []
-        # [zone.append(k.name) for k in zone_result]
-        # self.assertEqual(sorted(zone), sorted(self.zones))
+        url = reverse("admin:hierarchy_district_changelist")
+        response = self.client.get(url)
+        district_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        district = []
+        [district.append(k.name) for k in district_result]
+        self.assertEqual(sorted(district), sorted(self.districts))
 
 
-        # url = reverse("admin:hierarchy_school_changelist")
-        # response = self.client.get(url)
-        # school_result = response.__dict__['context_data']['cl'].__dict__['result_list']
-        # school = []
-        # [school.append(k.emis) for k in school_result]
-        # self.assertEqual(sorted(school), sorted(self.schools))
+        url = reverse("admin:hierarchy_zone_changelist")
+        response = self.client.get(url)
+        zone_result =  response.__dict__['context_data']['cl'].__dict__['result_list']
+        zone = []
+        [zone.append(k.name) for k in zone_result]
+        self.assertEqual(sorted(zone), sorted(self.zones))
+
+
+        url = reverse("admin:hierarchy_school_changelist")
+        response = self.client.get(url)
+        school_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        school = []
+        [school.append(k.emis) for k in school_result]
+        self.assertEqual(sorted(school), sorted(self.schools))
+
+
+        url = reverse("admin:data_headteacher_changelist")
+        response = self.client.get(url)
+        headteacher_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        headteacher = []
+        [headteacher.append(k.emis.emis) for k in headteacher_result]
+        self.assertEqual(sorted(headteacher), sorted(self.headteachers))
+
+        url = reverse("admin:data_schooldata_changelist")
+        response = self.client.get(url)
+        schooldata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        schooldata = []
+        [schooldata.append(k.emis.emis) for k in schooldata_result]
+        self.assertEqual(sorted(schooldata), sorted(self.schooldatas))
+
+        url = reverse("admin:data_teacherperformancedata_changelist")
+        response = self.client.get(url)
+        teacherperformancedata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        teacherperformancedata = []
+        [teacherperformancedata.append(k.emis.emis) for k in teacherperformancedata_result]
+        self.assertEqual(sorted(teacherperformancedata), sorted(self.teacherperformancedata))
+
+        url = reverse("admin:data_learnerperformancedata_changelist")
+        response = self.client.get(url)
+        learnerperformancedata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        learnerperformancedata = []
+        [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
+        self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
+
+        url = reverse("admin:data_inboundsms_changelist")
+        response = self.client.get(url)
+        inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        inboundsms = []
+        [inboundsms.append(k.created_by.emis.emis) for k in inboundsms_result]
+        self.assertEqual(sorted(inboundsms), sorted(self.inboundsms))
+
+
+class TestDistrictAdmin2Area(TestCase):
+    fixtures = ['test_hierarchy.json', 'test_data.json', 'test_auth.json', 'test_users_district.json']
+
+    def setUp(self):
+        self.d2 = User.objects.get(username="d2")
+                                            
+        self.provinces = ['North Western', 'WESTERN', 'EASTERN', 'MUCHINGA', 'Luapula', 'Northern']
+        self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
+        self.zones = ['Kikombe', 'LUKWETA', 'MADZIMOYO', 'KALELA', 'Mbaso', 'Bweupe']
+        self.schools = [2525]
+        self.headteachers = [2525]
+        self.schooldatas = [2525]
+        self.teacherperformancedata = [2525]
+        self.learnerperformancedata = [2525, 2525]
+        self.inboundsms = [2525]
+
+    def test_d2_can_view_all(self):
+        self.client.login(username=self.d2.username,
+                          password="d2")
+
+        url_index = reverse("admin:index")
+        response = self.client.get(url_index)
+
+        url = reverse("admin:hierarchy_province_changelist")
+        response = self.client.get(url)
+        province_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        province = []
+        [province.append(k.name) for k in province_result]
+        self.assertEqual(sorted(province), sorted(self.provinces))
+
+
+        url = reverse("admin:hierarchy_district_changelist")
+        response = self.client.get(url)
+        district_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        district = []
+        [district.append(k.name) for k in district_result]
+        self.assertEqual(sorted(district), sorted(self.districts))
+
+
+        url = reverse("admin:hierarchy_zone_changelist")
+        response = self.client.get(url)
+        zone_result =  response.__dict__['context_data']['cl'].__dict__['result_list']
+        zone = []
+        [zone.append(k.name) for k in zone_result]
+        self.assertEqual(sorted(zone), sorted(self.zones))
+
+
+        url = reverse("admin:hierarchy_school_changelist")
+        response = self.client.get(url)
+        school_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        school = []
+        [school.append(k.emis) for k in school_result]
+        self.assertEqual(sorted(school), sorted(self.schools))
+
+
+        url = reverse("admin:data_headteacher_changelist")
+        response = self.client.get(url)
+        headteacher_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        headteacher = []
+        [headteacher.append(k.emis.emis) for k in headteacher_result]
+        self.assertEqual(sorted(headteacher), sorted(self.headteachers))
+
+        url = reverse("admin:data_schooldata_changelist")
+        response = self.client.get(url)
+        schooldata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        schooldata = []
+        [schooldata.append(k.emis.emis) for k in schooldata_result]
+        self.assertEqual(sorted(schooldata), sorted(self.schooldatas))
+
+        url = reverse("admin:data_teacherperformancedata_changelist")
+        response = self.client.get(url)
+        teacherperformancedata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        teacherperformancedata = []
+        [teacherperformancedata.append(k.emis.emis) for k in teacherperformancedata_result]
+        self.assertEqual(sorted(teacherperformancedata), sorted(self.teacherperformancedata))
+
+        url = reverse("admin:data_learnerperformancedata_changelist")
+        response = self.client.get(url)
+        learnerperformancedata_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        learnerperformancedata = []
+        [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
+        self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
+
+        url = reverse("admin:data_inboundsms_changelist")
+        response = self.client.get(url)
+        inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
+        inboundsms = []
+        [inboundsms.append(k.created_by.emis.emis) for k in inboundsms_result]
+        self.assertEqual(sorted(inboundsms), sorted(self.inboundsms))
