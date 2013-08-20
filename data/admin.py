@@ -1,12 +1,13 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, InboundSMS, AcademicAchievementCode,
-                    TeacherPerfomanceData, LearnerPerfomanceData)
+                    TeacherPerformanceData, LearnerPerformanceData)
 from actions import export_as_csv_action
 
 
 
 class SchoolDataAdmin(admin.ModelAdmin):
-    list_display = ["emis", "created_at"]
+    list_display = ["emis", "name", "classrooms", "teachers",
+                    "teachers_g1", "teachers_g2", "boys_g2", "girls_g2", "created_at","created_at"]
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
     def queryset(self, request):
@@ -20,7 +21,7 @@ class SchoolDataAdmin(admin.ModelAdmin):
 
 
 class HeadTeacherAdmin(admin.ModelAdmin):
-    list_display = ["id", "emis", "first_name", "last_name", "msisdn", "created_at"]
+    list_display = ["emis", "first_name", "last_name", "msisdn", "gender", "date_of_birth", "is_zonal_head", "zonal_head_name","created_at"]
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
 
@@ -35,29 +36,34 @@ class HeadTeacherAdmin(admin.ModelAdmin):
         print dir(request.user.userdistrict);
         return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
 
-class TeacherPerfomanceDataAdmin(admin.ModelAdmin):
-    list_display = ["emis", "created_by", "created_at"]
+class TeacherPerformanceDataAdmin(admin.ModelAdmin):
+    list_display = ["emis", "gender", "age", "years_experience", "g2_pupils_present", "g2_pupils_registered",
+                    "classroom_environment_score", "t_l_materials", "pupils_materials_score",
+                    "pupils_books_number", "reading_lesson", "pupil_engagement_score", "attitudes_and_beliefs",
+                    "training_subtotal", "ts_number", "academic_level", "created_by", "created_at"]
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
     def queryset(self, request):
         """
         Limits queries for pages that belong to district admin
         """
-        qs = super(TeacherPerfomanceDataAdmin, self).queryset(request)
+        qs = super(TeacherPerformanceDataAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
         return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
 
 
-class LearnerPerfomanceDataAdmin(admin.ModelAdmin):
-    list_display = ["emis", "created_by", "created_at"]
+class LearnerPerformanceDataAdmin(admin.ModelAdmin):
+    list_display = ["emis", "gender", "total_number_pupils", "phonetic_awareness", "vocabulary",
+                    "reading_comprehension", "writing_diction", "below_minimum_results", "minimum_results",
+                    "desirable_results", "outstanding_results", "created_by", "created_at"]
     actions = [export_as_csv_action("Export selected objects as CSV file")]
 
     def queryset(self, request):
         """
         Limits queries for pages that belong to district admin
         """
-        qs = super(LearnerPerfomanceDataAdmin, self).queryset(request)
+        qs = super(LearnerPerformanceDataAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
         return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
@@ -91,7 +97,7 @@ class AcademicAchievementCodeAdmin(admin.ModelAdmin):
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
-admin.site.register(TeacherPerfomanceData, TeacherPerfomanceDataAdmin)
-admin.site.register(LearnerPerfomanceData, LearnerPerfomanceDataAdmin)
+admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
+admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
 admin.site.register(InboundSMS, InboundSMSAdmin)
 admin.site.register(AcademicAchievementCode, AcademicAchievementCodeAdmin)

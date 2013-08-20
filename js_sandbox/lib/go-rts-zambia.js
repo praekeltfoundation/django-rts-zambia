@@ -177,7 +177,7 @@ function GoRtsZambia() {
             headteacher_data['is_zonal_head'] = true;
         }
         var school_data = {
-            "name": im.get_user_answer('reg_school_name'),   
+            "name": im.get_user_answer('reg_school_name'),
             "classrooms": parseInt(im.get_user_answer('reg_school_classrooms')),
             "teachers": parseInt(im.get_user_answer('reg_school_teachers')),
             "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1')),
@@ -185,7 +185,7 @@ function GoRtsZambia() {
             "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys')),
             "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'))
         };
-        
+
         if (im.get_user_answer('initial_state') == 'manage_change_emis'){
             school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
             headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
@@ -193,7 +193,7 @@ function GoRtsZambia() {
             school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
             headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
         }
-        
+
         return [headteacher_data, school_data];
     };
 
@@ -213,11 +213,11 @@ function GoRtsZambia() {
             "pupil_engagement_score": im.get_user_answer('perf_teacher_pupil_engagement_score'),
             "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
             "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
-            "academic_level": im.get_user_answer('perf_teacher_academic_level'),
-            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "academic_level": "/api/v1/data/achievement/" + im.get_user_answer('perf_teacher_academic_level') + "/",
+            "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
-        
+
         return data;
     };
 
@@ -233,7 +233,7 @@ function GoRtsZambia() {
             "desirable_results": im.get_user_answer('perf_learner_boys_desirable_results'),
             "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
-            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
 
@@ -248,10 +248,10 @@ function GoRtsZambia() {
             "desirable_results": im.get_user_answer('perf_learner_girls_desirable_results'),
             "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
-            "emis": "/api/v1/hierarchy/school/emis/" + emis + "/",
+            "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
-        
+
         return [data_boys, data_girls];
     };
 
@@ -264,11 +264,13 @@ function GoRtsZambia() {
     };
 
     self.clear_contact_extra = function(extra){
+        var fields = {};
+        fields[extra] = "";
         var p = self.get_contact(im);
         p.add_callback(function(result) {
             return im.api_request('contacts.update_extras', {
                 key: result.contact.key,
-                fields: {extra: ""}
+                fields: fields
             });
         });
         return p;
@@ -393,9 +395,9 @@ function GoRtsZambia() {
                 var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
                 p_lp_boys.add_callback(function(){
                     var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
-                    p_lp_girls.add_callback(function(contact_key) {
+                    p_lp_girls.add_callback(function() {
                         return im.api_request('contacts.update_extras', {
-                            key: result.contact.key,
+                            key: contact_key,
                             fields: {
                                 "rts_last_save_performance_learner": 'true'
                             }
@@ -427,8 +429,7 @@ function GoRtsZambia() {
             function(choice) {
                 return choice.value;
             },
-            "Sorry!\nThat is not a EMIS we recognise. Make sure you have " +
-            "entered the number correctly.",
+            "There is a problem with the EMIS number you have entered.",
             [
                 new Choice(retry_state, "Try again"),
                 new Choice("reg_exit_emis", "Exit")
@@ -461,11 +462,11 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to SPERT. What would you like to do?",
+                    "Welcome to the Zambia School Gateway! What would you like to do?",
                     [
-                        new Choice("reg_emis", "Register as a new user"),
-                        new Choice("manage_change_emis", "Change my school"),
-                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary mobile number")
+                        new Choice("reg_emis", "Register as a new user."),
+                        new Choice("manage_change_emis", "Change my school."),
+                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary cell phone number.")
                     ]
                 );
             } else {
@@ -475,12 +476,11 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to SPERT. What would you like to do?",
+                    "Welcome to the Zambia School Gateway. What would you like to do?",
                     [
-                        new Choice("perf_teacher_ts_number", "Add a classroom observation report"),
-                        new Choice("perf_learner_boys_total", "Add a learner performance report"),
-                        new Choice("manage_change_emis", "Change my school")
-                        
+                        new Choice("perf_teacher_ts_number", "Report on teacher performance."),
+                        new Choice("perf_learner_boys_total", "Report on learner performance."),
+                        new Choice("manage_change_emis", "Change my school.")
                     ]
                 );
             }
@@ -491,19 +491,19 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_emis",
         "reg_school_name",
-        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
         "manage_change_msisdn_emis_lookup",
         "manage_change_msisdn_confirm",
-        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
         "manage_change_emis",
         "reg_school_name",
-        "Please enter your school's EMIS number. This should have 4 digits e.g 4351."
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
@@ -512,8 +512,8 @@ function GoRtsZambia() {
             // EMIS valid
             return new EndState(
                 state_name,
-                "Thank you! We have now allocated your new contact mobile number " +
-                "to your current school.",
+                "Thank you! Your cell phone number is now the official number" +
+                " that your school will use to communicate with the Gateway.",
                 "initial_state",
                 {
                     on_enter: function() {
@@ -567,14 +567,12 @@ function GoRtsZambia() {
 
     self.add_state(self.make_emis_error_state('reg_emis_error', 'reg_emis'));
 
-    
-
     self.add_creator('reg_exit_emis', function(state_name, im) {
         return new EndState(
             state_name,
-            "There seems to be a problem with the EMIS number. Please send a SMS " +
-            "with the code EMIS ERROR to " + im.config.sms_short_code + " " +
-            "and your district officer will be in touch.",
+            "We don't recognise your EMIS number. Please send a SMS with" +
+            " the words EMIS ERROR to 739 and your DEST will contact you" +
+            " to resolve the problem.",
             "initial_state"
         );
     });
@@ -606,10 +604,10 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         'reg_gender',
         'reg_school_classrooms',
-        "Enter 1 if you are a woman or 2 if you are a man.",
+        "What is your gender?",
         [
-            new Choice("female", "Woman"),
-            new Choice("male", "Man")
+            new Choice("female", "Female"),
+            new Choice("male", "Male")
         ]
     ));
 
@@ -621,7 +619,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many classrooms you have in your school'
+        'Please provide a number value for how many classrooms you have in your school.'
     ));
 
 
@@ -633,7 +631,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many teachers in total do you have in your school'
+        'Please provide a number value for how many teachers in total you have in your school.'
     ));
 
     self.add_state(new FreeText(
@@ -644,7 +642,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many teachers teach G1 local language literacy'
+        'Please provide a number value for how many teachers teach G1 local language literacy.'
     ));
 
     self.add_state(new FreeText(
@@ -655,7 +653,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for how many teachers teach G2 local language literacy'
+        'Please provide a number value for how many teachers teach G2 local language literacy.'
     ));
 
     self.add_state(new FreeText(
@@ -666,7 +664,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for total number of G2 boys enrolled'
+        'Please provide a number value for the total number of G2 boys enrolled.'
     ));
 
     self.add_state(new FreeText(
@@ -677,7 +675,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for total number of G2 girls enrolled'
+        'Please provide a number value for the total number of G2 girls enrolled.'
     ));
 
     self.add_state(new ChoiceState(
@@ -705,8 +703,9 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             return new EndState(
                 state_name,
-                "Thank you for registering! When you are ready you can dial in again " +
-                "to start reporting.",
+                "Congratulations! You are now registered as a user of the" +
+                " Gateway! Please dial in again when you are ready to start" +
+                " reporting on teacher and learner performance.",
                 "initial_state"
             );
         });
@@ -720,9 +719,9 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             return new EndState(
                 state_name,
-                "Thank you for registering! When you are ready you can dial in again " +
-                "to start reporting. You will also start receiving the monthly SMS's " +
-                "from your Headteachers.",
+                "Well done! You are now registered as a Zonal Head Teacher." +
+                " When you are ready, dial in to start reporting. You will" +
+                " also receive monthly SMS's from your zone.",
                 "initial_state"
             );
         });
@@ -736,12 +735,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_teacher_ts_number",
         "perf_teacher_gender",
-        "Please enter the teacher's TS number",
+        "Please enter the teacher's TS number.",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for the teacher's TS number",
+        "Please provide a number value for the teacher's TS number.",
         {
             on_enter: function(){
                 var p = self.clear_contact_extra("rts_last_save_performance_teacher");
@@ -753,7 +752,7 @@ function GoRtsZambia() {
     self.add_state(new ChoiceState(
         'perf_teacher_gender',
         'perf_teacher_age',
-        "Please enter 1 if the teacher is a man or 2 if she is a woman",
+        "What is the gender of the teacher?",
         [
             new Choice("male", "Male"),
             new Choice("female", "Female")
@@ -763,12 +762,12 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_teacher_age",
         "perf_teacher_academic_level",
-        "Please enter the teacher's age in years e.g. 26",
+        "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for the teachers age'
+        "Please provide a number value for the teacher's age."
     ));
 
     self.add_state(new ChoiceState(
@@ -809,7 +808,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for pupils present'
+        'Please provide a number value for pupils present.'
     ));
 
     self.add_state(new FreeText(
@@ -820,31 +819,31 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for pupils enrolled'
+        'Please provide a number value for pupils enrolled.'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_classroom_environment_score",
         "perf_teacher_t_l_materials",
         "Enter the subtotal that the teacher achieved during the classroom " +
-            "observation for Section 2 (Classroom Environment)",
+            "observation for Section 2 (Classroom Environment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for classroom environment'
+        'Please provide a number value for the Classroom Environment subtotal.'
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_t_l_materials",
         "perf_teacher_pupils_books_number",
         "Enter the subtotal that the teacher achieved during the classroom " +
-            "observation for Section 3 (Teaching and Learning Materials)",
+            "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        'Please provide a number value for Teaching and Learning Materials'
+        'Please provide a number value for the Teaching and Learning Materials subtotal.'
     ));
 
     self.add_state(new FreeText(
@@ -856,19 +855,19 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for number of learners' books"
+        "Please provide a number value for number of learners' books."
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_pupils_materials_score",
         "perf_teacher_reading_lesson",
         "Enter the subtotal that the teacher achieved during the classroom observation " +
-            "for Section 4 (Learner Materials)",
+            "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for learner materials subtotal"
+        "Please provide a number value for the Learner Materials subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -880,7 +879,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for time on task subtotal"
+        "Please provide a number value for the Time on Task and Reading Practice subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -892,7 +891,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for learner engagement subtotal"
+        "Please provide a number value for the Learner Engagement subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -904,7 +903,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for teacher attitudes and beliefs subtotal"
+        "Please provide a number value for the Teacher Attitudes and Beliefs subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -916,7 +915,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for teacher training interview subtotal"
+        "Please provide a number value for the Teacher Training interview subtotal."
     ));
 
     self.add_creator('perf_teacher_completed', function(state_name, im) {
@@ -929,12 +928,11 @@ function GoRtsZambia() {
                 function(choice) {
                         return choice.value;
                     },
-                "You have successfully added and assessed this teacher. " +
-                    "What would you like to do now?",
+                "Congratulations, you have finished reporting on this teacher.",
                 [
-                    new Choice("perf_teacher_ts_number", "Add another teacher"),
-                    new Choice("initial_state", "Go back to the main menu"),
-                    new Choice("end_state", "Exit")
+                    new Choice("perf_teacher_ts_number", "Add another teacher."),
+                    new Choice("initial_state", "Go back to the main menu."),
+                    new Choice("end_state", "Exit.")
                 ]
             );
         });
@@ -954,7 +952,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys assessed",
+        "Please provide a number value for total boys assessed.",
         {
             on_enter: function(){
                 var p = self.clear_contact_extra("rts_last_save_performance_learner");
@@ -971,31 +969,33 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls assessed"
+        "Please provide a number value for total girls assessed."
     ));
 
     self.add_state(new FreeText(
         "perf_learner_boys_phonetic_awareness",
         "perf_learner_girls_phonetic_awareness",
-        "How many boys achieved at least 4 out of 6 correct answers for Section " + 
+        "How many boys achieved at least 4 out of 6 correct answers for Section " +
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 4 out of 6 correct answers"
+        "Please provide a number value for total boys achieving 4 out of 6" +
+        " correct answers for Phonics and Phonemic Awareness."
     ));
 
     self.add_state(new FreeText(
         "perf_learner_girls_phonetic_awareness",
         "perf_learner_boys_vocabulary",
-        "How many girls achieved at least 4 out of 6 correct answers for Section " + 
+        "How many girls achieved at least 4 out of 6 correct answers for Section " +
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 4 out of 6 correct answers"
+        "Please provide a number value for total girls achieving 4 out of 6" +
+        " correct answers for Phonics and Phonemic Awareness."
     ));
 
     self.add_state(new FreeText(
@@ -1006,7 +1006,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 3 out of 6 correct answers"
+        "Please provide a number value for total boys achieving 3 out of 6" +
+        " correct answers for Vocabulary."
     ));
 
     self.add_state(new FreeText(
@@ -1017,7 +1018,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 3 out of 6 correct answers"
+        "Please provide a number value for total girls achieving 3 out of 6" +
+        " correct answers for Vocabulary."
     ));
 
     self.add_state(new FreeText(
@@ -1028,7 +1030,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+        "Please provide a number value for total boys achieving 2 out of 4" +
+        " correct answers for Comprehension."
     ));
 
     self.add_state(new FreeText(
@@ -1039,7 +1042,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+        "Please provide a number value for total girls achieving 2 out of 4" +
+        " correct answers for Comprehension."
     ));
 
     self.add_state(new FreeText(
@@ -1050,7 +1054,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 2 out of 4 correct answers"
+        "Please provide a number value for total boys achieving 2 out of 4" +
+        " correct answers for Writing."
     ));
 
     self.add_state(new FreeText(
@@ -1061,7 +1066,8 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 2 out of 4 correct answers"
+        "Please provide a number value for total girls achieving 2 out of 4" +
+        " correct answers for Writing."
     ));
 
     self.add_state(new FreeText(
@@ -1072,7 +1078,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving 16 out of 20 or more"
+        "Please provide a number value for total boys achieving 16 out of 20 or more."
     ));
 
     self.add_state(new FreeText(
@@ -1083,7 +1089,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving 16 out of 20 or more"
+        "Please provide a number value for total girls achieving 16 out of 20 or more."
     ));
 
     self.add_state(new FreeText(
@@ -1094,7 +1100,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving between 12 and 15 out of 20"
+        "Please provide a number value for total boys achieving between 12 and 15 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1105,7 +1111,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving between 12 and 15 out of 20"
+        "Please provide a number value for total girls achieving between 12 and 15 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1116,7 +1122,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving between 8 and 11 out of 20"
+        "Please provide a number value for total boys achieving between 8 and 11 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1127,7 +1133,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving between 8 and 11 out of 20"
+        "Please provide a number value for total girls achieving between 8 and 11 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1138,7 +1144,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total boys achieving between 0 and 7 out of 20"
+        "Please provide a number value for total boys achieving between 0 and 7 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1149,7 +1155,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return !Number.isNaN(parseInt(content));
         },
-        "Please provide a number value for total girls achieving between 0 and 7 out of 20"
+        "Please provide a number value for total girls achieving between 0 and 7 out of 20."
     ));
 
     self.add_creator('perf_learner_completed', function(state_name, im) {
@@ -1164,8 +1170,8 @@ function GoRtsZambia() {
                     },
                 "Congratulations. You have finished reporting on the learner assessment.",
                 [
-                    new Choice("initial_state", "Go back to the main menu"),
-                    new Choice("end_state", "Exit")
+                    new Choice("initial_state", "Go back to the main menu."),
+                    new Choice("end_state", "Exit.")
                 ]
             );
         });
@@ -1179,7 +1185,7 @@ function GoRtsZambia() {
 
     self.add_state(new EndState(
         "end_state",
-        "Goodbye! Thank you for using SPERT.",
+        "Goodbye! Thank you for using the Gateway.",
         "initial_state"
     ));
 
@@ -1193,4 +1199,3 @@ function GoRtsZambia() {
 var states = new GoRtsZambia();
 var im = new InteractionMachine(api, states);
 im.attach();
- 

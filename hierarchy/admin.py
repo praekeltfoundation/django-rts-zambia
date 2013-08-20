@@ -1,8 +1,21 @@
 from django.contrib import admin
 from models import (Province, District, Zone, School)
 
+class ProvinceAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+
+
+class DistrictAdmin(admin.ModelAdmin):
+    list_display = ["name", "province"]
+
+
+class ZoneAdmin(admin.ModelAdmin):
+    list_display = ["name", "district"]
+
+
 class SchoolAdmin(admin.ModelAdmin):
     list_display = ["emis", "name", "zone"]
+
 
     def queryset(self, request):
         """
@@ -13,7 +26,8 @@ class SchoolAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(zone__district=request.user.userdistrict.district_id)
 
-admin.site.register(Province)
-admin.site.register(District)
-admin.site.register(Zone)
+
+admin.site.register(Province, ProvinceAdmin)
+admin.site.register(District, DistrictAdmin)
+admin.site.register(Zone, ZoneAdmin)
 admin.site.register(School, SchoolAdmin)

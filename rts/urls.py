@@ -1,20 +1,16 @@
 from django.conf.urls import patterns, include, url
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic.base import RedirectView
 
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'skeleton.views.home', name='home'),
-    # url(r'^skeleton/', include('skeleton.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
+urlpatterns = patterns(
+    '',
+    url(r'^$', RedirectView.as_view(url=reverse_lazy('admin:index')),
+        name='home'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^', include('hierarchy.urls')),
     url(r'^', include('data.urls')),
-    # url(r'^celery/', include('celery_app.urls')),
 )

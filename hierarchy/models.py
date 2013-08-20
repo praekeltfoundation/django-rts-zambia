@@ -43,7 +43,7 @@ class School(models.Model):
                              verbose_name=u'Zone')
 
     def __unicode__(self):
-        return self.name
+        return "%s" % self.emis
 
     class Meta:
         verbose_name = "4. School"

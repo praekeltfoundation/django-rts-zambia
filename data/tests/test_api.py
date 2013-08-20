@@ -1,8 +1,8 @@
 from tastypie.test import ResourceTestCase
 from django.core.urlresolvers import reverse
 import json
-from data.models import (HeadTeacher, SchoolData, TeacherPerfomanceData,
-                         LearnerPerfomanceData, InboundSMS)
+from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
+                         LearnerPerformanceData, InboundSMS)
 import datetime
 
 
@@ -216,15 +216,15 @@ class TestSchoolDataAPI(ResourceTestCase):
         self.assertIn("error", json_item)
 
 
-class TestTeacherPerfomanceDataAPI(ResourceTestCase):
+class TestTeacherPerformanceDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json', 'academic_achievement_code.json']
 
     def test_basic_api_functionality(self):
         """
-            Testing basic teacher perfomance API functionality.
+            Testing basic teacher performance API functionality.
         """
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/teacherperfomance',
+                      kwargs={'resource_name': 'data/teacherperformance',
                       'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
@@ -233,9 +233,9 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertIn("meta", json_item)
         self.assertIn("objects", json_item)
 
-    def test_good_post_teacherperfomance_json_data(self):
+    def test_good_post_teacherperformance_json_data(self):
         """
-            Testing good post teacher perfomance data.
+            Testing good post teacher performance data.
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
@@ -254,7 +254,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(url, achievement_uri)
 
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/teacherperfomance',
+                      kwargs={'resource_name': 'data/teacherperformance',
                       'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
@@ -268,7 +268,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
                                     "pupils_materials_score": 13,
                                     "pupils_books_number": 14,
                                     "reading_lesson": 15,
-                                    "pupil_engagment_score": 16,
+                                    "pupil_engagement_score": 16,
                                     "attitudes_and_beliefs": 17,
                                     "training_subtotal": 18,
                                     "ts_number": 19,
@@ -288,7 +288,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(13, json_item["pupils_materials_score"])
         self.assertEqual(14, json_item["pupils_books_number"])
         self.assertEqual(15, json_item["reading_lesson"])
-        self.assertEqual(16, json_item["pupil_engagment_score"])
+        self.assertEqual(16, json_item["pupil_engagement_score"])
         self.assertEqual(17, json_item["attitudes_and_beliefs"])
         self.assertEqual(18, json_item["training_subtotal"])
         self.assertEqual(19, json_item["ts_number"])
@@ -296,7 +296,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(4813, json_item["emis"]["emis"])
         self.assertEqual("Musungu", json_item["emis"]["name"])
 
-        teacher = TeacherPerfomanceData.objects.get(pk=1)
+        teacher = TeacherPerformanceData.objects.get(pk=1)
         self.assertEqual("male", teacher.gender)
         self.assertEqual(30, teacher.age)
         self.assertEqual("11+", teacher.years_experience)
@@ -307,7 +307,7 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(13, teacher.pupils_materials_score)
         self.assertEqual(14, teacher.pupils_books_number)
         self.assertEqual(15, teacher.reading_lesson)
-        self.assertEqual(16, teacher.pupil_engagment_score)
+        self.assertEqual(16, teacher.pupil_engagement_score)
         self.assertEqual(17, teacher.attitudes_and_beliefs)
         self.assertEqual(18, teacher.training_subtotal)
         self.assertEqual(19, teacher.ts_number)
@@ -319,15 +319,15 @@ class TestTeacherPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(headteacher_id, teacher.created_by.id)
         
 
-class TestLearnerPerfomanceDataAPI(ResourceTestCase):
+class TestLearnerPerformanceDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
 
     def test_basic_api_functionality(self):
         """
-            Testing basic learner perfomance API functionality.
+            Testing basic learner performance API functionality.
         """
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/learnerperfomance',
+                      kwargs={'resource_name': 'data/learnerperformance',
                       'api_name': 'v1'})
         response = self.client.get(url)
         self.assertEqual("application/json", response["Content-Type"])
@@ -336,9 +336,9 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         self.assertIn("meta", json_item)
         self.assertIn("objects", json_item)
 
-    def test_good_post_learnerperfomance_json_data(self):
+    def test_good_post_learnerperformance_json_data(self):
         """
-            Testing good post learner perfomance data.
+            Testing good post learner performance data.
         """
         url = reverse('api_dispatch_list',
                       kwargs={'resource_name': 'data/headteacher',
@@ -349,7 +349,7 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         headteacher_id = json_item['objects'][0]['id']
 
         url = reverse('api_dispatch_list',
-                      kwargs={'resource_name': 'data/learnerperfomance',
+                      kwargs={'resource_name': 'data/learnerperformance',
                       'api_name': 'v1'})
         response = self.api_client.post(url,
                                     format="json",
@@ -381,7 +381,7 @@ class TestLearnerPerfomanceDataAPI(ResourceTestCase):
         self.assertEqual(4813, json_item["emis"]["emis"])
         self.assertEqual("Musungu", json_item["emis"]["name"])
 
-        learner = LearnerPerfomanceData.objects.all()[0]
+        learner = LearnerPerformanceData.objects.all()[0]
         self.assertEqual("female", learner.gender)
         self.assertEqual(40, learner.total_number_pupils)
         self.assertEqual(50, learner.phonetic_awareness)

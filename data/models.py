@@ -1,6 +1,6 @@
 from django.db import models
 import mockups
-from mockups.generators import ChoiceGenerator
+from mockups.generators import ChoiceGenerator, IntegerGenerator
 
 
 
@@ -11,12 +11,12 @@ class HeadTeacher(models.Model):
     msisdn = models.CharField(max_length=20)
     date_of_birth = models.DateField()
     is_zonal_head = models.BooleanField()
-    zonal_head_name = models.CharField(max_length=100, verbose_name=u'Zonal Head Name')
+    zonal_head_name = models.CharField(max_length=100, verbose_name=u'Zonal Head')
     created_at = models.DateTimeField(auto_now_add=True)
     emis = models.ForeignKey('hierarchy.School',
                              null=True,
                              blank=True,
-                             verbose_name=u'EMIS Number')
+                             verbose_name=u'EMIS')
 
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
@@ -27,8 +27,8 @@ class HeadTeacher(models.Model):
 
 class SchoolData(models.Model):
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'EMIS Number')
-    name = models.CharField(max_length=100, verbose_name=u'Name of School')
+                             verbose_name=u'EMIS')
+    name = models.CharField(max_length=100, verbose_name=u'Name')
     classrooms = models.IntegerField()
     teachers = models.IntegerField()
     teachers_g1 = models.IntegerField()
@@ -56,7 +56,7 @@ class AcademicAchievementCode(models.Model):
         verbose_name = "Academic Achievment Code"
 
 
-class TeacherPerfomanceData(models.Model):
+class TeacherPerformanceData(models.Model):
     gender = models.CharField(max_length=6, verbose_name=u'Gender')
     age = models.IntegerField()
     years_experience = models.CharField(max_length=5)
@@ -67,25 +67,25 @@ class TeacherPerfomanceData(models.Model):
     pupils_materials_score = models.IntegerField()
     pupils_books_number = models.IntegerField()
     reading_lesson = models.IntegerField()
-    pupil_engagment_score = models.IntegerField()
+    pupil_engagement_score = models.IntegerField()
     attitudes_and_beliefs = models.IntegerField()
     training_subtotal = models.IntegerField()
     ts_number = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     academic_level = models.ForeignKey(AcademicAchievementCode,
-                                    verbose_name=u'Academic Achievment Code')
+                                    verbose_name=u'Academic Achievement')
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'emis Number')
+                             verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Head Teacher')
     def __unicode__(self):
         return "%s" % self.emis
 
     class Meta:
-        verbose_name_plural = "Teacher Perfomance Data"
+        verbose_name_plural = "Teacher Performance Data"
 
 
-class LearnerPerfomanceData(models.Model):
+class LearnerPerformanceData(models.Model):
     gender = models.CharField(max_length=6, verbose_name=u'Gender')
     total_number_pupils = models.IntegerField()
     phonetic_awareness = models.IntegerField()
@@ -98,14 +98,14 @@ class LearnerPerfomanceData(models.Model):
     outstanding_results = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     emis = models.ForeignKey('hierarchy.School',
-                             verbose_name=u'EMIS Number')
+                             verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Teacher')
     def __unicode__(self):
         return "%s" % self.emis
 
     class Meta:
-        verbose_name_plural = "Learner Perfomance Data"
+        verbose_name_plural = "Learner Performance Data"
 
 
 class InboundSMS(models.Model):
@@ -127,23 +127,45 @@ class GenderGenerator(ChoiceGenerator):
     choices = [u"male", u"female"]
 
 
-class TeacherPerfomanceDataFactory(mockups.Factory):
+class TeacherPerformanceDataFactory(mockups.Factory):
     gender = GenderGenerator()
+    age = IntegerGenerator(min_value=29, max_value=50)
+    years_experience = IntegerGenerator(min_value=1, max_value=30)
+    g2_pupils_present = IntegerGenerator(min_value=30, max_value=50)
+    g2_pupils_registered = IntegerGenerator(min_value=30, max_value=50)
+    classroom_environment_score = IntegerGenerator(min_value=1, max_value=10)
+    t_l_materials = IntegerGenerator(min_value=1, max_value=10)
+    pupils_materials_score = IntegerGenerator(min_value=1, max_value=10)
+    pupils_books_number = IntegerGenerator(min_value=0, max_value=20)
+    reading_lesson = IntegerGenerator(min_value=1, max_value=10)
+    pupil_engagement_score = IntegerGenerator(min_value=1, max_value=10)
+    attitudes_and_beliefs = IntegerGenerator(min_value=1, max_value=10)
+    training_subtotal = IntegerGenerator(min_value=1, max_value=10)
+    ts_number = IntegerGenerator(min_value=10000, max_value=99999)
 
 
-class TeacherPerfomanceDataMockup(mockups.Mockup):
-    factory = TeacherPerfomanceDataFactory
+class TeacherPerformanceDataMockup(mockups.Mockup):
+    factory = TeacherPerformanceDataFactory
 
 
-mockups.register(TeacherPerfomanceData, TeacherPerfomanceDataMockup)
+mockups.register(TeacherPerformanceData, TeacherPerformanceDataMockup)
 
 
-class LearnerPerfomanceDataFactory(mockups.Factory):
+class LearnerPerformanceDataFactory(mockups.Factory):
     gender = GenderGenerator()
+    total_number_pupils = IntegerGenerator(min_value=1, max_value=30)
+    phonetic_awareness = IntegerGenerator(min_value=1, max_value=10)
+    vocabulary = IntegerGenerator(min_value=1, max_value=10)
+    reading_comprehension = IntegerGenerator(min_value=1, max_value=10)
+    writing_diction = IntegerGenerator(min_value=1, max_value=10)
+    below_minimum_results = IntegerGenerator(min_value=1, max_value=30)
+    minimum_results = IntegerGenerator(min_value=1, max_value=10)
+    desirable_results = IntegerGenerator(min_value=1, max_value=10)
+    outstanding_results = IntegerGenerator(min_value=1, max_value=10)
 
 
-class LearnerPerfomanceDataMockup(mockups.Mockup):
-    factory = LearnerPerfomanceDataFactory
+class LearnerPerformanceDataMockup(mockups.Mockup):
+    factory = LearnerPerformanceDataFactory
 
 
-mockups.register(LearnerPerfomanceData, LearnerPerfomanceDataMockup)
+mockups.register(LearnerPerformanceData, LearnerPerformanceDataMockup)

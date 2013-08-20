@@ -1,8 +1,8 @@
 from tastypie.resources import ModelResource, ALL_WITH_RELATIONS
 from tastypie.authorization import Authorization
 from tastypie import fields
-from models import (HeadTeacher, SchoolData, TeacherPerfomanceData,
-                    LearnerPerfomanceData, InboundSMS, AcademicAchievementCode)
+from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
+                    LearnerPerformanceData, InboundSMS, AcademicAchievementCode)
 from django.conf.urls import url
 
 
@@ -95,11 +95,11 @@ class AcademicAchievementCodeResource(ModelResource):
         always_return_data = True
 
 
-class TeacherPerfomanceDataResource(ModelResource):
+class TeacherPerformanceDataResource(ModelResource):
     """
     POSTING DATA
 
-    "url": "<base_url>/api/v1/data/teacherperfomance/",
+    "url": "<base_url>/api/v1/data/teacherperformance/",
     "body": {
                 "data": "data",
                 "academic_level": "/api/data/achievement/8/",
@@ -112,8 +112,8 @@ class TeacherPerfomanceDataResource(ModelResource):
     academic_level = fields.ForeignKey(AcademicAchievementCodeResource, 'academic_level', full=True)
 
     class Meta:
-        queryset = TeacherPerfomanceData.objects.all()
-        resource_name = "data/teacherperfomance"
+        queryset = TeacherPerformanceData.objects.all()
+        resource_name = "data/teacherperformance"
         list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
         include_resource_uri = True
@@ -123,11 +123,11 @@ class TeacherPerfomanceDataResource(ModelResource):
             'emis': ALL_WITH_RELATIONS}
 
 
-class LearnerPerfomanceDataResource(ModelResource):
+class LearnerPerformanceDataResource(ModelResource):
     """
     POSTING DATA
     
-    "url": "<base_url>/api/v1/data/learnerperfomance/",
+    "url": "<base_url>/api/v1/data/learnerperformance/",
     "body": {
                 "data": "data",
                 "created_by": "/api/v1/data/headteacher/emis/4813/",
@@ -138,8 +138,8 @@ class LearnerPerfomanceDataResource(ModelResource):
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
 
     class Meta:
-        queryset = LearnerPerfomanceData.objects.all()
-        resource_name = "data/learnerperfomance"
+        queryset = LearnerPerformanceData.objects.all()
+        resource_name = "data/learnerperformance"
         list_allowed_methods = ['post', 'get'] 
         authorization = Authorization()
         include_resource_uri = True
