@@ -1,6 +1,7 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, InboundSMS, AcademicAchievementCode,
                     TeacherPerformanceData, LearnerPerformanceData)
+from users.models import UserDistrict
 from actions import export_as_csv_action
 
 
@@ -17,7 +18,10 @@ class SchoolDataAdmin(admin.ModelAdmin):
         qs = super(SchoolDataAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        else:
+            return qs
 
 
 class HeadTeacherAdmin(admin.ModelAdmin):
@@ -32,7 +36,10 @@ class HeadTeacherAdmin(admin.ModelAdmin):
         qs = super(HeadTeacherAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        else:
+            return qs
 
 
 class TeacherPerformanceDataAdmin(admin.ModelAdmin):
@@ -49,7 +56,10 @@ class TeacherPerformanceDataAdmin(admin.ModelAdmin):
         qs = super(TeacherPerformanceDataAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        else:
+            return qs
 
 
 class LearnerPerformanceDataAdmin(admin.ModelAdmin):
@@ -65,7 +75,10 @@ class LearnerPerformanceDataAdmin(admin.ModelAdmin):
         qs = super(LearnerPerformanceDataAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+        else:
+            return qs
 
 
 class InboundSMSAdmin(admin.ModelAdmin):
@@ -79,7 +92,10 @@ class InboundSMSAdmin(admin.ModelAdmin):
         qs = super(InboundSMSAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
-        return qs.filter(created_by__emis__zone__district=request.user.userdistrict.district_id)
+        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return qs.filter(created_by__emis__zone__district=request.user.userdistrict.district_id)
+        else:
+            return qs
 
 
 class AcademicAchievementCodeAdmin(admin.ModelAdmin):
