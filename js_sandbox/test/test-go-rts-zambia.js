@@ -92,10 +92,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Register as a new user[^]" +
-                    "2. Change my school[^]" +
-                    "3. Change my primary mobile number$"
+            response: "^Welcome to the Zambia School Gateway! What would you like to do\\?[^]" +
+                    "1. Register as a new user\\.[^]" +
+                    "2. Change my school\\.[^]" +
+                    "3. Change my primary cell phone number\\.$"
         });
         p.then(done, done);
     });
@@ -109,7 +109,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             content: "1",
             next_state: "reg_emis",
             response: "^Please enter your school's EMIS number. " +
-                "This should have 4 digits e.g 4351.$"
+                "This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -141,8 +141,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "000A",
             next_state: "reg_emis_error",
-            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
-                "you have entered the number correctly.[^]" +
+            response: "^There is a problem with the EMIS number you" +
+                " have entered\\.[^]" +
                 "1. Try again[^]" +
                 "2. Exit$"
         });
@@ -161,9 +161,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_exit_emis",
-            response: "^There seems to be a problem with the EMIS number. " +
-                "Please send a SMS with the code EMIS ERROR to 1234 " +
-                "and your district officer will be in touch.$",
+            response: "^We don't recognise your EMIS number\\. Please send a" +
+                " SMS with the words EMIS ERROR to 739 and your DEST will" +
+                " contact you to resolve the problem\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -181,7 +181,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_emis",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -256,9 +256,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "11091980",
             next_state: "reg_gender",
-            response: "^Enter 1 if you are a woman or 2 if you are a man.[^]" +
-            "1. Woman[^]" +
-            "2. Man$"
+            response: "^What is your gender\\?[^]" +
+            "1. Female[^]" +
+            "2. Male$"
         });
         p.then(done, done);
     });
@@ -344,7 +344,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "five",
             next_state: "reg_school_classrooms",
-            response: "^Please provide a number value for how many classrooms you have in your school$"
+            response: "^Please provide a number value for how many classrooms you have in your school\\.$"
         });
         p.then(done, done);
     });
@@ -390,7 +390,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "five",
             next_state: "reg_school_teachers",
-            response: "^Please provide a number value for how many teachers in total do you have in your school$"
+            response: "^Please provide a number value for how many teachers in total you have in your school\\.$"
         });
         p.then(done, done);
     });
@@ -438,7 +438,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "two",
             next_state: "reg_school_teachers_g1",
-            response: "^Please provide a number value for how many teachers teach G1 local language literacy$"
+            response: "^Please provide a number value for how many teachers teach G1 local language literacy\\.$"
         });
         p.then(done, done);
     });
@@ -488,7 +488,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "two",
             next_state: "reg_school_teachers_g2",
-            response: "^Please provide a number value for how many teachers teach G2 local language literacy$"
+            response: "^Please provide a number value for how many teachers teach G2 local language literacy\\.$"
         });
         p.then(done, done);
     });
@@ -540,7 +540,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "ten",
             next_state: "reg_school_students_g2_boys",
-            response: "^Please provide a number value for total number of G2 boys enrolled$"
+            response: "^Please provide a number value for the total number of G2 boys enrolled\\.$"
         });
         p.then(done, done);
     });
@@ -596,7 +596,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "eleven",
             next_state: "reg_school_students_g2_girls",
-            response: "^Please provide a number value for total number of G2 girls enrolled$"
+            response: "^Please provide a number value for the total number of G2 girls enrolled\\.$"
         });
         p.then(done, done);
     });
@@ -652,9 +652,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_thanks_zonal_head",
-            response: "^Thank you for registering! When you are ready you can " +
-            "dial in again to start reporting. You will also start receiving the " +
-            "monthly SMS's from your Headteachers.$",
+            response: "^Well done! You are now registered as a Zonal Head" +
+                " Teacher\\. When you are ready, dial in to start" +
+                " reporting\\. You will also receive monthly SMS's from" +
+                " your zone\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -684,8 +685,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "Jim Carey",
             next_state: "reg_thanks_head_teacher",
-            response: "^Thank you for registering! When you are ready you can dial " +
-            "in again to start reporting.$",
+            response: "^Congratulations! You are now registered as a user of" +
+                " the Gateway! Please dial in again when you are ready to" +
+                " start reporting on teacher and learner performance\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -699,7 +701,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "3",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -715,8 +717,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "0001",
             next_state: "manage_change_msisdn_confirm",
-            response: "^Thank you! We have now allocated your new contact mobile number " +
-            "to your current school.$",
+            response: "^Thank you! Your cell phone number is now the official" +
+                " number that your school will use to communicate with the" +
+                " Gateway\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -733,8 +736,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "000A",
             next_state: "manage_change_msisdn_emis_error",
-            response: "^Sorry![^]That is not a EMIS we recognise. Make sure " +
-                "you have entered the number correctly.[^]" +
+            response: "^There is a problem with the EMIS number you" +
+                " have entered\\.[^]" +
                 "1. Try again[^]" +
                 "2. Exit$"
         });
@@ -753,9 +756,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_exit_emis",
-            response: "^There seems to be a problem with the EMIS number. " +
-                "Please send a SMS with the code EMIS ERROR to 1234 " +
-                "and your district officer will be in touch.$",
+            response: "^We don't recognise your EMIS number\\. Please send" +
+                " a SMS with the words EMIS ERROR to 739 and your DEST will" +
+                " contact you to resolve the problem\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -773,7 +776,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -786,7 +789,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "manage_change_emis",
-            response: "^Please enter your school's EMIS number. This should have 4 digits e.g 4351.$"
+            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -830,9 +833,10 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "reg_thanks_zonal_head",
-            response: "^Thank you for registering! When you are ready you can " +
-            "dial in again to start reporting. You will also start receiving the " +
-            "monthly SMS's from your Headteachers.$",
+            response: "^Well done! You are now registered as a Zonal Head" +
+                " Teacher\\. When you are ready, dial in to start" +
+                " reporting\\. You will also receive monthly SMS's from" +
+                " your zone\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -890,10 +894,10 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -906,7 +910,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "1",
             next_state: "perf_teacher_ts_number",
-            response: "^Please enter the teacher's TS number$"
+            response: "^Please enter the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
@@ -922,7 +926,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One Hundred and Six",
             next_state: "perf_teacher_ts_number",
-            response: "^Please provide a number value for the teacher's TS number$"
+            response: "^Please provide a number value for the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
@@ -938,7 +942,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "106",
             next_state: "perf_teacher_gender",
-            response: "^Please enter 1 if the teacher is a man or 2 if she is a woman[^]" +
+            response: "^What is the gender of the teacher\\?[^]" +
             "1. Male[^]" +
             "2. Female$"
         });
@@ -957,7 +961,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "2",
             next_state: "perf_teacher_age",
-            response: "^Please enter the teacher's age in years e.g. 26$"
+            response: "^Please enter the teacher's age in years e\\.g\\. 26\\.$"
         });
         p.then(done, done);
     });
@@ -975,7 +979,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One",
             next_state: "perf_teacher_age",
-            response: "^Please provide a number value for the teachers age$"
+            response: "^Please provide a number value for the teacher's age\\.$"
         });
         p.then(done, done);
     });
@@ -1068,7 +1072,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "forty",
             next_state: "perf_teacher_g2_pupils_present",
-            response: "^Please provide a number value for pupils present$"
+            response: "^Please provide a number value for pupils present\\.$"
         });
         p.then(done, done);
     });
@@ -1111,7 +1115,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "fifty",
             next_state: "perf_teacher_g2_pupils_registered",
-            response: "^Please provide a number value for pupils enrolled$"
+            response: "^Please provide a number value for pupils enrolled\\.$"
         });
         p.then(done, done);
     });
@@ -1133,7 +1137,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "50",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Enter the subtotal that the teacher achieved during the classroom observation for Section 2 \\(Classroom Environment\\)$"
+            response: "^Enter the subtotal that the teacher achieved during the classroom observation for Section 2 \\(Classroom Environment\\)\\.$"
         });
         p.then(done, done);
     });
@@ -1156,7 +1160,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "great",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Please provide a number value for classroom environment$"
+            response: "^Please provide a number value for the Classroom Environment subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1180,7 +1184,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             content: "10",
             next_state: "perf_teacher_t_l_materials",
             response: "^Enter the subtotal that the teacher achieved during the classroom " +
-                "observation for Section 3 \\(Teaching and Learning Materials\\)$"
+                "observation for Section 3 \\(Teaching and Learning Materials\\)\\.$"
         });
         p.then(done, done);
     });
@@ -1204,7 +1208,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "rubbish",
             next_state: "perf_teacher_t_l_materials",
-            response: "^Please provide a number value for Teaching and Learning Materials$"
+            response: "^Please provide a number value for the Teaching and Learning Materials subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1254,7 +1258,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "fab",
             next_state: "perf_teacher_pupils_books_number",
-            response: "^Please provide a number value for number of learners' books$"
+            response: "^Please provide a number value for number of learners' books\\.$"
         });
         p.then(done, done);
     });
@@ -1280,7 +1284,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             content: "90",
             next_state: "perf_teacher_pupils_materials_score",
             response: "^Enter the subtotal that the teacher achieved during the classroom observation " +
-            "for Section 4 \\(Learner Materials\\)$"
+            "for Section 4 \\(Learner Materials\\)\\.$"
         });
         p.then(done, done);
     });
@@ -1306,7 +1310,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "score is seventy five",
             next_state: "perf_teacher_pupils_materials_score",
-            response: "^Please provide a number value for learner materials subtotal$"
+            response: "^Please provide a number value for the Learner Materials subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1360,7 +1364,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "forty five mins",
             next_state: "perf_teacher_reading_lesson",
-            response: "^Please provide a number value for time on task subtotal$"
+            response: "^Please provide a number value for the Time on Task and Reading Practice subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1416,7 +1420,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "low",
             next_state: "perf_teacher_pupil_engagement_score",
-            response: "^Please provide a number value for learner engagement subtotal$"
+            response: "^Please provide a number value for the Learner Engagement subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1474,7 +1478,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "great",
             next_state: "perf_teacher_attitudes_and_beliefs",
-            response: "^Please provide a number value for teacher attitudes and beliefs subtotal$"
+            response: "^Please provide a number value for the Teacher Attitudes and Beliefs subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1534,7 +1538,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "five",
             next_state: "perf_teacher_training_subtotal",
-            response: "^Please provide a number value for teacher training interview subtotal$"
+            response: "^Please provide a number value for the Teacher Training interview subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1564,11 +1568,10 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "5",
             next_state: "perf_teacher_completed",
-            response: "^You have successfully added and assessed this teacher. " +
-                "What would you like to do now\\?[^]" +
-                "1. Add another teacher[^]" +
-                "2. Go back to the main menu[^]" +
-                "3. Exit$"
+            response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
+                "1. Add another teacher\\.[^]" +
+                "2. Go back to the main menu\\.[^]" +
+                "3. Exit\\.$"
         });
         p.then(done, done);
     });
@@ -1643,7 +1646,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "1",
             next_state: "perf_teacher_ts_number",
-            response: "^Please enter the teacher's TS number$"
+            response: "^Please enter the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
@@ -1673,10 +1676,10 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "2",
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -1706,7 +1709,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "3",
             next_state: "end_state",
-            response: "^Goodbye! Thank you for using SPERT.$",
+            response: "^Goodbye! Thank you for using the Gateway\\.$",
             continue_session: false
         });
         p.then(done, done);
@@ -1764,10 +1767,10 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -1796,7 +1799,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "Fifty two",
             next_state: "perf_learner_boys_total",
-            response: "^Please provide a number value for total boys assessed$"
+            response: "^Please provide a number value for total boys assessed\\.$"
         });
         p.then(done, done);
     });
@@ -1829,7 +1832,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "forty two",
             next_state: "perf_learner_girls_total",
-            response: "^Please provide a number value for total girls assessed$"
+            response: "^Please provide a number value for total girls assessed\\.$"
         });
         p.then(done, done);
     });
@@ -1865,7 +1868,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lots",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a number value for total boys achieving 4 out of 6 correct answers$"
+            response: "^Please provide a number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -1903,7 +1906,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "loads",
             next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a number value for total girls achieving 4 out of 6 correct answers$"
+            response: "^Please provide a number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -1943,7 +1946,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "less",
             next_state: "perf_learner_boys_vocabulary",
-            response: "^Please provide a number value for total boys achieving 3 out of 6 correct answers$"
+            response: "^Please provide a number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -1985,7 +1988,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_vocabulary",
-            response: "^Please provide a number value for total girls achieving 3 out of 6 correct answers$"
+            response: "^Please provide a number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -2029,7 +2032,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lessly",
             next_state: "perf_learner_boys_reading_comprehension",
-            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -2075,7 +2078,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_reading_comprehension",
-            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -2123,7 +2126,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_writing_diction",
-            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers for Writing\\.$"
         });
         p.then(done, done);
     });
@@ -2173,7 +2176,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_writing_diction",
-            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers$"
+            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers for Writing\\.$"
         });
         p.then(done, done);
     });
@@ -2224,7 +2227,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_outstanding_results",
-            response: "^Please provide a number value for total boys achieving 16 out of 20 or more$"
+            response: "^Please provide a number value for total boys achieving 16 out of 20 or more\\.$"
         });
         p.then(done, done);
     });
@@ -2277,7 +2280,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_outstanding_results",
-            response: "^Please provide a number value for total girls achieving 16 out of 20 or more$"
+            response: "^Please provide a number value for total girls achieving 16 out of 20 or more\\.$"
         });
         p.then(done, done);
     });
@@ -2332,7 +2335,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_desirable_results",
-            response: "^Please provide a number value for total boys achieving between 12 and 15 out of 20$"
+            response: "^Please provide a number value for total boys achieving between 12 and 15 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2389,7 +2392,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_desirable_results",
-            response: "^Please provide a number value for total girls achieving between 12 and 15 out of 20$"
+            response: "^Please provide a number value for total girls achieving between 12 and 15 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2449,7 +2452,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_minimum_results",
-            response: "^Please provide a number value for total boys achieving between 8 and 11 out of 20$"
+            response: "^Please provide a number value for total boys achieving between 8 and 11 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2510,12 +2513,10 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_minimum_results",
-            response: "^Please provide a number value for total girls achieving between 8 and 11 out of 20$"
+            response: "^Please provide a number value for total girls achieving between 8 and 11 out of 20\\.$"
         });
         p.then(done, done);
     });
-
-    
 
     it("entering total girls minimum results should ask for total boys below minimum results", function (done) {
         var user = {
@@ -2575,7 +2576,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatering",
             next_state: "perf_learner_boys_below_minimum_results",
-            response: "^Please provide a number value for total boys achieving between 0 and 7 out of 20$"
+            response: "^Please provide a number value for total boys achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2640,7 +2641,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greating",
             next_state: "perf_learner_girls_below_minimum_results",
-            response: "^Please provide a number value for total girls achieving between 0 and 7 out of 20$"
+            response: "^Please provide a number value for total girls achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2674,8 +2675,8 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             content: "46",
             next_state: "perf_learner_completed",
             response: "^Congratulations. You have finished reporting on the learner assessment.[^]" +
-                "1. Go back to the main menu[^]" +
-                "2. Exit$"
+                "1. Go back to the main menu\\.[^]" +
+                "2. Exit\\.$"
         });
         p.then(done, done);
     });
@@ -2755,10 +2756,10 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             user: user,
             content: "1",
             next_state: "initial_state",
-            response: "^Welcome to SPERT. What would you like to do\\?[^]" +
-                    "1. Add a classroom observation report[^]" +
-                    "2. Add a learner performance report[^]" +
-                    "3. Change my school$"
+            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance\\.[^]" +
+                    "3. Change my school\\.$"
         });
         p.then(done, done);
     });
@@ -2792,7 +2793,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             user: user,
             content: "2",
             next_state: "end_state",
-            response: "^Goodbye! Thank you for using SPERT.$",
+            response: "^Goodbye! Thank you for using the Gateway\\.$",
             continue_session: false
         });
         p.then(done, done);
