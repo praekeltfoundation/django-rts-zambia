@@ -32,9 +32,8 @@ class HeadTeacherAdmin(admin.ModelAdmin):
         qs = super(HeadTeacherAdmin, self).queryset(request)
         if request.user.is_superuser:
             return qs
-        print request.user.userdistrict.district_id;
-        print dir(request.user.userdistrict);
         return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
+
 
 class TeacherPerformanceDataAdmin(admin.ModelAdmin):
     list_display = ["emis", "gender", "age", "years_experience", "g2_pupils_present", "g2_pupils_registered",
