@@ -13,7 +13,7 @@ redis
 django-debug-toolbar
 django-celery
 django-celery-email
-django-tastypie
+django-tastypie==0.9.16
 django-mockups
 python-mimeparse
 pep8
