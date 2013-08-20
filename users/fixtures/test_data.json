@@ -164,7 +164,7 @@
 },
 {
     "pk": 5, 
-    "model": "data.teacherperfomancedata", 
+    "model": "data.teacherperformancedata", 
     "fields": {
         "reading_lesson": 15, 
         "classroom_environment_score": 15, 
@@ -177,7 +177,7 @@
         "years_experience": "+5", 
         "training_subtotal": 18, 
         "attitudes_and_beliefs": 17, 
-        "pupil_engagment_score": 16, 
+        "pupil_engagement_score": 16, 
         "g2_pupils_registered": 50, 
         "emis": 6, 
         "academic_level": 8, 
@@ -188,7 +188,7 @@
 },
 {
     "pk": 6, 
-    "model": "data.teacherperfomancedata", 
+    "model": "data.teacherperformancedata", 
     "fields": {
         "reading_lesson": 15, 
         "classroom_environment_score": 15, 
@@ -201,7 +201,7 @@
         "years_experience": "+5", 
         "training_subtotal": 18, 
         "attitudes_and_beliefs": 17, 
-        "pupil_engagment_score": 16, 
+        "pupil_engagement_score": 16, 
         "g2_pupils_registered": 50, 
         "emis": 1, 
         "academic_level": 8, 
@@ -212,7 +212,7 @@
 },
 {
     "pk": 7, 
-    "model": "data.teacherperfomancedata", 
+    "model": "data.teacherperformancedata", 
     "fields": {
         "reading_lesson": 15, 
         "classroom_environment_score": 15, 
@@ -225,7 +225,7 @@
         "years_experience": "+5", 
         "training_subtotal": 18, 
         "attitudes_and_beliefs": 17, 
-        "pupil_engagment_score": 16, 
+        "pupil_engagement_score": 16, 
         "g2_pupils_registered": 50, 
         "emis": 3, 
         "academic_level": 8, 
@@ -236,7 +236,7 @@
 },
 {
     "pk": 8, 
-    "model": "data.learnerperfomancedata", 
+    "model": "data.learnerperformancedata", 
     "fields": {
         "phonetic_awareness": 50, 
         "outstanding_results": 17, 
@@ -255,7 +255,7 @@
 },
 {
     "pk": 9, 
-    "model": "data.learnerperfomancedata", 
+    "model": "data.learnerperformancedata", 
     "fields": {
         "phonetic_awareness": 50, 
         "outstanding_results": 17, 
@@ -274,7 +274,7 @@
 },
 {
     "pk": 10, 
-    "model": "data.learnerperfomancedata", 
+    "model": "data.learnerperformancedata", 
     "fields": {
         "phonetic_awareness": 50, 
         "outstanding_results": 17, 
@@ -293,7 +293,7 @@
 },
 {
     "pk": 11, 
-    "model": "data.learnerperfomancedata", 
+    "model": "data.learnerperformancedata", 
     "fields": {
         "phonetic_awareness": 50, 
         "outstanding_results": 17, 
@@ -312,7 +312,7 @@
 },
 {
     "pk": 12, 
-    "model": "data.learnerperfomancedata", 
+    "model": "data.learnerperformancedata", 
     "fields": {
         "phonetic_awareness": 50, 
         "outstanding_results": 17, 
@@ -331,7 +331,7 @@
 },
 {
     "pk": 13, 
-    "model": "data.learnerperfomancedata", 
+    "model": "data.learnerperformancedata", 
     "fields": {
         "phonetic_awareness": 50, 
         "outstanding_results": 17, 

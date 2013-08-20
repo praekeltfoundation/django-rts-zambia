@@ -1,0 +1,18 @@
+[
+{
+    "pk": 3, 
+    "model": "users.userdistrict", 
+    "fields": {
+        "user": 2, 
+        "district": 6
+    }
+},
+{
+    "pk": 4, 
+    "model": "users.userdistrict", 
+    "fields": {
+        "user": 3, 
+        "district": 1
+    }
+}
+]
