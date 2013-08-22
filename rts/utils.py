@@ -6,9 +6,6 @@ class DistrictIdFilter:
         self.qs = qs
         self.parent = parent
 
-        print parent.__class__.__name__
-
-
     def queryset(self):
         if self.request.user.is_superuser:
             return self.qs
