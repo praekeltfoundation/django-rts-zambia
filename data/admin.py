@@ -1,8 +1,8 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, InboundSMS, AcademicAchievementCode,
                     TeacherPerformanceData, LearnerPerformanceData)
-from users.models import UserDistrict
 from actions import export_as_csv_action
+from rts.utils import DistrictIdFilter
 
 
 
@@ -16,12 +16,7 @@ class SchoolDataAdmin(admin.ModelAdmin):
         Limits queries for pages that belong to district admin
         """
         qs = super(SchoolDataAdmin, self).queryset(request)
-        if request.user.is_superuser:
-            return qs
-        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
-        else:
-            return qs
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 class HeadTeacherAdmin(admin.ModelAdmin):
@@ -34,12 +29,7 @@ class HeadTeacherAdmin(admin.ModelAdmin):
         Limits queries for pages that belong to district admin
         """
         qs = super(HeadTeacherAdmin, self).queryset(request)
-        if request.user.is_superuser:
-            return qs
-        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
-        else:
-            return qs
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 class TeacherPerformanceDataAdmin(admin.ModelAdmin):
@@ -54,12 +44,7 @@ class TeacherPerformanceDataAdmin(admin.ModelAdmin):
         Limits queries for pages that belong to district admin
         """
         qs = super(TeacherPerformanceDataAdmin, self).queryset(request)
-        if request.user.is_superuser:
-            return qs
-        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
-        else:
-            return qs
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 class LearnerPerformanceDataAdmin(admin.ModelAdmin):
@@ -73,12 +58,7 @@ class LearnerPerformanceDataAdmin(admin.ModelAdmin):
         Limits queries for pages that belong to district admin
         """
         qs = super(LearnerPerformanceDataAdmin, self).queryset(request)
-        if request.user.is_superuser:
-            return qs
-        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return qs.filter(emis__zone__district=request.user.userdistrict.district_id)
-        else:
-            return qs
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 class InboundSMSAdmin(admin.ModelAdmin):
@@ -90,12 +70,7 @@ class InboundSMSAdmin(admin.ModelAdmin):
         Limits queries for pages that belong to district admin
         """
         qs = super(InboundSMSAdmin, self).queryset(request)
-        if request.user.is_superuser:
-            return qs
-        elif UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return qs.filter(created_by__emis__zone__district=request.user.userdistrict.district_id)
-        else:
-            return qs
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 class AcademicAchievementCodeAdmin(admin.ModelAdmin):
