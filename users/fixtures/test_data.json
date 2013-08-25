@@ -1,0 +1,378 @@
+[
+{
+    "pk": 5, 
+    "model": "data.headteacher", 
+    "fields": {
+        "zonal_head_name": "", 
+        "first_name": "H1_first", 
+        "last_name": "H1_last", 
+        "msisdn": "0711111111", 
+        "gender": "female", 
+        "created_at": "2013-08-20T08:03:45.731Z", 
+        "date_of_birth": "1972-10-12", 
+        "is_zonal_head": false, 
+        "emis": 6
+    }
+},
+{
+    "pk": 6, 
+    "model": "data.headteacher", 
+    "fields": {
+        "zonal_head_name": "", 
+        "first_name": "H2_first", 
+        "last_name": "H2_last", 
+        "msisdn": "0711111112", 
+        "gender": "male", 
+        "created_at": "2013-08-20T08:04:08.633Z", 
+        "date_of_birth": "1972-10-12", 
+        "is_zonal_head": false, 
+        "emis": 1
+    }
+},
+{
+    "pk": 7, 
+    "model": "data.headteacher", 
+    "fields": {
+        "zonal_head_name": "", 
+        "first_name": "H3_first", 
+        "last_name": "H3_last", 
+        "msisdn": "0711111113", 
+        "gender": "female", 
+        "created_at": "2013-08-20T08:05:20.130Z", 
+        "date_of_birth": "1992-10-12", 
+        "is_zonal_head": false, 
+        "emis": 3
+    }
+},
+{
+    "pk": 6, 
+    "model": "data.schooldata", 
+    "fields": {
+        "boys_g2": 15, 
+        "classrooms": 30, 
+        "teachers_g2": 8, 
+        "name": "Kimale", 
+        "teachers_g1": 4, 
+        "created_at": "2013-08-20T08:10:51.929Z", 
+        "created_by": 5, 
+        "teachers": 40, 
+        "emis": 6, 
+        "girls_g2": 12
+    }
+},
+{
+    "pk": 7, 
+    "model": "data.schooldata", 
+    "fields": {
+        "boys_g2": 15, 
+        "classrooms": 30, 
+        "teachers_g2": 8, 
+        "name": "Bweupe", 
+        "teachers_g1": 4, 
+        "created_at": "2013-08-20T08:11:14.877Z", 
+        "created_by": 6, 
+        "teachers": 40, 
+        "emis": 1, 
+        "girls_g2": 12
+    }
+},
+{
+    "pk": 8, 
+    "model": "data.schooldata", 
+    "fields": {
+        "boys_g2": 15, 
+        "classrooms": 30, 
+        "teachers_g2": 8, 
+        "name": "Bwinambo", 
+        "teachers_g1": 4, 
+        "created_at": "2013-08-20T08:11:43.924Z", 
+        "created_by": 7, 
+        "teachers": 40, 
+        "emis": 3, 
+        "girls_g2": 12
+    }
+},
+{
+    "pk": 1, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "Gr 7"
+    }
+},
+{
+    "pk": 2, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "Gr 9"
+    }
+},
+{
+    "pk": 3, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "Gr 12"
+    }
+},
+{
+    "pk": 4, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "PTC"
+    }
+},
+{
+    "pk": 5, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "PTD"
+    }
+},
+{
+    "pk": 6, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "Dip Ed"
+    }
+},
+{
+    "pk": 7, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "Other diploma"
+    }
+},
+{
+    "pk": 8, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "BA Degree"
+    }
+},
+{
+    "pk": 9, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "MA Degree"
+    }
+},
+{
+    "pk": 10, 
+    "model": "data.academicachievementcode", 
+    "fields": {
+        "achievement": "Other"
+    }
+},
+{
+    "pk": 5, 
+    "model": "data.teacherperformancedata", 
+    "fields": {
+        "reading_lesson": 15, 
+        "classroom_environment_score": 15, 
+        "gender": "male", 
+        "age": 30, 
+        "t_l_materials": 12, 
+        "g2_pupils_present": 40, 
+        "pupils_materials_score": 13, 
+        "created_by": 5, 
+        "years_experience": "+5", 
+        "training_subtotal": 18, 
+        "attitudes_and_beliefs": 17, 
+        "pupil_engagement_score": 16, 
+        "g2_pupils_registered": 50, 
+        "emis": 6, 
+        "academic_level": 8, 
+        "ts_number": 19, 
+        "created_at": "2013-08-20T08:06:17.449Z", 
+        "pupils_books_number": 14
+    }
+},
+{
+    "pk": 6, 
+    "model": "data.teacherperformancedata", 
+    "fields": {
+        "reading_lesson": 15, 
+        "classroom_environment_score": 15, 
+        "gender": "female", 
+        "age": 30, 
+        "t_l_materials": 12, 
+        "g2_pupils_present": 40, 
+        "pupils_materials_score": 13, 
+        "created_by": 6, 
+        "years_experience": "+5", 
+        "training_subtotal": 18, 
+        "attitudes_and_beliefs": 17, 
+        "pupil_engagement_score": 16, 
+        "g2_pupils_registered": 50, 
+        "emis": 1, 
+        "academic_level": 8, 
+        "ts_number": 19, 
+        "created_at": "2013-08-20T08:06:34.408Z", 
+        "pupils_books_number": 14
+    }
+},
+{
+    "pk": 7, 
+    "model": "data.teacherperformancedata", 
+    "fields": {
+        "reading_lesson": 15, 
+        "classroom_environment_score": 15, 
+        "gender": "female", 
+        "age": 21, 
+        "t_l_materials": 12, 
+        "g2_pupils_present": 40, 
+        "pupils_materials_score": 13, 
+        "created_by": 7, 
+        "years_experience": "+5", 
+        "training_subtotal": 18, 
+        "attitudes_and_beliefs": 17, 
+        "pupil_engagement_score": 16, 
+        "g2_pupils_registered": 50, 
+        "emis": 3, 
+        "academic_level": 8, 
+        "ts_number": 19, 
+        "created_at": "2013-08-20T08:07:07.859Z", 
+        "pupils_books_number": 14
+    }
+},
+{
+    "pk": 8, 
+    "model": "data.learnerperformancedata", 
+    "fields": {
+        "phonetic_awareness": 50, 
+        "outstanding_results": 17, 
+        "reading_comprehension": 12, 
+        "vocabulary": 15, 
+        "gender": "female", 
+        "created_at": "2013-08-20T08:08:11.464Z", 
+        "desirable_results": 16, 
+        "created_by": 5, 
+        "minimum_results": 15, 
+        "below_minimum_results": 14, 
+        "total_number_pupils": 40, 
+        "emis": 6, 
+        "writing_diction": 13
+    }
+},
+{
+    "pk": 9, 
+    "model": "data.learnerperformancedata", 
+    "fields": {
+        "phonetic_awareness": 50, 
+        "outstanding_results": 17, 
+        "reading_comprehension": 12, 
+        "vocabulary": 15, 
+        "gender": "male", 
+        "created_at": "2013-08-20T08:08:20.902Z", 
+        "desirable_results": 16, 
+        "created_by": 5, 
+        "minimum_results": 15, 
+        "below_minimum_results": 14, 
+        "total_number_pupils": 40, 
+        "emis": 6, 
+        "writing_diction": 13
+    }
+},
+{
+    "pk": 10, 
+    "model": "data.learnerperformancedata", 
+    "fields": {
+        "phonetic_awareness": 50, 
+        "outstanding_results": 17, 
+        "reading_comprehension": 12, 
+        "vocabulary": 15, 
+        "gender": "male", 
+        "created_at": "2013-08-20T08:08:40.138Z", 
+        "desirable_results": 16, 
+        "created_by": 6, 
+        "minimum_results": 15, 
+        "below_minimum_results": 14, 
+        "total_number_pupils": 40, 
+        "emis": 1, 
+        "writing_diction": 13
+    }
+},
+{
+    "pk": 11, 
+    "model": "data.learnerperformancedata", 
+    "fields": {
+        "phonetic_awareness": 50, 
+        "outstanding_results": 17, 
+        "reading_comprehension": 12, 
+        "vocabulary": 15, 
+        "gender": "female", 
+        "created_at": "2013-08-20T08:08:55.273Z", 
+        "desirable_results": 16, 
+        "created_by": 6, 
+        "minimum_results": 15, 
+        "below_minimum_results": 14, 
+        "total_number_pupils": 40, 
+        "emis": 1, 
+        "writing_diction": 13
+    }
+},
+{
+    "pk": 12, 
+    "model": "data.learnerperformancedata", 
+    "fields": {
+        "phonetic_awareness": 50, 
+        "outstanding_results": 17, 
+        "reading_comprehension": 12, 
+        "vocabulary": 15, 
+        "gender": "female", 
+        "created_at": "2013-08-20T08:09:14.146Z", 
+        "desirable_results": 16, 
+        "created_by": 7, 
+        "minimum_results": 15, 
+        "below_minimum_results": 14, 
+        "total_number_pupils": 40, 
+        "emis": 3, 
+        "writing_diction": 13
+    }
+},
+{
+    "pk": 13, 
+    "model": "data.learnerperformancedata", 
+    "fields": {
+        "phonetic_awareness": 50, 
+        "outstanding_results": 17, 
+        "reading_comprehension": 12, 
+        "vocabulary": 15, 
+        "gender": "male", 
+        "created_at": "2013-08-20T08:09:21.473Z", 
+        "desirable_results": 16, 
+        "created_by": 7, 
+        "minimum_results": 15, 
+        "below_minimum_results": 14, 
+        "total_number_pupils": 40, 
+        "emis": 3, 
+        "writing_diction": 13
+    }
+},
+{
+    "pk": 6, 
+    "model": "data.inboundsms", 
+    "fields": {
+        "message": "SMS1", 
+        "created_at": "2013-08-20T08:12:22.075Z", 
+        "created_by": 5
+    }
+},
+{
+    "pk": 7, 
+    "model": "data.inboundsms", 
+    "fields": {
+        "message": "SMS2", 
+        "created_at": "2013-08-20T08:12:31.335Z", 
+        "created_by": 6
+    }
+},
+{
+    "pk": 8, 
+    "model": "data.inboundsms", 
+    "fields": {
+        "message": "SMS3", 
+        "created_at": "2013-08-20T08:12:40.058Z", 
+        "created_by": 7
+    }
+}
+]

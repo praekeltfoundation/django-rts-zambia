@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'hierarchy',
     'data',
     'celery_app',
+    'users',
 )
 
 # A sample logging configuration. The only tangible logging

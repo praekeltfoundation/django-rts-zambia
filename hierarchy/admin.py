@@ -1,5 +1,7 @@
 from django.contrib import admin
 from models import (Province, District, Zone, School)
+from rts.utils import DistrictIdFilter
+
 
 class ProvinceAdmin(admin.ModelAdmin):
     list_display = ["name"]
@@ -15,6 +17,14 @@ class ZoneAdmin(admin.ModelAdmin):
 
 class SchoolAdmin(admin.ModelAdmin):
     list_display = ["emis", "name", "zone"]
+
+
+    def queryset(self, request):
+        """
+        Limits queries for pages that belong to district admin
+        """
+        qs = super(SchoolAdmin, self).queryset(request)
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 admin.site.register(Province, ProvinceAdmin)
