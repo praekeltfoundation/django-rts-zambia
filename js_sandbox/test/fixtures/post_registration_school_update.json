@@ -1,0 +1,48 @@
+{
+    "url": "http://qa/api/v1/data/school/",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+        "boys_g2": 10,
+        "classrooms": 5,
+        "created_by": "/api/v1/data/headteacher/2/",
+        "emis": "/api/v1/school/emis/2334/",
+        "girls_g2": 11,
+        "name":null,
+        "teachers": 5,
+        "teachers_g1": 2,
+        "teachers_g2": 2
+    },
+    "body":  {
+        "created_at": "2013-08-14T19:57:50.232678",
+        "emis": {
+            "emis": 2334,
+            "id": 2,
+            "name": "School Two",
+            "resource_uri": "/api/v1/school/2/",
+            "zone": {
+                "district": {
+                    "id": 2,
+                    "name": "District Two",
+                    "province": {
+                        "id": 2,
+                        "name": "Province Two",
+                        "resource_uri": "/api/v1/province/2/"
+                    },
+                    "resource_uri": "/api/v1/district/2/"
+                },
+                "id": 2,
+                "name": "Zone Two",
+                "resource_uri": "/api/v1/zone/2/"
+            }
+        },
+        "boys_g2": 10,
+        "classrooms": 5,
+        "girls_g2": 11,
+        "name": "School One",
+        "resource_uri": "/api/data/school/2/",
+        "teachers": 5,
+        "teachers_g1": 2,        
+        "teachers_g2": 2
+    }
+}
