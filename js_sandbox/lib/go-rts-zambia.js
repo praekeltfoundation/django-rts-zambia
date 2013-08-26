@@ -618,7 +618,6 @@ function GoRtsZambia() {
     self.add_creator('reg_school_classrooms', function(state_name, im) {
         if(im.get_user_answer('initial_state') == 'manage_change_emis'){
             var EMIS = im.get_user_answer('manage_change_emis');
-            console.log(EMIS);
             if (self.check_valid_emis(EMIS)) {
                 // EMIS valid
                 return new FreeText(
