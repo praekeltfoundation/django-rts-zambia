@@ -161,21 +161,7 @@ function GoRtsZambia() {
         }
     };
 
-    self.registration_data_collect = function(){
-        var headteacher_data = {
-            "first_name": im.get_user_answer('reg_first_name'),
-            "last_name": im.get_user_answer('reg_surname'),
-            "msisdn": im.user_addr,
-            "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_date_of_birth')).yyyymmdd(),
-            "gender": im.get_user_answer('reg_gender'),
-        };
-        if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
-            headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
-            headteacher_data['is_zonal_head'] = false;
-        } else {
-            headteacher_data['zonal_head_name'] = "self";
-            headteacher_data['is_zonal_head'] = true;
-        }
+    self.registration_data_school_collect = function(){
         var school_data = {
             "name": im.get_user_answer('reg_school_name'),
             "classrooms": parseInt(im.get_user_answer('reg_school_classrooms')),
@@ -186,16 +172,29 @@ function GoRtsZambia() {
             "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'))
         };
 
-        if (im.get_user_answer('initial_state') == 'manage_change_emis'){
-            school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
-            headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/";
-        } else {
-            school_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
-            headteacher_data['emis'] = "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/";
-        }
-
-        return [headteacher_data, school_data];
+        return school_data;
     };
+
+    self.registration_data_headteacher_collect = function(){
+        var headteacher_data = {
+            "first_name": im.get_user_answer('reg_first_name'),
+            "last_name": im.get_user_answer('reg_surname'),
+            "msisdn": im.user_addr,
+            "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_date_of_birth')).yyyymmdd(),
+            "gender": im.get_user_answer('reg_gender'),
+            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/"
+        };
+        if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
+            headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
+            headteacher_data['is_zonal_head'] = false;
+        } else {
+            headteacher_data['zonal_head_name'] = "self";
+            headteacher_data['is_zonal_head'] = true;
+        }
+        return headteacher_data;
+    };
+
+
 
     self.performance_data_teacher_collect = function(emis, id){
         var data = {
@@ -281,24 +280,41 @@ function GoRtsZambia() {
     // START CMS Interactions
 
     self.cms_registration = function(im) {
-        var data = self.registration_data_collect();
-        var headteacher_data = data[0];
-        var school_data = data[1];
-        var p_ht = self.cms_post("data/headteacher/", headteacher_data);
-        p_ht.add_callback(function(result){
-            var headteacher_id = result.id;
-            var emis = result.emis.emis;
-            school_data["created_by"] = "/api/v1/data/headteacher/" + headteacher_id + "/";
-            var p_school = self.cms_post("data/school/", school_data);
-            p_school.add_callback(function(){
-                var fields = {
-                    "rts_id": JSON.stringify(headteacher_id),
-                    "rts_emis": JSON.stringify(emis)
+        var headteacher_data;
+        var headteacher_id;
+
+        // get the contact
+        var p_c = self.get_contact(im);
+        p_c.add_callback(function(result) {
+            var contact = result.contact;
+            var p_ht;
+            if (im.get_user_answer('initial_state') == 'manage_change_emis') {
+                // Update current headteacher EMIS only
+                headteacher_id = contact['extras-rts_id'];
+                headteacher_data = {
+                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/"
                 };
-                var p_c = self.get_contact(im);
-                p_c.add_callback(function(result) {
+                p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
+            } else {
+                // create new headteacher 
+                headteacher_data = self.registration_data_headteacher_collect();
+                p_ht = self.cms_post("data/headteacher/", headteacher_data);
+            }
+            // Use the results
+            p_ht.add_callback(function(result){
+                headteacher_id = result.id;
+                var emis = result.emis.emis;
+                var school_data = self.registration_data_school_collect();
+                school_data["created_by"] = "/api/v1/data/headteacher/" + headteacher_id + "/";
+                school_data["emis"] = "/api/v1/school/emis/" + emis + "/";
+                var p_school = self.cms_post("data/school/", school_data);
+                p_school.add_callback(function(){
+                    var fields = {
+                        "rts_id": JSON.stringify(headteacher_id),
+                        "rts_emis": JSON.stringify(emis)
+                    };
                     var p_extra = im.api_request('contacts.update_extras', {
-                        key: result.contact.key,
+                        key: contact.key,
                         fields: fields
                     });
                     p_extra.add_callback(function(result) {
@@ -317,11 +333,11 @@ function GoRtsZambia() {
                     });
                     return p_extra;
                 });
-                return p_c;
+                return p_school;
             });
-            return p_school;
+            return p_ht;
         });
-        return p_ht;
+        return p_c;
     };
 
     self.cms_registration_update_msisdn = function(im) {
@@ -335,13 +351,6 @@ function GoRtsZambia() {
             return self.cms_put("data/headteacher/" + headteacher_id + "/", data);
         });
         return p;
-    };
-
-    self.cms_registration_emis_delink = function(im, emis) {
-        var data = {
-            emis: parseInt(emis)
-        };
-        return self.cms_post("registration/emisdelink/", data);
     };
 
     self.cms_hierarchy_load = function() {
@@ -465,7 +474,7 @@ function GoRtsZambia() {
                     "Welcome to the Zambia School Gateway! What would you like to do?",
                     [
                         new Choice("reg_emis", "Register as a new user."),
-                        new Choice("manage_change_emis", "Change my school."),
+                        new Choice("manage_change_emis_error", "Change my school."),
                         new Choice("manage_change_msisdn_emis_lookup", "Change my primary cell phone number.")
                     ]
                 );
@@ -497,12 +506,25 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "manage_change_msisdn_emis_lookup",
         "manage_change_msisdn_confirm",
-        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+        "Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_state(new ChoiceState(
+        "manage_change_emis_error",
+        function(choice) {
+                return choice.value;
+            },
+        "Your cell phone number is unrecognised. Please associate your new number with " +
+        "your old EMIS first before requesting to change school.",
+        [
+            new Choice("initial_state", "Main menu."),
+            new Choice("end_state", "Exit.")
+        ]
     ));
 
     self.add_state(new FreeText(
         "manage_change_emis",
-        "reg_school_name",
+        "reg_school_classrooms",
         "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
@@ -534,34 +556,16 @@ function GoRtsZambia() {
 
     self.add_creator('reg_school_name', function(state_name, im) {
         var EMIS = im.get_user_answer('reg_emis');
-        // TODO: Validate EMIS properly
         if (self.check_valid_emis(EMIS)) {
             // EMIS valid
-            if(im.get_user_answer('initial_state') == 'manage_change_emis'){
-                // drop the current msisdn from this emis
-                var p = self.cms_registration_emis_delink(im, EMIS);
-                p.add_callback(function(result){
-                    return new FreeText(
-                        state_name,
-                        "reg_first_name",
-                        "Please enter the name of your school, e.g. Kapililonga"
-                    );
-                });
-                return p;
-            } else {
-                return new FreeText(
-                    state_name,
-                    "reg_first_name",
-                    "Please enter the name of your school, e.g. Kapililonga"
-                );
-            }
+            return new FreeText(
+                state_name,
+                "reg_first_name",
+                "Please enter the name of your school, e.g. Kapililonga"
+            );
         } else {
             // Invalid EMIS - request again
-            if(im.get_user_answer('initial_state') == 'manage_change_emis'){
-                return self.make_emis_error_state('reg_emis_error', 'manage_change_emis');
-            } else {
-                return self.make_emis_error_state('reg_emis_error', 'reg_emis');
-            }
+            return self.make_emis_error_state('reg_emis_error', 'reg_emis');
         }
     });
 
@@ -611,17 +615,37 @@ function GoRtsZambia() {
         ]
     ));
 
-    self.add_state(new FreeText(
-        "reg_school_classrooms",
-        "reg_school_teachers",
-        "How many classrooms do you have in your school?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
-        },
-        'Please provide a number value for how many classrooms you have in your school.'
-    ));
-
+    self.add_creator('reg_school_classrooms', function(state_name, im) {
+        if(im.get_user_answer('initial_state') == 'manage_change_emis'){
+            var EMIS = im.get_user_answer('manage_change_emis');
+            if (self.check_valid_emis(EMIS)) {
+                // EMIS valid
+                return new FreeText(
+                    state_name,
+                    "reg_school_teachers",
+                    "How many classrooms do you have in your school?",
+                    function(content) {
+                        // check that the value provided is actually decimal-ish.
+                        return !Number.isNaN(parseInt(content));
+                    },
+                    'Please provide a number value for how many classrooms you have in your school.'
+                )
+            } else {
+                return self.make_emis_error_state('reg_emis_error', 'manage_change_emis');
+            }
+        } else {
+            return new FreeText(
+                state_name,
+                "reg_school_teachers",
+                "How many classrooms do you have in your school?",
+                function(content) {
+                    // check that the value provided is actually decimal-ish.
+                    return !Number.isNaN(parseInt(content));
+                },
+                'Please provide a number value for how many classrooms you have in your school.'
+            )
+        }
+    });
 
     self.add_state(new FreeText(
         "reg_school_teachers",
