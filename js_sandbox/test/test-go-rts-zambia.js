@@ -20,10 +20,11 @@ describe("test_api", function() {
 var test_fixtures_full = [
     'test/fixtures/get_hierarchy.json',
     'test/fixtures/put_registration_update_msisdn.json',
-    'test/fixtures/post_registration_emisdelink.json',
+    'test/fixtures/put_registration_update_emis.json',
     'test/fixtures/post_registration_headteacher.json',
     'test/fixtures/post_registration_headteacher_zonal.json',
     'test/fixtures/post_registration_school.json',
+    'test/fixtures/post_registration_school_update.json',
     'test/fixtures/post_performance_teacher.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
@@ -701,7 +702,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "3",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
+            response: "^Please enter the school's EMIS number that you are currently registered " +
+                "with. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
@@ -776,9 +778,71 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "1",
             next_state: "manage_change_msisdn_emis_lookup",
-            response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
+            response: "^Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
+    });
+
+    it("selecting to change school should ask to change MSISDN first", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "manage_change_emis_error",
+            response: "^Your cell phone number is unrecognised. Please associate your new number with " +
+                "your old EMIS first before requesting to change school.[^]" +
+                "1. Main menu.[^]" +
+                "2. Exit.$"
+        });
+        p.then(done, done);
+    });
+
+});
+
+
+describe("When using the USSD line as an recognised MSISDN to change school", function() {
+
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 2,
+                    "rts_emis": 1
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
     });
 
     it("selecting to change school should ask for EMIS", function (done) {
@@ -787,40 +851,35 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "2",
+            content: "3",
             next_state: "manage_change_emis",
             response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
 
-    it("entering valid EMIS should disassociate current and ask for School Name", function (done) {
+    it("entering valid EMIS should ask for School classrooms", function (done) {
         var user = {
-            current_state: 'reg_emis',
+            current_state: 'manage_change_emis',
             answers: {
                 initial_state: 'manage_change_emis'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "0001",
-            next_state: "reg_school_name",
-            response: "^Please enter the name of your school, e.g. Kapililonga$"
+            content: "2334",
+            next_state: "reg_school_classrooms",
+            response: "^How many classrooms do you have in your school\\?$"
         });
         p.then(done, done);
     });
 
-    it("saying are zonal head after disassociate should thank long and close", function (done) {
+    it("saying are zonal head after association with new school should thank long and close", function (done) {
         var user = {
             current_state: 'reg_zonal_head',
             answers: {
                 initial_state: 'manage_change_emis',
-                manage_change_emis: '0001',
-                reg_school_name: 'School One',
-                reg_first_name: 'Jack',
-                reg_surname: 'Black',
-                reg_date_of_birth: '11091980',
-                reg_gender: 'male',
+                manage_change_emis: '2334',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -843,6 +902,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
     });
 
 });
+
+
 
 describe("When using the USSD line as an recognised MSISDN to report on teachers", function() {
 
