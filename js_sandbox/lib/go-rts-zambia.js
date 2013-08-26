@@ -353,19 +353,6 @@ function GoRtsZambia() {
         return p;
     };
 
-    // self.cms_registration_update_emis = function(im, emis) {
-    //     // Get Headteacher ID from contact
-    //     var p_contact = self.get_contact(im);
-    //     p_contact.add_callback(function(result){
-    //         var headteacher_id = result.contact['extras-rts_id'];
-    //         var data = {
-    //             emis: "/api/v1/school/emis/" + parseInt(emis) + "/"
-    //         };
-    //         return self.cms_put("data/headteacher/" + headteacher_id + "/", data);
-    //     });
-    //     return p_contact;
-    // };
-
     self.cms_hierarchy_load = function() {
         var p = self.cms_get("hierarchy/");
         p.add_callback(function(result){
