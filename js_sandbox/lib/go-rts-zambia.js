@@ -363,7 +363,7 @@ function GoRtsZambia() {
             var id = parseInt(result.contact["extras-rts_id"]);
             // Need to ensure no double save
             var contact_key = result.contact.key;
-            if (result.contact["extras-rts_last_save_performance_teacher"] != im.get_user_answer('perf_teacher_ts_number')) {
+            if (parseInt(result.contact["extras-rts_last_save_performance_teacher"]) != parseInt(im.get_user_answer('perf_teacher_ts_number'))) {
                 var data = self.performance_data_teacher_collect(emis, id);
                 var p_tp = self.cms_post("data/teacherperformance/", data);
 
