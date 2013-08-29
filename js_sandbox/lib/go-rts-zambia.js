@@ -720,37 +720,33 @@ function GoRtsZambia() {
         "Please enter the name and surname of your ZONAL HEAD TEACHER."
     ));
 
-    self.add_creator('reg_thanks_head_teacher', function(state_name, im) {
-        // Log the users data
-        var p = self.cms_registration(im);
-        // Generate the EndState
-        p.add_callback(function(result) {
-            return new EndState(
-                state_name,
-                "Congratulations! You are now registered as a user of the" +
-                " Gateway! Please dial in again when you are ready to start" +
-                " reporting on teacher and learner performance.",
-                "initial_state"
-            );
-        });
-        return p;
-    });
+    self.add_state(new EndState(
+            "reg_thanks_head_teacher",
+            "Congratulations! You are now registered as a user of the" +
+            " Gateway! Please dial in again when you are ready to start" +
+            " reporting on teacher and learner performance.",
+            "initial_state",
+            {
+                on_enter: function(){
+                    return self.cms_registration(im);
+                }
+            }
+        )
+    );
 
-    self.add_creator('reg_thanks_zonal_head', function(state_name, im) {
-        // Log the users data
-        var p = self.cms_registration(im);
-        // Generate the EndState
-        p.add_callback(function(result) {
-            return new EndState(
-                state_name,
-                "Well done! You are now registered as a Zonal Head Teacher." +
-                " When you are ready, dial in to start reporting. You will" +
-                " also receive monthly SMS's from your zone.",
-                "initial_state"
-            );
-        });
-        return p;
-    });
+    self.add_state(new EndState(
+            "reg_thanks_zonal_head",
+            "Well done! You are now registered as a Zonal Head Teacher." +
+            " When you are ready, dial in to start reporting. You will" +
+            " also receive monthly SMS's from your zone.",
+            "initial_state",
+            {
+                on_enter: function(){
+                    return self.cms_registration(im);
+                }
+            }
+        )
+    );
 
     /////////////////////////////////////////////////////////////////
     // Start of Performance Management - Teachers
