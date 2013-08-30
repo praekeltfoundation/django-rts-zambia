@@ -1,4 +1,6 @@
 from users.models import UserDistrict
+from django.contrib import admin
+
 
 class DistrictIdFilter:
     def __init__(self, parent=None, request=None, qs=None):
@@ -23,15 +25,11 @@ class DistrictIdFilter:
             return self.qs
 
 
-class ManagePermissions:
-    def __init__(self, parent=None, request=None, actions=None, delete_perm=None):
-        self.parent = parent
-        self.request = request
-        self.actions = actions
-        self.delete_perm = delete_perm
-
-    def remove_delete_permission(self):
-        if not self.delete_perm:
-            if 'delete_selected' in self.actions:
-                del self.actions['delete_selected']
-        return self.actions
+class ManagePermissions(admin.ModelAdmin):
+    def get_actions(self, request):
+        actions = super(ManagePermissions, self).get_actions(request)
+        delete_perm = super(ManagePermissions, self).has_delete_permission(request)
+        if not delete_perm:
+            if 'delete_selected' in actions:
+                del actions['delete_selected']
+        return actions
