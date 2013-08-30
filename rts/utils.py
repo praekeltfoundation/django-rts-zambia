@@ -21,3 +21,17 @@ class DistrictIdFilter:
                 return self.qs.filter(zone__district=self.request.user.userdistrict.district_id)
         else:
             return self.qs
+
+
+class ManagePermissions:
+    def __init__(self, parent=None, request=None, actions=None, delete_perm=None):
+        self.parent = parent
+        self.request = request
+        self.actions = actions
+        self.delete_perm = delete_perm
+
+    def remove_delete_permission(self):
+        if not self.delete_perm:
+            if 'delete_selected' in self.actions:
+                del self.actions['delete_selected']
+        return self.actions
