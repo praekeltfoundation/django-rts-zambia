@@ -218,6 +218,8 @@ RAVEN_CONFIG = {
     # 'dsn': 'http://public:secret@example.com/1',
 }
 
+API_LIMIT_PER_PAGE = 0
+
 # Import production settings
 try:
     from production_settings import *
