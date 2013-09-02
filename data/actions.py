@@ -41,7 +41,8 @@ def export_select_fields_csv_action(description="Export selected objects as CSV 
             labels = [v for k, v in fields if k in field_names]
 
         response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
+        response['Content-Disposition'] = ('attachment; filename=%s.csv'
+                                           % unicode(opts).replace('.', '_'))
 
         writer = csv.writer(response)
         if header:
@@ -50,7 +51,8 @@ def export_select_fields_csv_action(description="Export selected objects as CSV 
             else:
                 writer.writerow(field_names)
         for obj in queryset:
-            writer.writerow([unicode(getattr(obj, field)).encode('utf-8') for field in field_names])
+            writer.writerow([unicode(getattr(obj, field)).encode('utf-8')
+                            for field in field_names])
         return response
     export_as_csv.short_description = description
     return export_as_csv
