@@ -1,3 +1,9 @@
 from django.db import models
 
-# Create your models here.
+
+class SendSMS(models.Model):
+    pass
+
+
+class SMSDatabase(models.Model):
+    pass
