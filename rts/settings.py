@@ -27,6 +27,19 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'rts',
         'USER': 'postgres',
+
+
+    }
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'rts',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -149,6 +162,7 @@ INSTALLED_APPS = (
     'data',
     'celery_app',
     'users',
+    'sms',
 )
 
 # A sample logging configuration. The only tangible logging
