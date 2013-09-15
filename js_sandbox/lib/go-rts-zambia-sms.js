@@ -160,15 +160,18 @@ function GoRtsZambiaSms() {
         var response_state;
         p.add_callback(function(result) {
             if (result.contact["extras-rts_id"] === undefined) {
-                response_state = 'not_registered';
+                return new FreeText(
+                    state_name,
+                    'not_registered',
+                    im.config.output["not_registered"]);
             } else {
-                response_state = 'thanks';
+                return new FreeText(
+                    state_name,
+                    'thanks',
+                    im.config.output["not_registered"]);
             }
         });
-        return new FreeText(
-            state_name,
-            response_state,
-            "Welcome");
+        return p;        
     });
 
     self.add_creator('not_registered', function(state_name, im) {
@@ -179,7 +182,6 @@ function GoRtsZambiaSms() {
     });
 
     self.add_creator('thanks', function(state_name, im) {
-
         return new SMSEndState(
             state_name,
             im.config.output[thanks],
