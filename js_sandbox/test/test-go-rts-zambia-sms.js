@@ -18,6 +18,7 @@ describe("test_api", function() {
 });
 
 var test_fixtures_full = [
+ "test/fixtures/get_headteacher_filter_emis_zonal.json",
 ];
 
 var tester;
@@ -138,7 +139,7 @@ describe("When using the SMS line as an recognised MSISDN", function() {
         var p = tester.check_state({
             user: null,
             content: 'Hi everyone!',
-            next_state: "initial_state",
+            next_state: "thanks",
             response: "^Thanks\\! Bye\\!$",
             continue_session: false
         });
