@@ -1656,6 +1656,139 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         });
         p.then(done, done);
     });
+
+    it("entering reading assessment subtotal incorrectly should ask reading assessment subtotal again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_assessment',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "seven",
+            next_state: "perf_teacher_reading_assessment",
+            response: "^Please provide a number value for the Reading Assessment subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Reading Assessment subtotal should ask Readers total", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_assessment',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "7",
+            next_state: "perf_teacher_reading_total",
+            response: "^According to your assessment records, how many of the pupils in the class " +
+                "that was observed have broken through\\/can read\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering reader total incorrectly should ask readers total again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_total',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5',
+                perf_teacher_reading_assessment: '7'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "nine",
+            next_state: "perf_teacher_reading_total",
+            response: "^Please provide a number value for the pupils in the class that have broken " +
+                "through\\/can read\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Readers total show success and options", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_total',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5',
+                perf_teacher_reading_assessment: '7'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
+            next_state: "perf_teacher_completed",
+            response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
+                "1. Add another teacher\\.[^]" +
+                "2. Go back to the main menu\\.[^]" +
+                "3. Exit\\.$"
+        });
+        p.then(done, done);
+    });
+
+    
 });
 
 describe("When using the USSD line as an recognised MSISDN - completed Teacher review", function() {
