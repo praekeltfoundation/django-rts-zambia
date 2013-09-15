@@ -213,6 +213,8 @@ function GoRtsZambia() {
             "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
             "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
             "academic_level": "/api/v1/data/achievement/" + im.get_user_answer('perf_teacher_academic_level') + "/",
+            "reading_assessment": im.get_user_answer('perf_teacher_reading_assessment'),
+            "reading_total": im.get_user_answer('perf_teacher_reading_total'),
             "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
