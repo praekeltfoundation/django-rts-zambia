@@ -182,7 +182,7 @@ function GoRtsZambia() {
             "msisdn": im.user_addr,
             "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_date_of_birth')).yyyymmdd(),
             "gender": im.get_user_answer('reg_gender'),
-            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/"
+            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis_validator')) + "/"
         };
         if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
             headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
@@ -292,7 +292,7 @@ function GoRtsZambia() {
                 // Update current headteacher EMIS only
                 headteacher_id = contact['extras-rts_id'];
                 headteacher_data = {
-                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/"
+                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator')) + "/"
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
             } else {
@@ -341,7 +341,7 @@ function GoRtsZambia() {
     };
 
     self.cms_registration_update_msisdn = function(im) {
-        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis_lookup'));
+        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis'));
         var p = self.cms_get("data/headteacher/?emis__emis=" + emis);
         p.add_callback(function(result){
             var headteacher_id = result.id;
@@ -475,7 +475,7 @@ function GoRtsZambia() {
                     [
                         new Choice("reg_emis", "Register as a new user."),
                         new Choice("manage_change_emis_error", "Change my school."),
-                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary cell phone number.")
+                        new Choice("manage_change_msisdn_emis", "Change my primary cell phone number.")
                     ]
                 );
             } else {
@@ -499,13 +499,79 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "reg_emis",
-        "reg_school_name",
+        "reg_emis_validator",
         "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
-        "manage_change_msisdn_emis_lookup",
-        "manage_change_msisdn_confirm",
+        "reg_emis_try_2",
+        "reg_emis_validator",
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_creator('reg_emis_validator', function(state_name, im){
+        var EMIS;
+        if (im.get_user_answer('reg_emis_try_2')) {
+            EMIS = im.get_user_answer('reg_emis_try_2');
+        } else {
+            EMIS = im.get_user_answer('reg_emis');
+        }
+        if (self.check_valid_emis(EMIS)) { // EMIS valid
+            return new ChoiceState(
+                "reg_emis_validator",
+                "reg_school_name",
+                "Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
+                    "number to reclaim the EMIS and continue to receive SMS updates.",
+                [
+                    new Choice(EMIS, "Continue")
+                ]
+            );
+        } else {
+            if (im.get_user_answer('reg_emis_try_2')) { // Second failure - force exit
+                return new EndState(
+                    "reg_exit_emis",
+                    "We don't recognise your EMIS number. Please send a SMS with" +
+                    " the words EMIS ERROR to 739 and your DEST will contact you" +
+                    " to resolve the problem.",
+                    "initial_state"
+                );
+            } else { // First invalid EMIS - request again
+                return new ChoiceState(
+                    "reg_emis_error",
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "There is a problem with the EMIS number you have entered.",
+                    [
+                        new Choice("reg_emis_try_2", "Try again"),
+                        new Choice("reg_exit_emis", "Exit")
+                    ]
+                );
+            }
+        }
+    });
+
+    self.add_state(new ChoiceState(
+        "reg_emis_error",
+        function(choice) {
+            return choice.value;
+        },
+        "There is a problem with the EMIS number you have entered.",
+        [
+            new Choice("reg_emis_try_2", "Try again"),
+            new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "manage_change_msisdn_emis",
+        "manage_change_msisdn_emis_validator",
+        "Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_state(new FreeText(
+        "manage_change_msisdn_emis_try_2",
+        "manage_change_msisdn_emis_validator",
         "Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351."
     ));
 
@@ -522,14 +588,13 @@ function GoRtsZambia() {
         ]
     ));
 
-    self.add_state(new FreeText(
-        "manage_change_emis",
-        "reg_school_classrooms",
-        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
-    ));
-
-    self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
-        var EMIS = im.get_user_answer('manage_change_msisdn_emis_lookup');
+    self.add_creator('manage_change_msisdn_emis_validator', function(state_name, im) {
+        var EMIS;
+        if (im.get_user_answer('manage_change_msisdn_emis_try_2')) {
+            EMIS = im.get_user_answer('manage_change_msisdn_emis_try_2');
+        } else {
+            EMIS = im.get_user_answer('manage_change_msisdn_emis');
+        }
         if (self.check_valid_emis(EMIS)) {
             // EMIS valid
             return new EndState(
@@ -546,40 +611,122 @@ function GoRtsZambia() {
             );
         } else {
             // Invalid EMIS - request again
-            return self.make_emis_error_state('manage_change_msisdn_emis_error',
-                'manage_change_msisdn_emis_lookup');
+            if (im.get_user_answer('reg_emis_try_2')) { // Second failure - force exit
+                return new EndState(
+                    "reg_exit_emis",
+                    "We don't recognise your EMIS number. Please send a SMS with" +
+                    " the words EMIS ERROR to 739 and your DEST will contact you" +
+                    " to resolve the problem.",
+                    "initial_state"
+                );
+            } else { // First invalid EMIS - request again
+                return new ChoiceState(
+                    "manage_change_msisdn_emis_error",
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "There is a problem with the EMIS number you have entered.",
+                    [
+                        new Choice("manage_change_msisdn_emis_try_2", "Try again"),
+                        new Choice("reg_exit_emis", "Exit")
+                    ]
+                );
+            }
         }
     });
 
-    self.add_state(self.make_emis_error_state('manage_change_msisdn_emis_error',
-        'manage_change_msisdn_emis_lookup'));
+    self.add_state(new ChoiceState(
+        "manage_change_msisdn_emis_error",
+        function(choice) {
+            return choice.value;
+        },
+        "There is a problem with the EMIS number you have entered.",
+        [
+            new Choice("manage_change_msisdn_emis_try_2", "Try again"),
+            new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
 
-    self.add_creator('reg_school_name', function(state_name, im) {
-        var EMIS = im.get_user_answer('reg_emis');
-        if (self.check_valid_emis(EMIS)) {
-            // EMIS valid
-            return new FreeText(
-                state_name,
-                "reg_first_name",
-                "Please enter the name of your school, e.g. Kapililonga"
+    self.add_state(new FreeText(
+        "manage_change_emis",
+        "manage_change_emis_validator",
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_state(new FreeText(
+        "manage_change_emis_try_2",
+        "manage_change_emis_validator",
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_creator('manage_change_emis_validator', function(state_name, im){
+        var EMIS;
+        if (im.get_user_answer('manage_change_emis_try_2')) {
+            EMIS = im.get_user_answer('manage_change_emis_try_2');
+        } else {
+            EMIS = im.get_user_answer('manage_change_emis');
+        }
+        if (self.check_valid_emis(EMIS)) { // EMIS valid
+            return new ChoiceState(
+                "manage_change_emis_validator",
+                "reg_school_classrooms",
+                "Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
+                    "number to reclaim the EMIS and continue to receive SMS updates.",
+                [
+                    new Choice(EMIS, "Continue")
+                ]
             );
         } else {
-            // Invalid EMIS - request again
-            return self.make_emis_error_state('reg_emis_error', 'reg_emis');
+            if (im.get_user_answer('manage_change_emis_try_2')) { // Second failure - force exit
+                return new EndState(
+                    "reg_exit_emis",
+                    "We don't recognise your EMIS number. Please send a SMS with" +
+                    " the words EMIS ERROR to 739 and your DEST will contact you" +
+                    " to resolve the problem.",
+                    "initial_state"
+                );
+            } else { // First invalid EMIS - request again
+                return new ChoiceState(
+                    "manage_change_emis_enter_error",
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "There is a problem with the EMIS number you have entered.",
+                    [
+                        new Choice("manage_change_emis_try_2", "Try again"),
+                        new Choice("reg_exit_emis", "Exit")
+                    ]
+                );
+            }
         }
     });
 
-    self.add_state(self.make_emis_error_state('reg_emis_error', 'reg_emis'));
+    self.add_state(new ChoiceState(
+        "manage_change_emis_enter_error",
+        function(choice) {
+            return choice.value;
+        },
+        "There is a problem with the EMIS number you have entered.",
+        [
+            new Choice("manage_change_emis_try_2", "Try again"),
+            new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
 
-    self.add_creator('reg_exit_emis', function(state_name, im) {
-        return new EndState(
-            state_name,
-            "We don't recognise your EMIS number. Please send a SMS with" +
-            " the words EMIS ERROR to 739 and your DEST will contact you" +
-            " to resolve the problem.",
-            "initial_state"
-        );
-    });
+
+    self.add_state(new EndState(
+        "reg_exit_emis",
+        "We don't recognise your EMIS number. Please send a SMS with" +
+        " the words EMIS ERROR to 739 and your DEST will contact you" +
+        " to resolve the problem.",
+        "initial_state"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_name",
+        "reg_first_name",
+        "Please enter the name of your school, e.g. Kapililonga"
+    ));
 
     self.add_state(new FreeText(
         "reg_first_name",
@@ -615,37 +762,39 @@ function GoRtsZambia() {
         ]
     ));
 
-    self.add_creator('reg_school_classrooms', function(state_name, im) {
-        if(im.get_user_answer('initial_state') == 'manage_change_emis'){
-            var EMIS = im.get_user_answer('manage_change_emis');
-            if (self.check_valid_emis(EMIS)) {
-                // EMIS valid
-                return new FreeText(
-                    state_name,
-                    "reg_school_teachers",
-                    "How many classrooms do you have in your school?",
-                    function(content) {
-                        // check that the value provided is actually decimal-ish.
-                        return !Number.isNaN(Number(content));
-                    },
-                    'Please provide a number value for how many classrooms you have in your school.'
-                )
-            } else {
-                return self.make_emis_error_state('reg_emis_error', 'manage_change_emis');
-            }
-        } else {
-            return new FreeText(
-                state_name,
-                "reg_school_teachers",
-                "How many classrooms do you have in your school?",
-                function(content) {
-                    // check that the value provided is actually decimal-ish.
-                    return !Number.isNaN(Number(content));
-                },
-                'Please provide a number value for how many classrooms you have in your school.'
-            )
-        }
-    });
+    // self.add_creator('reg_school_classrooms', function(state_name, im) {
+    //     if(im.get_user_answer('initial_state') == 'manage_change_emis'){
+    //         var EMIS = im.get_user_answer('manage_change_emis');
+    //         if (self.check_valid_emis(EMIS)) {
+    //             // EMIS valid
+    //             return 
+    //         } else {
+    //             return self.make_emis_error_state('reg_emis_error', 'manage_change_emis');
+    //         }
+    //     } else {
+    //         return new FreeText(
+    //             state_name,
+    //             "reg_school_teachers",
+    //             "How many classrooms do you have in your school?",
+    //             function(content) {
+    //                 // check that the value provided is actually decimal-ish.
+    //                 return !Number.isNaN(Number(content));
+    //             },
+    //             'Please provide a number value for how many classrooms you have in your school.'
+    //         )
+    //     }
+    // });
+
+    self.add_state(new FreeText(
+        "reg_school_classrooms",
+        "reg_school_teachers",
+        "How many classrooms do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(Number(content));
+        },
+        'Please provide a number value for how many classrooms you have in your school.'
+    ));
 
     self.add_state(new FreeText(
         "reg_school_teachers",
