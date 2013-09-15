@@ -1,4 +1,6 @@
 from users.models import UserDistrict
+from django.contrib import admin
+
 
 class DistrictIdFilter:
     def __init__(self, parent=None, request=None, qs=None):
@@ -21,3 +23,13 @@ class DistrictIdFilter:
                 return self.qs.filter(zone__district=self.request.user.userdistrict.district_id)
         else:
             return self.qs
+
+
+class ManagePermissions(admin.ModelAdmin):
+    def get_actions(self, request):
+        actions = super(ManagePermissions, self).get_actions(request)
+        delete_perm = super(ManagePermissions, self).has_delete_permission(request)
+        if not delete_perm:
+            if 'delete_selected' in actions:
+                del actions['delete_selected']
+        return actions
