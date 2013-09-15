@@ -1626,7 +1626,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         p.then(done, done);
     });
 
-    it("entering teacher training subtotal should ask show success and options", function (done) {
+    it("entering teacher training subtotal should ask Reading Assessment", function (done) {
         var user = {
             current_state: 'perf_teacher_training_subtotal',
             answers: {
@@ -1650,11 +1650,9 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         var p = tester.check_state({
             user: user,
             content: "5",
-            next_state: "perf_teacher_completed",
-            response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
-                "1. Add another teacher\\.[^]" +
-                "2. Go back to the main menu\\.[^]" +
-                "3. Exit\\.$"
+            next_state: "perf_teacher_reading_assessment",
+            response: "^Enter the subtotal that the teacher achieved during the interview " +
+                "on Section 7.3. \\(Reading Assessment\\).$"
         });
         p.then(done, done);
     });

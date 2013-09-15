@@ -928,7 +928,7 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "perf_teacher_training_subtotal",
-        "perf_teacher_completed",
+        "perf_teacher_reading_assessment",
         "Enter the subtotal that the teacher achieved during the interview on Section " +
             "7.2. (Teacher Training)",
         function(content) {
@@ -936,6 +936,18 @@ function GoRtsZambia() {
             return !Number.isNaN(Number(content));
         },
         "Please provide a number value for the Teacher Training interview subtotal."
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_reading_assessment",
+        "perf_teacher_reading_total",
+        "Enter the subtotal that the teacher achieved during the interview " +
+            "on Section 7.3. (Reading Assessment).",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(Number(content));
+        },
+        "Please provide a number value for the Reading Assessment subtotal."
     ));
 
     self.add_creator('perf_teacher_completed', function(state_name, im) {
