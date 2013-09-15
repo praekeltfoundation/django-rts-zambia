@@ -52,16 +52,16 @@ function GoRtsZambiaSms() {
 
     // START Shared helpers
 
-    self.send_sms = function(im, content, to_addr) {
+    self.send_sms = function(content, to_addr) {
         var sms_tag = im.config.sms_tag;
         if (!sms_tag) return success(true);
-        var p = im.api_request("outbound.send_to_tag", {
+        im.log('outbound.send_to_tag with ' + content + ' and ' + to_addr);
+        return im.api_request("outbound.send_to_tag", {
             to_addr: to_addr,
             content: content,
             tagpool: sms_tag[0],
             tag: sms_tag[1]
         });
-        return p;
     };
 
     self.make_send_sms_function = function(im, content, number) {
@@ -185,7 +185,27 @@ function GoRtsZambiaSms() {
         return new SMSEndState(
             state_name,
             im.config.output[state_name],
-            'initial_state');
+            'initial_state',
+                {
+                    on_enter: function(){
+                        var p = self.get_contact(im);
+                        p.add_callback(function(result) {
+                            return self.cms_get(
+                                "data/headteacher/?emis__emis=" +
+                                result.contact["extras-rts_emis"] +
+                                "&is_zonal_head=true");
+                        });
+                        p.add_callback(function(result) {
+                            if (result.msisdn) {
+                                var to_addr = result.msisdn;
+                                var content = im.get_user_answer('initial_state');
+                                return self.send_sms(content, to_addr);
+                            }
+                        });
+                        return p;
+                    }
+                }
+            );
     });
 
 }
