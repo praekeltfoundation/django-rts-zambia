@@ -171,7 +171,7 @@ function GoRtsZambiaSms() {
                     im.config.output["not_registered"]);
             }
         });
-        return p;        
+        return p;
     });
 
     self.add_creator('not_registered', function(state_name, im) {
@@ -184,7 +184,7 @@ function GoRtsZambiaSms() {
     self.add_creator('thanks', function(state_name, im) {
         return new SMSEndState(
             state_name,
-            im.config.output[thanks],
+            im.config.output[state_name],
             'initial_state');
     });
 
