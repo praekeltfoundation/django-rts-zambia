@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "users.userdistrict", "fields": {"user": 2, "district": 10}}, {"pk": 2, "model": "users.userdistrict", "fields": {"user": 3, "district": 4}}]
