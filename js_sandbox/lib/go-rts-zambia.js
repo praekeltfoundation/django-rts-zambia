@@ -950,6 +950,19 @@ function GoRtsZambia() {
         "Please provide a number value for the Reading Assessment subtotal."
     ));
 
+    self.add_state(new FreeText(
+        "perf_teacher_reading_total",
+        "perf_teacher_completed",
+        "According to your assessment records, how many of the pupils in the class " +
+            "that was observed have broken through/can read?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return !Number.isNaN(Number(content));
+        },
+        "Please provide a number value for the pupils in the class that have broken " +
+            "through/can read."
+    ));
+
     self.add_creator('perf_teacher_completed', function(state_name, im) {
         // Log the users data
         var p = self.cms_performance_teacher(im);
