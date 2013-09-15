@@ -68,10 +68,9 @@ describe("When using the SMS line as an unrecognised MSISDN", function() {
         });
     });
 
-    it("reject with message", function (done) {
-        var user = {};
+    it.only("reject with message", function (done) {
         var p = tester.check_state({
-            user: user,
+            user: null,
             content: 'Hi everyone!',
             next_state: "initial_state",
             response: "^Sorry, we don't recognise your number. This SMS line " +
