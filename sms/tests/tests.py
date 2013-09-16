@@ -11,7 +11,7 @@ from hierarchy.models import Zone
 
 
 class TestAdminCreation(TestCase):
-    fixtures = ['hierarchy_upload.json', 'test_auth.json', 'test_user_district.json']
+    fixtures = ['test_sms_hierarchy_upload.json', 'test_sms_auth.json', 'test_sms_user_district.json']
 
     @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
                        CELERY_ALWAYS_EAGER = True,
