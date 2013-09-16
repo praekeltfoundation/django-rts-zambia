@@ -25,13 +25,6 @@ for key, value in zones_dict.iteritems():
     TempSMSZones.add_to_class(str(key), models.BooleanField(value))
 
 
-def save_zones(key, sms):
-    sms = SMSZones(send_sms=sms,
-                    zone=Zone.objects.get(id=int(key)),
-                    num_sent=50)
-    sms.save()
-
-
 class SMSZoneForm(forms.ModelForm):
     all = forms.BooleanField(label="All", required=False)
 
@@ -84,7 +77,7 @@ class SMSZoneInline(admin.StackedInline):
         temp = []
         if UserDistrict.objects.filter(user_id=request.user.id).exists():
             district = District.objects.get(id=request.user.userdistrict.district_id)
-            zones = district.district_id.all()
+            zones = district.zone_set.all()
             query_dict = [temp.append(str(obj.id)) for obj in zones]
 
         for field in fields["fields"]:
@@ -103,6 +96,25 @@ class SendSMSAdmin(ManagePermissions):
     def __init__(self, *args, **kwargs):
         super(SendSMSAdmin, self).__init__(*args, **kwargs)
         self.list_display_links = (None, )
+
+    def has_add_permission(self, request):
+        if not UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return False
+        return True
+
+    def has_change_permission(self, request, obj=None):
+        if not UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return False
+        return True
+
+    def custom_save_zones(self, key, sms):
+        """
+        Repeated function to save zones
+        """
+        sms = SMSZones(send_sms=sms,
+                        zone=Zone.objects.get(id=int(key)),
+                        num_sent=50)
+        sms.save()
 
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -128,7 +140,7 @@ class SendSMSAdmin(ManagePermissions):
         for formset in formsets:
             if UserDistrict.objects.filter(user_id=request.user.id).exists():
                 district = District.objects.get(id=request.user.userdistrict.district_id)
-                zones = district.district_id.all()
+                zones = district.zone_set.all()
                 temp = [str(obj.id) for obj in zones]
 
             result = {}
@@ -138,12 +150,12 @@ class SendSMSAdmin(ManagePermissions):
 
             for key, value in result.iteritems():
                 if key.isdigit() and key in temp:
-                    save_zones(key, result["temp_sms"])
+                    self.custom_save_zones(key, result["temp_sms"])
                     task_query_zone.delay(int(key), result["temp_sms"].sms)
 
                 elif key == 'all':
                     for zone_id in temp:
-                        save_zones(zone_id, result["temp_sms"])
+                        self.custom_save_zones(zone_id, result["temp_sms"])
                         task_query_zone.delay(zone_id, result["temp_sms"].sms)
 
 
