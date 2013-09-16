@@ -4,7 +4,7 @@ import os
 import djcelery
 
 
-djcelery.setup_loader()
+# djcelery.setup_loader()
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -32,16 +32,6 @@ DATABASES = {
     }
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'rts',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -163,6 +153,7 @@ INSTALLED_APPS = (
     'celery_app',
     'users',
     'sms',
+    'kombu.transport.django'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -194,16 +185,16 @@ LOGGING = {
     }
 }
 
-# Celery configuration options
-BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# # Celery configuration options
+# BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
-# Uncomment if you're running in DEBUG mode and you want to skip the broker
-# and execute tasks immediate instead of deferring them to the queue / workers.
-# CELERY_ALWAYS_EAGER = DEBUG
+# # Uncomment if you're running in DEBUG mode and you want to skip the broker
+# # and execute tasks immediate instead of deferring them to the queue / workers.
+# # CELERY_ALWAYS_EAGER = DEBUG
 
-# Tell Celery where to find the tasks
-CELERY_IMPORTS = ('celery_app.tasks',)
+# # Tell Celery where to find the tasks
+# CELERY_IMPORTS = ('celery_app.tasks',)
 
 # Defer email sending to Celery, except if we're in debug mode,
 # then just print the emails to stdout for debugging.
@@ -239,3 +230,11 @@ try:
     from production_settings import *
 except ImportError:
     pass
+
+
+djcelery.setup_loader()
+BROKER_URL = "django://"
+CELERY_RESULT_BACKEND = "database"
+
+
+SMS_CONFIG = {"sender_type": "logging"}
