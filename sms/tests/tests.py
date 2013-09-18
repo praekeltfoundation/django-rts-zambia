@@ -35,15 +35,15 @@ class TestAdminCreation(TestCase):
         self.client.login(username=self.d1.username,
                           password="d1")
         url = reverse("admin:sms_sendsms_add")
-        data = {"sms": "Sending the SMS",
+        data = {"sms": "Sending the SMS 1",
                 'tempsmszones_set-INITIAL_FORMS': 0,
                 'tempsmszones_set-TOTAL_FORMS': 1,
                 'tempsmszones_set-MAX_NUM_FORMS':  u'',
                 'tempsmszones_set-0-all': [u'on']
                 }
         self.client.post(url, data=data)
-        send_sms = SendSMS.objects.get(id=1)
-        self.assertEqual(send_sms.sms, "Sending the SMS")
+        sendsms = SendSMS.objects.get(sms="Sending the SMS 1")
+        self.assertEqual(sendsms.sms, "Sending the SMS 1")
         sms_zone = SMSZones.objects.all()
         self.assertEqual(sorted(self.d1_zones_id),
                          sorted([obj.zone_id for obj in sms_zone]))
@@ -79,7 +79,7 @@ class TestAdminCreation(TestCase):
         self.client.login(username=self.d1.username,
                           password="d1")
         url = reverse("admin:sms_sendsms_add")
-        data = {"sms": "Sending the SMS",
+        data = {"sms": "Sending the SMS 3",
                 'tempsmszones_set-INITIAL_FORMS': 0,
                 'tempsmszones_set-TOTAL_FORMS': 1,
                 'tempsmszones_set-MAX_NUM_FORMS':  u'',
@@ -90,8 +90,8 @@ class TestAdminCreation(TestCase):
 
                 }
         self.client.post(url, data=data)
-        send_sms = SendSMS.objects.get(id=1)
-        self.assertEqual(send_sms.sms, "Sending the SMS")
+        sendsms = SendSMS.objects.get(sms="Sending the SMS 3")
+        self.assertEqual(sendsms.sms, "Sending the SMS 3")
         sms_zone = SMSZones.objects.all()
         self.assertEqual(sorted([139, 140, 141, 142]),
                          sorted([obj.zone_id for obj in sms_zone]))
