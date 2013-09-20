@@ -10,7 +10,7 @@ def send_sms(msisdn, sms):
                        account_id=settings.ACCOUNT_ID,
                        conversation_id=settings.CONVERSATION_ID,
                        conversation_token=settings.CONVERSATION_TOKEN)
-    # sms.send_sms(msisdn, sms)
+    sms.send_sms(msisdn, sms)
 
 
 @task
