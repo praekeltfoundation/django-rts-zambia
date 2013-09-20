@@ -46,7 +46,7 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
         """
         qs = super(TeacherPerformanceDataAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
-        
+
 
 
 class LearnerPerformanceDataAdmin(ManagePermissions):
@@ -60,18 +60,6 @@ class LearnerPerformanceDataAdmin(ManagePermissions):
         Limits queries for pages that belong to district admin
         """
         qs = super(LearnerPerformanceDataAdmin, self).queryset(request)
-        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
-
-
-class InboundSMSAdmin(ManagePermissions):
-    list_display = ["message", "created_by", "created_at"]
-    actions = [export_as_csv_action("Export selected objects as CSV file")]
-
-    def queryset(self, request):
-        """
-        Limits queries for pages that belong to district admin
-        """
-        qs = super(InboundSMSAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
@@ -91,5 +79,4 @@ admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
 admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
 admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
-admin.site.register(InboundSMS, InboundSMSAdmin)
 admin.site.register(AcademicAchievementCode, AcademicAchievementCodeAdmin)
