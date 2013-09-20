@@ -10,7 +10,7 @@ urlpatterns = patterns(
     url(r'^$', RedirectView.as_view(url=reverse_lazy('admin:index')),
         name='home'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^', include('hierarchy.urls')),
     url(r'^', include('data.urls')),
 )
