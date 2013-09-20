@@ -8,9 +8,11 @@ from django.contrib.admin.util import flatten_fieldsets
 from functools import partial
 from django.db import models
 from sms.tasks import task_query_zone
-from rts.utils import ManagePermissions
+from rts.utils import DistrictIdFilter, ManagePermissions
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from data.models import InboundSMS
+from rts.actions import export_as_csv_action
 
 
 """
@@ -159,4 +161,24 @@ class SendSMSAdmin(ManagePermissions):
                         task_query_zone.delay(zone_id, result["temp_sms"].sms)
 
 
+class InboundSMSProxy(InboundSMS):
+    class Meta:
+        proxy = True
+        app_label = "sms"
+        verbose_name = "Inbound SMS"
+        verbose_name_plural = "Inbound SMS's"
+
+class InboundSMSAdmin(ManagePermissions):
+    list_display = ["message", "created_by", "created_at"]
+    actions = [export_as_csv_action("Export selected objects as CSV file")]
+
+    def queryset(self, request):
+        """
+        Limits queries for pages that belong to district admin
+        """
+        qs = super(InboundSMSAdmin, self).queryset(request)
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
+
+
 admin.site.register(SendSMS, SendSMSAdmin)
+admin.site.register(InboundSMSProxy, InboundSMSAdmin)
