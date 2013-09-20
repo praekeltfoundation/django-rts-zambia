@@ -11,7 +11,7 @@ class TestAdminView(TestCase):
 
     def setUp(self):
         self.admin = User.objects.create_superuser('admin',
-                                                    'admin@test.com', 
+                                                    'admin@test.com',
                                                     'pass123')
         self.provinces = ['North Western', 'WESTERN', 'EASTERN', 'MUCHINGA', 'Luapula', 'Northern']
         self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
@@ -90,7 +90,7 @@ class TestAdminView(TestCase):
         [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
         self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
 
-        url = reverse("admin:data_inboundsms_changelist")
+        url = reverse("admin:sms_inboundsmsproxy_changelist")
         response = self.client.get(url)
         inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
         inboundsms = []
@@ -107,7 +107,7 @@ class TestDistrictAdmin1Area(TestCase):
 
     def setUp(self):
         self.d1 = User.objects.get(username="d1")
-                                            
+
         self.provinces = ['North Western', 'WESTERN', 'EASTERN', 'MUCHINGA', 'Luapula', 'Northern']
         self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
         self.zones = ['Kikombe', 'LUKWETA', 'MADZIMOYO', 'KALELA', 'Mbaso', 'Bweupe']
@@ -185,7 +185,7 @@ class TestDistrictAdmin1Area(TestCase):
         [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
         self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
 
-        url = reverse("admin:data_inboundsms_changelist")
+        url = reverse("admin:sms_inboundsmsproxy_changelist")
         response = self.client.get(url)
         inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
         inboundsms = []
@@ -201,7 +201,7 @@ class TestDistrictAdmin2Area(TestCase):
 
     def setUp(self):
         self.d2 = User.objects.get(username="d2")
-                                            
+
         self.provinces = ['North Western', 'WESTERN', 'EASTERN', 'MUCHINGA', 'Luapula', 'Northern']
         self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
         self.zones = ['Kikombe', 'LUKWETA', 'MADZIMOYO', 'KALELA', 'Mbaso', 'Bweupe']
@@ -279,7 +279,7 @@ class TestDistrictAdmin2Area(TestCase):
         [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
         self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
 
-        url = reverse("admin:data_inboundsms_changelist")
+        url = reverse("admin:sms_inboundsmsproxy_changelist")
         response = self.client.get(url)
         inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
         inboundsms = []
@@ -295,7 +295,7 @@ class TestAdmin3View(TestCase):
 
     def setUp(self):
         self.d3 = User.objects.get(username="d3")
-                                            
+
         self.provinces = ['North Western', 'WESTERN', 'EASTERN', 'MUCHINGA', 'Luapula', 'Northern']
         self.districts = ['Solwezi', 'Mongu', 'CHIPATA', 'CHINSALI', 'Mansa', 'Mporokoso']
         self.zones = ['Kikombe', 'LUKWETA', 'MADZIMOYO', 'KALELA', 'Mbaso', 'Bweupe']
@@ -375,7 +375,7 @@ class TestAdmin3View(TestCase):
         [learnerperformancedata.append(k.emis.emis) for k in learnerperformancedata_result]
         self.assertEqual(sorted(learnerperformancedata), sorted(self.learnerperformancedata))
 
-        url = reverse("admin:data_inboundsms_changelist")
+        url = reverse("admin:sms_inboundsmsproxy_changelist")
         response = self.client.get(url)
         inboundsms_result = response.__dict__['context_data']['cl'].__dict__['result_list']
         inboundsms = []
