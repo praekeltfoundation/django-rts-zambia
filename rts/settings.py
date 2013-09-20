@@ -238,3 +238,7 @@ CELERY_RESULT_BACKEND = "database"
 
 
 SMS_CONFIG = {"sender_type": "logging"}
+API_URL = ""
+ACCOUNT_ID = ""
+CONVERSATION_ID = ""
+CONVERSATION_TOKEN = ""
