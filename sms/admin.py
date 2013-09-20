@@ -167,6 +167,7 @@ class InboundSMSProxy(InboundSMS):
         app_label = "sms"
         verbose_name = "Inbound SMS"
         verbose_name_plural = "Inbound SMS's"
+        db_table = "Inbound SMS"
 
 class InboundSMSAdmin(ManagePermissions):
     list_display = ["message", "created_by", "created_at"]
@@ -178,6 +179,12 @@ class InboundSMSAdmin(ManagePermissions):
         """
         qs = super(InboundSMSAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_add_permission(self, request):
+        return True
 
 
 admin.site.register(SendSMS, SendSMSAdmin)
