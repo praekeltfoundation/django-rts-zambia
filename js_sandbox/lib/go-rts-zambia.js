@@ -780,7 +780,7 @@ function GoRtsZambia() {
         "How many classrooms do you have in your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content)
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many classrooms you have in your school.'
     ));
