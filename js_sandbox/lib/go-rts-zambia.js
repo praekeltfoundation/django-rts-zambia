@@ -34,7 +34,7 @@ function GoRtsZambiaError(msg) {
 function GoRtsZambia() {
     var self = this;
 
-    self.post_headers = {
+    self.headers = {
         'Content-Type': ['application/json']
     };
 
@@ -51,45 +51,32 @@ function GoRtsZambia() {
         };
     };
 
-    self.cms_get = function(path) {
+    self.cms_request = function(method, path, data) {
+        data = typeof data !== 'undefined' ? JSON.stringify(data) : null;
         var url = im.config.cms_api_root + path;
-        var p = im.api_request("http.get", {
+        var p = im.api_request("http." + method.toLowerCase(), {
             url: url,
-            headers: self.headers
+            headers: self.headers,
+            data: data
         });
         p.add_callback(function(result) {
-            var json = self.check_reply(result, url, 'GET', null, false);
+            var json = self.check_reply(
+                result, url, method.toUpperCase(), data, false);
             return json;
         });
         return p;
+    };
+
+    self.cms_get = function(path) {
+        return self.cms_request('GET', path);
     };
 
     self.cms_post = function(path, data) {
-        var url = im.config.cms_api_root + path;
-        var p = im.api_request("http.post", {
-            url: url,
-            headers: self.post_headers,
-            data: JSON.stringify(data)
-        });
-        p.add_callback(function(result) {
-            var json = self.check_reply(result, url, 'POST', data, false);
-            return json;
-        });
-        return p;
+        return self.cms_request('POST', path, data);
     };
 
     self.cms_put = function(path, data) {
-        var url = im.config.cms_api_root + path;
-        var p = im.api_request("http.put", {
-            url: url,
-            headers: self.post_headers,
-            data: JSON.stringify(data)
-        });
-        p.add_callback(function(result) {
-            var json = self.check_reply(result, url, 'PUT', data, false);
-            return json;
-        });
-        return p;
+        return self.cms_request('PUT', path, data);
     };
 
     self.url_encode = function(params) {
