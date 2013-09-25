@@ -105,6 +105,15 @@ function GoRtsZambiaSms() {
         return self.cms_request('PUT', path, data);
     };
 
+    self.url_encode = function(params) {
+        var items = [];
+        for (var key in params) {
+            items[items.length] = (encodeURIComponent(key) + '=' +
+                                   encodeURIComponent(params[key]));
+        }
+        return items.join('&');
+    };
+
     self.check_reply = function(reply, url, method, data, ignore_error) {
         var error;
         if (reply.success && (reply.code >= 200 && reply.code < 300))  {
@@ -143,18 +152,17 @@ function GoRtsZambiaSms() {
 
     self.add_creator('initial_state', function(state_name, im) {
         var p = self.get_contact(im);
-        var response_state;
         p.add_callback(function(result) {
             if (result.contact["extras-rts_id"] === undefined) {
                 return new FreeText(
                     state_name,
                     'not_registered',
-                    im.config.output["not_registered"]);
+                    "not registered response");
             } else {
                 return new FreeText(
                     state_name,
                     'thanks',
-                    im.config.output["not_registered"]);
+                    "thank you response");
             }
         });
         return p;
@@ -176,10 +184,11 @@ function GoRtsZambiaSms() {
                     on_enter: function(){
                         var p = self.get_contact(im);
                         p.add_callback(function(result) {
-                            return self.cms_get(
-                                "data/headteacher/?emis__emis=" +
-                                result.contact["extras-rts_emis"] +
-                                "&is_zonal_head=true");
+                            var url = "data/headteacher/" + '?' + self.url_encode({
+                                'emis__emis': result.contact["extras-rts_emis"],
+                                'is_zonal_head': 'true'
+                            });
+                            return self.cms_get(url);
                         });
                         p.add_callback(function(result) {
                             if (result.msisdn) {
