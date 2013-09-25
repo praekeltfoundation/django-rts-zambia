@@ -195,6 +195,8 @@ function GoRtsZambiaSms() {
                                 var to_addr = result.msisdn;
                                 var content = im.get_user_answer('initial_state');
                                 return self.send_sms(content, to_addr);
+                            } else {
+                                return im.log('failed to find Zonal Head for SMS forwarding');
                             }
                         });
                         return p;
