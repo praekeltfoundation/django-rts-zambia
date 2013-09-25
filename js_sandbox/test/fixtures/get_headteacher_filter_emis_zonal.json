@@ -1,0 +1,38 @@
+{
+    "url": "http://qa/api/v1/data/headteacher/?emis__emis=1&is_zonal_head=true",
+    "method": "GET",
+    "content_type": "application/json",
+    "body": {
+        "created_at": "2013-08-14T19:57:50.232678",
+        "date_of_birth": "1980-09-11T00:00:00",
+        "emis": {
+            "emis": 1,
+            "id": 1,
+            "name": "School One",
+            "resource_uri": "/api/v1/school/1/",
+            "zone": {
+                "district": {
+                    "id": 1,
+                    "name": "District One",
+                    "province": {
+                        "id": 1,
+                        "name": "Province One",
+                        "resource_uri": "/api/v1/province/1/"
+                    },
+                    "resource_uri": "/api/v1/district/1/"
+                },
+                "id": 1,
+                "name": "Zone One",
+                "resource_uri": "/api/v1/zone/1/"
+            }
+        },
+        "first_name": "Jack",
+        "gender": "male",
+        "id": 2,
+        "is_zonal_head": true,
+        "last_name": "Black",
+        "msisdn": "1234567",
+        "resource_uri": "/api/data/headteacher/2/",
+        "zonal_head_name": "Jim Carey"
+    }
+}
