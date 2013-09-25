@@ -161,6 +161,16 @@ function GoRtsZambia() {
         }
     };
 
+    self.check_valid_number = function(input){
+        // an attempt to solve the insanity or JavaScript numbers
+        var numbers_only = new RegExp('^\\d+$');
+        if (input !== '' && numbers_only.test(input) && !Number.isNaN(Number(input))){
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     self.registration_data_school_collect = function(){
         var school_data = {
             "name": im.get_user_answer('reg_school_name'),
@@ -628,7 +638,7 @@ function GoRtsZambia() {
                     "How many classrooms do you have in your school?",
                     function(content) {
                         // check that the value provided is actually decimal-ish.
-                        return !Number.isNaN(Number(content));
+                        return self.check_valid_number(content);
                     },
                     'Please provide a number value for how many classrooms you have in your school.'
                 )
@@ -642,7 +652,7 @@ function GoRtsZambia() {
                 "How many classrooms do you have in your school?",
                 function(content) {
                     // check that the value provided is actually decimal-ish.
-                    return !Number.isNaN(Number(content));
+                    return self.check_valid_number(content);
                 },
                 'Please provide a number value for how many classrooms you have in your school.'
             )
@@ -655,7 +665,7 @@ function GoRtsZambia() {
         "How many teachers are presently working in your school, including the head teacher?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many teachers in total you have in your school.'
     ));
@@ -666,7 +676,7 @@ function GoRtsZambia() {
         "How many teachers teach Grade 1 local language?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many teachers teach G1 local language literacy.'
     ));
@@ -677,7 +687,7 @@ function GoRtsZambia() {
         "How many teachers teach Grade 2 local language?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many teachers teach G2 local language literacy.'
     ));
@@ -688,7 +698,7 @@ function GoRtsZambia() {
         "How many boys are ENROLLED in Grade 2 at your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the total number of G2 boys enrolled.'
     ));
@@ -699,7 +709,7 @@ function GoRtsZambia() {
         "How many girls are ENROLLED in Grade 2 at your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the total number of G2 girls enrolled.'
     ));
@@ -760,7 +770,7 @@ function GoRtsZambia() {
         "Please enter the teacher's TS number.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the teacher's TS number.",
         {
@@ -787,7 +797,7 @@ function GoRtsZambia() {
         "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the teacher's age."
     ));
@@ -828,7 +838,7 @@ function GoRtsZambia() {
         "How many children were PRESENT during the observed lesson?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for pupils present.'
     ));
@@ -839,7 +849,7 @@ function GoRtsZambia() {
         "How many children are ENROLLED in the Grade 2 class that was observed?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for pupils enrolled.'
     ));
@@ -851,7 +861,7 @@ function GoRtsZambia() {
             "observation for Section 2 (Classroom Environment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the Classroom Environment subtotal.'
     ));
@@ -863,7 +873,7 @@ function GoRtsZambia() {
             "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the Teaching and Learning Materials subtotal.'
     ));
@@ -875,7 +885,7 @@ function GoRtsZambia() {
             "available in the classroom during the lesson observation.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for number of learners' books."
     ));
@@ -887,7 +897,7 @@ function GoRtsZambia() {
             "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Learner Materials subtotal."
     ));
@@ -899,7 +909,7 @@ function GoRtsZambia() {
             "for Section 5 (Time on Task and Reading Practice)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Time on Task and Reading Practice subtotal."
     ));
@@ -911,7 +921,7 @@ function GoRtsZambia() {
             "for Section 6 (Learner Engagement)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Learner Engagement subtotal."
     ));
@@ -923,7 +933,7 @@ function GoRtsZambia() {
             "7.1. (Teacher Attitudes and Beliefs)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Teacher Attitudes and Beliefs subtotal."
     ));
@@ -935,7 +945,7 @@ function GoRtsZambia() {
             "7.2. (Teacher Training)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Teacher Training interview subtotal."
     ));
@@ -947,7 +957,7 @@ function GoRtsZambia() {
             "on Section 7.3. (Reading Assessment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Reading Assessment subtotal."
     ));
@@ -959,7 +969,7 @@ function GoRtsZambia() {
             "that was observed have broken through/can read?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the pupils in the class that have broken " +
             "through/can read."
@@ -997,7 +1007,7 @@ function GoRtsZambia() {
         "How many boys took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys assessed.",
         {
@@ -1014,7 +1024,7 @@ function GoRtsZambia() {
         "How many girls took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls assessed."
     ));
@@ -1026,7 +1036,7 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
@@ -1039,7 +1049,7 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
@@ -1051,7 +1061,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 3 out of 6" +
         " correct answers for Vocabulary."
@@ -1063,7 +1073,7 @@ function GoRtsZambia() {
         "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 3 out of 6" +
         " correct answers for Vocabulary."
@@ -1075,7 +1085,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 2 out of 4" +
         " correct answers for Comprehension."
@@ -1087,7 +1097,7 @@ function GoRtsZambia() {
         "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 2 out of 4" +
         " correct answers for Comprehension."
@@ -1099,7 +1109,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 2 out of 4" +
         " correct answers for Writing."
@@ -1111,7 +1121,7 @@ function GoRtsZambia() {
         "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 2 out of 4" +
         " correct answers for Writing."
@@ -1123,7 +1133,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 16 out of 20 or more."
     ));
@@ -1134,7 +1144,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 16 out of 20 or more."
     ));
@@ -1145,7 +1155,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving between 12 and 15 out of 20."
     ));
@@ -1156,7 +1166,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving between 12 and 15 out of 20."
     ));
@@ -1167,7 +1177,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving between 8 and 11 out of 20."
     ));
@@ -1178,7 +1188,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving between 8 and 11 out of 20."
     ));
@@ -1189,7 +1199,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving between 0 and 7 out of 20."
     ));
@@ -1200,7 +1210,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(Number(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving between 0 and 7 out of 20."
     ));
