@@ -140,10 +140,6 @@ function GoRtsZambiaSms() {
 
     // END Shared helpers
 
-    // START CMS Interactions
-
-
-    // END CMS Interactions
 
     self.add_creator('initial_state', function(state_name, im) {
         var p = self.get_contact(im);
