@@ -101,19 +101,19 @@ class LearnerPerformanceDataAdmin(admin.ModelAdmin):
                     "desirable_results", "outstanding_results", "created_by", "created_at"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
-                ("emis", "Emis"),
+                ("emis", "EMIS"),
+                ("created_by", "Created By"),
+                ("created_at", "Created At"),
                 ("gender", "Gender"),
                 ("total_number_pupils", "Total Number of Pupils"),
                 ("phonetic_awareness", "Phonetic Awareness"),
-                ("vocabulary", "Vocabulary"),
-                ("reading_comprehension", "Reading Comprehension"),
                 ("writing_diction", "Writing Diction"),
-                ("below_minimum_results", "Below Minimum Results"),
-                ("minimum_results", "Minimum Results"),
-                ("desirable_results", "Desirable Results"),
+                ("reading_comprehension", "Reading Comprehension"),
+                ("vocabulary", "Vocabulary"),
                 ("outstanding_results", "Outstanding Results"),
-                ("created_by", "Created By"),
-                ("created_at", "Created At"),
+                ("desirable_results", "Desirable Results"),
+                ("minimum_results", "Minimum Results"),
+                ("below_minimum_results", "Below Minimum Results"),
                ],
                header=True
               )]
