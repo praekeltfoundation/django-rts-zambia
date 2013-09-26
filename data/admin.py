@@ -11,26 +11,19 @@ class SchoolDataAdmin(admin.ModelAdmin):
                     "teachers_g1", "teachers_g2", "boys_g2", "girls_g2", "created_by", "created_at"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
-                ("emis", "Emis"),
+                ("emis", "EMIS"),
+                ("created_at", "Created At"),
+                ("created_by", "Created By"),
                 ("name", "Name"),
-                ("classrooms", "Classrooms"),
-                ("teachers", "Teachers"),
-                ("teachers_g1", "Grade 1 Teachers"),
-                ("teachers_g2", "Grade 2 Teachers"),
                 ("boys_g2", "Grade 2 Boys"),
                 ("girls_g2", "Grade 2 Girls"),
-                ("created_by", "Created By"),
-                ("created_at", "Created At"),
+                ("classrooms", "Classrooms"),
+                ("teachers", "Teachers"),
+                ("teachers_g2", "Grade 2 Teachers"),
+                ("teachers_g1", "Grade 1 Teachers"),
                ],
                header=True
               )]
-
-    def queryset(self, request):
-        """
-        Limits queries for pages that belong to district admin
-        """
-        qs = super(SchoolDataAdmin, self).queryset(request)
-        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
 class HeadTeacherAdmin(admin.ModelAdmin):
