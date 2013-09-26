@@ -37,19 +37,18 @@ class HeadTeacherAdmin(admin.ModelAdmin):
     list_display = ["emis", "first_name", "last_name", "msisdn", "gender", "date_of_birth", "is_zonal_head", "zonal_head_name","created_at"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
-                ("emis", "Emis"),
+                ("created_at", "Created At"),
                 ("first_name", "First Name"),
                 ("last_name", "Last Name"),
-                ("msisdn", "Msisdn"),
+                ("msisdn", "MSISDN"),
                 ("gender", "Gender"),
                 ("date_of_birth", "Date of Birth"),
                 ("is_zonal_head", "Is Zonal Head"),
                 ("zonal_head_name", "Zonal Head Name"),
-                ("created_at", "Created At"),
+                ("emis", "EMIS"),
                ],
                header=True
               )]
-
 
     def queryset(self, request):
         """
