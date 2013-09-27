@@ -99,6 +99,41 @@ class TestHeadteacherAPI(ResourceTestCase):
         self.assertIn("error", json_item)
 
 
+class TestHeadTeacherData(ResourceTestCase):
+    fixtures = ['data.json', 'hierarchy.json']
+
+    def test_is_zonal_head_true(self):
+        """
+            Testing basic API functionality.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'v1'})
+        response = self.client.get("%s?is_zonal_head=True" % url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
+        [self.assertEqual(dict_item["is_zonal_head"], True) for dict_item in json_item["objects"]]
+        self.assertEqual(len(json_item["objects"]), 1)
+
+    def test_is_zonal_head_false(self):
+        """
+            Testing basic API functionality.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'v1'})
+        response = self.client.get("%s?is_zonal_head=False" % url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
+        [self.assertEqual(dict_item["is_zonal_head"], False) for dict_item in json_item["objects"]]
+        self.assertEqual(len(json_item["objects"]), 3)
+
 
 class TestSchoolDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
@@ -187,7 +222,7 @@ class TestSchoolDataAPI(ResourceTestCase):
         self.assertEqual(8, schooldata.teachers_g2)
         self.assertEqual(15, schooldata.boys_g2)
         self.assertEqual(12, schooldata.girls_g2)
-        self.assertIsNotNone(schooldata.created_at) 
+        self.assertIsNotNone(schooldata.created_at)
         self.assertEqual("Musungu", schooldata.emis.name)
         self.assertEqual(4813, schooldata.emis.emis)
         self.assertEqual(4813, schooldata.created_by.emis.emis)
@@ -318,12 +353,12 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(50, teacher.reading_assessment)
         self.assertEqual(70, teacher.reading_total)
         self.assertEqual(8, teacher.academic_level.id)
-        self.assertIsNotNone(teacher.created_at) 
+        self.assertIsNotNone(teacher.created_at)
         self.assertEqual("Musungu", teacher.emis.name)
         self.assertEqual(4813, teacher.emis.emis)
         self.assertEqual(4813, teacher.created_by.emis.emis)
         self.assertEqual(headteacher_id, teacher.created_by.id)
-        
+
 
 class TestLearnerPerformanceDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
@@ -398,7 +433,7 @@ class TestLearnerPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(15, learner.minimum_results)
         self.assertEqual(16, learner.desirable_results)
         self.assertEqual(17, learner.outstanding_results)
-        self.assertIsNotNone(learner.created_at) 
+        self.assertIsNotNone(learner.created_at)
         self.assertEqual("Musungu", learner.emis.name)
         self.assertEqual(4813, learner.emis.emis)
         self.assertEqual(4813, learner.created_by.emis.emis)
@@ -452,7 +487,7 @@ class TestInboudSMSAPI(ResourceTestCase):
 
         sms = InboundSMS.objects.get(pk=1)
         self.assertEqual("This is the sms", sms.message)
-        self.assertIsNotNone(sms.created_at) 
+        self.assertIsNotNone(sms.created_at)
         self.assertEqual("Musungu", sms.created_by.emis.name)
         self.assertEqual(4813, sms.created_by.emis.emis)
         self.assertEqual(headteacher_id, sms.created_by.id)
