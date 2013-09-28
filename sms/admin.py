@@ -12,7 +12,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from data.models import InboundSMS
-from rts.actions import export_as_csv_action
+from rts.actions import export_select_fields_csv_action
 
 
 """
@@ -171,7 +171,7 @@ class InboundSMSProxy(InboundSMS):
 
 class InboundSMSAdmin(ManagePermissions):
     list_display = ["message", "created_by", "created_at"]
-    actions = [export_as_csv_action("Export selected objects as CSV file")]
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
 
     def queryset(self, request):
         """
