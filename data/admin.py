@@ -2,7 +2,7 @@ from django.contrib import admin
 from models import (SchoolData, HeadTeacher, AcademicAchievementCode,
                     TeacherPerformanceData, LearnerPerformanceData)
 
-from actions import export_select_fields_csv_action
+from rts.actions import export_select_fields_csv_action
 from rts.utils import DistrictIdFilter, ManagePermissions
 
 
