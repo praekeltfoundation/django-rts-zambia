@@ -1,13 +1,8 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, InboundSMS, AcademicAchievementCode,
                     TeacherPerformanceData, LearnerPerformanceData)
-<<<<<<< HEAD
 from actions import export_select_fields_csv_action
-from rts.utils import DistrictIdFilter
-=======
-from actions import export_as_csv_action
 from rts.utils import DistrictIdFilter, ManagePermissions
->>>>>>> develop
 
 
 
