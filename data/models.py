@@ -71,6 +71,8 @@ class TeacherPerformanceData(models.Model):
     attitudes_and_beliefs = models.IntegerField()
     training_subtotal = models.IntegerField()
     ts_number = models.IntegerField()
+    reading_assessment = models.IntegerField(null=True) # null = True for new fields
+    reading_total = models.IntegerField(null=True)  # Default is None for new fields
     created_at = models.DateTimeField(auto_now_add=True)
     academic_level = models.ForeignKey(AcademicAchievementCode,
                                     verbose_name=u'Academic Achievement')

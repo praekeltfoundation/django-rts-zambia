@@ -1,21 +1,21 @@
 from django.contrib import admin
 from models import (Province, District, Zone, School)
-from rts.utils import DistrictIdFilter
+from rts.utils import DistrictIdFilter, ManagePermissions
 
 
-class ProvinceAdmin(admin.ModelAdmin):
+class ProvinceAdmin(ManagePermissions):
     list_display = ["name"]
 
 
-class DistrictAdmin(admin.ModelAdmin):
+class DistrictAdmin(ManagePermissions):
     list_display = ["name", "province"]
 
 
-class ZoneAdmin(admin.ModelAdmin):
+class ZoneAdmin(ManagePermissions):
     list_display = ["name", "district"]
 
 
-class SchoolAdmin(admin.ModelAdmin):
+class SchoolAdmin(ManagePermissions):
     list_display = ["emis", "name", "zone"]
 
 
