@@ -1,7 +1,8 @@
 from django.contrib import admin
-from models import (SchoolData, HeadTeacher, InboundSMS, AcademicAchievementCode,
+from models import (SchoolData, HeadTeacher, AcademicAchievementCode,
                     TeacherPerformanceData, LearnerPerformanceData)
-from actions import export_select_fields_csv_action
+
+from rts.actions import export_select_fields_csv_action
 from rts.utils import DistrictIdFilter, ManagePermissions
 
 
@@ -89,7 +90,7 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
         """
         qs = super(TeacherPerformanceDataAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
-        
+
 
 
 class LearnerPerformanceDataAdmin(ManagePermissions):
@@ -123,25 +124,6 @@ class LearnerPerformanceDataAdmin(ManagePermissions):
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
-class InboundSMSAdmin(ManagePermissions):
-    list_display = ["message", "created_by", "created_at"]
-    actions = [export_select_fields_csv_action("Export selected objects as CSV file",
-               fields= [
-                ("message", "Message"),
-                ("created_by", "Created By"),
-                ("created_at", "Created At"),
-               ],
-               header=True
-              )]
-
-    def queryset(self, request):
-        """
-        Limits queries for pages that belong to district admin
-        """
-        qs = super(InboundSMSAdmin, self).queryset(request)
-        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
-
-
 class AcademicAchievementCodeAdmin(admin.ModelAdmin):
     list_display = ["id", "achievement"]
     actions = None
@@ -158,5 +140,4 @@ admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
 admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
 admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
-admin.site.register(InboundSMS, InboundSMSAdmin)
 admin.site.register(AcademicAchievementCode, AcademicAchievementCodeAdmin)
