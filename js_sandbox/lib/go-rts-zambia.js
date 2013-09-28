@@ -34,7 +34,7 @@ function GoRtsZambiaError(msg) {
 function GoRtsZambia() {
     var self = this;
 
-    self.post_headers = {
+    self.headers = {
         'Content-Type': ['application/json']
     };
 
@@ -51,45 +51,32 @@ function GoRtsZambia() {
         };
     };
 
-    self.cms_get = function(path) {
+    self.cms_request = function(method, path, data) {
+        data = typeof data !== 'undefined' ? JSON.stringify(data) : null;
         var url = im.config.cms_api_root + path;
-        var p = im.api_request("http.get", {
+        var p = im.api_request("http." + method.toLowerCase(), {
             url: url,
-            headers: self.headers
+            headers: self.headers,
+            data: data
         });
         p.add_callback(function(result) {
-            var json = self.check_reply(result, url, 'GET', null, false);
+            var json = self.check_reply(
+                result, url, method.toUpperCase(), data, false);
             return json;
         });
         return p;
+    };
+
+    self.cms_get = function(path) {
+        return self.cms_request('GET', path);
     };
 
     self.cms_post = function(path, data) {
-        var url = im.config.cms_api_root + path;
-        var p = im.api_request("http.post", {
-            url: url,
-            headers: self.post_headers,
-            data: JSON.stringify(data)
-        });
-        p.add_callback(function(result) {
-            var json = self.check_reply(result, url, 'POST', data, false);
-            return json;
-        });
-        return p;
+        return self.cms_request('POST', path, data);
     };
 
     self.cms_put = function(path, data) {
-        var url = im.config.cms_api_root + path;
-        var p = im.api_request("http.put", {
-            url: url,
-            headers: self.post_headers,
-            data: JSON.stringify(data)
-        });
-        p.add_callback(function(result) {
-            var json = self.check_reply(result, url, 'PUT', data, false);
-            return json;
-        });
-        return p;
+        return self.cms_request('PUT', path, data);
     };
 
     self.url_encode = function(params) {
@@ -161,6 +148,16 @@ function GoRtsZambia() {
         }
     };
 
+    self.check_valid_number = function(input){
+        // an attempt to solve the insanity or JavaScript numbers
+        var numbers_only = new RegExp('^\\d+$');
+        if (input !== '' && numbers_only.test(input) && !Number.isNaN(Number(input))){
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     self.registration_data_school_collect = function(){
         var school_data = {
             "name": im.get_user_answer('reg_school_name'),
@@ -182,7 +179,7 @@ function GoRtsZambia() {
             "msisdn": im.user_addr,
             "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_date_of_birth')).yyyymmdd(),
             "gender": im.get_user_answer('reg_gender'),
-            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis')) + "/"
+            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis_validator')) + "/"
         };
         if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
             headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
@@ -213,6 +210,8 @@ function GoRtsZambia() {
             "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
             "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
             "academic_level": "/api/v1/data/achievement/" + im.get_user_answer('perf_teacher_academic_level') + "/",
+            "reading_assessment": im.get_user_answer('perf_teacher_reading_assessment'),
+            "reading_total": im.get_user_answer('perf_teacher_reading_total'),
             "emis": "/api/v1/school/emis/" + emis + "/",
             "created_by": "/api/v1/data/headteacher/" + id + "/"
         };
@@ -292,7 +291,7 @@ function GoRtsZambia() {
                 // Update current headteacher EMIS only
                 headteacher_id = contact['extras-rts_id'];
                 headteacher_data = {
-                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis')) + "/"
+                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator')) + "/"
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
             } else {
@@ -341,7 +340,7 @@ function GoRtsZambia() {
     };
 
     self.cms_registration_update_msisdn = function(im) {
-        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis_lookup'));
+        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis'));
         var p = self.cms_get("data/headteacher/?emis__emis=" + emis);
         p.add_callback(function(result){
             var headteacher_id = result.id;
@@ -475,7 +474,7 @@ function GoRtsZambia() {
                     [
                         new Choice("reg_emis", "Register as a new user."),
                         new Choice("manage_change_emis_error", "Change my school."),
-                        new Choice("manage_change_msisdn_emis_lookup", "Change my primary cell phone number.")
+                        new Choice("manage_change_msisdn_emis", "Change my primary cell phone number.")
                     ]
                 );
             } else {
@@ -499,13 +498,79 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "reg_emis",
-        "reg_school_name",
+        "reg_emis_validator",
         "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
     ));
 
     self.add_state(new FreeText(
-        "manage_change_msisdn_emis_lookup",
-        "manage_change_msisdn_confirm",
+        "reg_emis_try_2",
+        "reg_emis_validator",
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_creator('reg_emis_validator', function(state_name, im){
+        var EMIS;
+        if (im.get_user_answer('reg_emis_try_2')) {
+            EMIS = im.get_user_answer('reg_emis_try_2');
+        } else {
+            EMIS = im.get_user_answer('reg_emis');
+        }
+        if (self.check_valid_emis(EMIS)) { // EMIS valid
+            return new ChoiceState(
+                "reg_emis_validator",
+                "reg_school_name",
+                "Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
+                    "number to reclaim the EMIS and continue to receive SMS updates.",
+                [
+                    new Choice(EMIS, "Continue")
+                ]
+            );
+        } else {
+            if (im.get_user_answer('reg_emis_try_2')) { // Second failure - force exit
+                return new EndState(
+                    "reg_exit_emis",
+                    "We don't recognise your EMIS number. Please send a SMS with" +
+                    " the words EMIS ERROR to 739 and your DEST will contact you" +
+                    " to resolve the problem.",
+                    "initial_state"
+                );
+            } else { // First invalid EMIS - request again
+                return new ChoiceState(
+                    "reg_emis_error",
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "There is a problem with the EMIS number you have entered.",
+                    [
+                        new Choice("reg_emis_try_2", "Try again"),
+                        new Choice("reg_exit_emis", "Exit")
+                    ]
+                );
+            }
+        }
+    });
+
+    self.add_state(new ChoiceState(
+        "reg_emis_error",
+        function(choice) {
+            return choice.value;
+        },
+        "There is a problem with the EMIS number you have entered.",
+        [
+            new Choice("reg_emis_try_2", "Try again"),
+            new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
+
+    self.add_state(new FreeText(
+        "manage_change_msisdn_emis",
+        "manage_change_msisdn_emis_validator",
+        "Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_state(new FreeText(
+        "manage_change_msisdn_emis_try_2",
+        "manage_change_msisdn_emis_validator",
         "Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351."
     ));
 
@@ -522,14 +587,13 @@ function GoRtsZambia() {
         ]
     ));
 
-    self.add_state(new FreeText(
-        "manage_change_emis",
-        "reg_school_classrooms",
-        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
-    ));
-
-    self.add_creator('manage_change_msisdn_confirm', function(state_name, im) {
-        var EMIS = im.get_user_answer('manage_change_msisdn_emis_lookup');
+    self.add_creator('manage_change_msisdn_emis_validator', function(state_name, im) {
+        var EMIS;
+        if (im.get_user_answer('manage_change_msisdn_emis_try_2')) {
+            EMIS = im.get_user_answer('manage_change_msisdn_emis_try_2');
+        } else {
+            EMIS = im.get_user_answer('manage_change_msisdn_emis');
+        }
         if (self.check_valid_emis(EMIS)) {
             // EMIS valid
             return new EndState(
@@ -546,40 +610,122 @@ function GoRtsZambia() {
             );
         } else {
             // Invalid EMIS - request again
-            return self.make_emis_error_state('manage_change_msisdn_emis_error',
-                'manage_change_msisdn_emis_lookup');
+            if (im.get_user_answer('reg_emis_try_2')) { // Second failure - force exit
+                return new EndState(
+                    "reg_exit_emis",
+                    "We don't recognise your EMIS number. Please send a SMS with" +
+                    " the words EMIS ERROR to 739 and your DEST will contact you" +
+                    " to resolve the problem.",
+                    "initial_state"
+                );
+            } else { // First invalid EMIS - request again
+                return new ChoiceState(
+                    "manage_change_msisdn_emis_error",
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "There is a problem with the EMIS number you have entered.",
+                    [
+                        new Choice("manage_change_msisdn_emis_try_2", "Try again"),
+                        new Choice("reg_exit_emis", "Exit")
+                    ]
+                );
+            }
         }
     });
 
-    self.add_state(self.make_emis_error_state('manage_change_msisdn_emis_error',
-        'manage_change_msisdn_emis_lookup'));
+    self.add_state(new ChoiceState(
+        "manage_change_msisdn_emis_error",
+        function(choice) {
+            return choice.value;
+        },
+        "There is a problem with the EMIS number you have entered.",
+        [
+            new Choice("manage_change_msisdn_emis_try_2", "Try again"),
+            new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
 
-    self.add_creator('reg_school_name', function(state_name, im) {
-        var EMIS = im.get_user_answer('reg_emis');
-        if (self.check_valid_emis(EMIS)) {
-            // EMIS valid
-            return new FreeText(
-                state_name,
-                "reg_first_name",
-                "Please enter the name of your school, e.g. Kapililonga"
+    self.add_state(new FreeText(
+        "manage_change_emis",
+        "manage_change_emis_validator",
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_state(new FreeText(
+        "manage_change_emis_try_2",
+        "manage_change_emis_validator",
+        "Please enter your school's EMIS number. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_creator('manage_change_emis_validator', function(state_name, im){
+        var EMIS;
+        if (im.get_user_answer('manage_change_emis_try_2')) {
+            EMIS = im.get_user_answer('manage_change_emis_try_2');
+        } else {
+            EMIS = im.get_user_answer('manage_change_emis');
+        }
+        if (self.check_valid_emis(EMIS)) { // EMIS valid
+            return new ChoiceState(
+                "manage_change_emis_validator",
+                "reg_school_classrooms",
+                "Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
+                    "number to reclaim the EMIS and continue to receive SMS updates.",
+                [
+                    new Choice(EMIS, "Continue")
+                ]
             );
         } else {
-            // Invalid EMIS - request again
-            return self.make_emis_error_state('reg_emis_error', 'reg_emis');
+            if (im.get_user_answer('manage_change_emis_try_2')) { // Second failure - force exit
+                return new EndState(
+                    "reg_exit_emis",
+                    "We don't recognise your EMIS number. Please send a SMS with" +
+                    " the words EMIS ERROR to 739 and your DEST will contact you" +
+                    " to resolve the problem.",
+                    "initial_state"
+                );
+            } else { // First invalid EMIS - request again
+                return new ChoiceState(
+                    "manage_change_emis_enter_error",
+                    function(choice) {
+                        return choice.value;
+                    },
+                    "There is a problem with the EMIS number you have entered.",
+                    [
+                        new Choice("manage_change_emis_try_2", "Try again"),
+                        new Choice("reg_exit_emis", "Exit")
+                    ]
+                );
+            }
         }
     });
 
-    self.add_state(self.make_emis_error_state('reg_emis_error', 'reg_emis'));
+    self.add_state(new ChoiceState(
+        "manage_change_emis_enter_error",
+        function(choice) {
+            return choice.value;
+        },
+        "There is a problem with the EMIS number you have entered.",
+        [
+            new Choice("manage_change_emis_try_2", "Try again"),
+            new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
 
-    self.add_creator('reg_exit_emis', function(state_name, im) {
-        return new EndState(
-            state_name,
-            "We don't recognise your EMIS number. Please send a SMS with" +
-            " the words EMIS ERROR to 739 and your DEST will contact you" +
-            " to resolve the problem.",
-            "initial_state"
-        );
-    });
+
+    self.add_state(new EndState(
+        "reg_exit_emis",
+        "We don't recognise your EMIS number. Please send a SMS with" +
+        " the words EMIS ERROR to 739 and your DEST will contact you" +
+        " to resolve the problem.",
+        "initial_state"
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_name",
+        "reg_first_name",
+        "Please enter the name of your school, e.g. Kapililonga"
+    ));
 
     self.add_state(new FreeText(
         "reg_first_name",
@@ -615,37 +761,16 @@ function GoRtsZambia() {
         ]
     ));
 
-    self.add_creator('reg_school_classrooms', function(state_name, im) {
-        if(im.get_user_answer('initial_state') == 'manage_change_emis'){
-            var EMIS = im.get_user_answer('manage_change_emis');
-            if (self.check_valid_emis(EMIS)) {
-                // EMIS valid
-                return new FreeText(
-                    state_name,
-                    "reg_school_teachers",
-                    "How many classrooms do you have in your school?",
-                    function(content) {
-                        // check that the value provided is actually decimal-ish.
-                        return !Number.isNaN(parseInt(content));
-                    },
-                    'Please provide a number value for how many classrooms you have in your school.'
-                )
-            } else {
-                return self.make_emis_error_state('reg_emis_error', 'manage_change_emis');
-            }
-        } else {
-            return new FreeText(
-                state_name,
-                "reg_school_teachers",
-                "How many classrooms do you have in your school?",
-                function(content) {
-                    // check that the value provided is actually decimal-ish.
-                    return !Number.isNaN(parseInt(content));
-                },
-                'Please provide a number value for how many classrooms you have in your school.'
-            )
-        }
-    });
+    self.add_state(new FreeText(
+        "reg_school_classrooms",
+        "reg_school_teachers",
+        "How many classrooms do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        'Please provide a number value for how many classrooms you have in your school.'
+    ));
 
     self.add_state(new FreeText(
         "reg_school_teachers",
@@ -653,7 +778,7 @@ function GoRtsZambia() {
         "How many teachers are presently working in your school, including the head teacher?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many teachers in total you have in your school.'
     ));
@@ -664,7 +789,7 @@ function GoRtsZambia() {
         "How many teachers teach Grade 1 local language?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many teachers teach G1 local language literacy.'
     ));
@@ -675,7 +800,7 @@ function GoRtsZambia() {
         "How many teachers teach Grade 2 local language?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for how many teachers teach G2 local language literacy.'
     ));
@@ -686,7 +811,7 @@ function GoRtsZambia() {
         "How many boys are ENROLLED in Grade 2 at your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the total number of G2 boys enrolled.'
     ));
@@ -697,7 +822,7 @@ function GoRtsZambia() {
         "How many girls are ENROLLED in Grade 2 at your school?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the total number of G2 girls enrolled.'
     ));
@@ -758,7 +883,7 @@ function GoRtsZambia() {
         "Please enter the teacher's TS number.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the teacher's TS number.",
         {
@@ -785,7 +910,7 @@ function GoRtsZambia() {
         "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the teacher's age."
     ));
@@ -826,7 +951,7 @@ function GoRtsZambia() {
         "How many children were PRESENT during the observed lesson?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for pupils present.'
     ));
@@ -837,7 +962,7 @@ function GoRtsZambia() {
         "How many children are ENROLLED in the Grade 2 class that was observed?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for pupils enrolled.'
     ));
@@ -849,7 +974,7 @@ function GoRtsZambia() {
             "observation for Section 2 (Classroom Environment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the Classroom Environment subtotal.'
     ));
@@ -861,7 +986,7 @@ function GoRtsZambia() {
             "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         'Please provide a number value for the Teaching and Learning Materials subtotal.'
     ));
@@ -873,7 +998,7 @@ function GoRtsZambia() {
             "available in the classroom during the lesson observation.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for number of learners' books."
     ));
@@ -885,7 +1010,7 @@ function GoRtsZambia() {
             "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Learner Materials subtotal."
     ));
@@ -897,7 +1022,7 @@ function GoRtsZambia() {
             "for Section 5 (Time on Task and Reading Practice)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Time on Task and Reading Practice subtotal."
     ));
@@ -909,7 +1034,7 @@ function GoRtsZambia() {
             "for Section 6 (Learner Engagement)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Learner Engagement subtotal."
     ));
@@ -921,21 +1046,46 @@ function GoRtsZambia() {
             "7.1. (Teacher Attitudes and Beliefs)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Teacher Attitudes and Beliefs subtotal."
     ));
 
     self.add_state(new FreeText(
         "perf_teacher_training_subtotal",
-        "perf_teacher_completed",
+        "perf_teacher_reading_assessment",
         "Enter the subtotal that the teacher achieved during the interview on Section " +
             "7.2. (Teacher Training)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for the Teacher Training interview subtotal."
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_reading_assessment",
+        "perf_teacher_reading_total",
+        "Enter the subtotal that the teacher achieved during the interview " +
+            "on Section 7.3. (Reading Assessment).",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        "Please provide a number value for the Reading Assessment subtotal."
+    ));
+
+    self.add_state(new FreeText(
+        "perf_teacher_reading_total",
+        "perf_teacher_completed",
+        "According to your assessment records, how many of the pupils in the class " +
+            "that was observed have broken through/can read?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        "Please provide a number value for the pupils in the class that have broken " +
+            "through/can read."
     ));
 
     self.add_creator('perf_teacher_completed', function(state_name, im) {
@@ -970,7 +1120,7 @@ function GoRtsZambia() {
         "How many boys took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys assessed.",
         {
@@ -987,7 +1137,7 @@ function GoRtsZambia() {
         "How many girls took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls assessed."
     ));
@@ -999,7 +1149,7 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
@@ -1012,7 +1162,7 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
@@ -1024,7 +1174,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 3 out of 6" +
         " correct answers for Vocabulary."
@@ -1036,7 +1186,7 @@ function GoRtsZambia() {
         "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 3 out of 6" +
         " correct answers for Vocabulary."
@@ -1048,7 +1198,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 2 out of 4" +
         " correct answers for Comprehension."
@@ -1060,7 +1210,7 @@ function GoRtsZambia() {
         "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 2 out of 4" +
         " correct answers for Comprehension."
@@ -1072,7 +1222,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 2 out of 4" +
         " correct answers for Writing."
@@ -1084,7 +1234,7 @@ function GoRtsZambia() {
         "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 2 out of 4" +
         " correct answers for Writing."
@@ -1096,7 +1246,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving 16 out of 20 or more."
     ));
@@ -1107,7 +1257,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving 16 out of 20 or more."
     ));
@@ -1118,7 +1268,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving between 12 and 15 out of 20."
     ));
@@ -1129,7 +1279,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving between 12 and 15 out of 20."
     ));
@@ -1140,7 +1290,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving between 8 and 11 out of 20."
     ));
@@ -1151,7 +1301,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving between 8 and 11 out of 20."
     ));
@@ -1162,7 +1312,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total boys achieving between 0 and 7 out of 20."
     ));
@@ -1173,7 +1323,7 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return !Number.isNaN(parseInt(content));
+            return self.check_valid_number(content);
         },
         "Please provide a number value for total girls achieving between 0 and 7 out of 20."
     ));
