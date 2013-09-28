@@ -1,4 +1,4 @@
-from tastypie.resources import ModelResource, ALL_WITH_RELATIONS
+from tastypie.resources import ModelResource, ALL_WITH_RELATIONS, ALL
 from tastypie.authorization import Authorization
 from tastypie import fields
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
@@ -26,18 +26,24 @@ class HeadTeacherResource(ModelResource):
     GET SPECIFIC EMIS
     "url": "<base_url>/api/v1/data/headteacher/?emis__emis=4817",,
     "method": "GET",
+
+    IS_ZONAL_HEAD
+    "url": "<base_url>/api/v1/data/headteacher/?is_zonal_head=True",
+    "method": "GET",
+    # Filter can be [True, true, 1] for true and [False, false, 0] for false
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
 
     class Meta:
         queryset = HeadTeacher.objects.all()
         resource_name = "data/headteacher"
-        list_allowed_methods = ['post', 'get', 'put'] 
+        list_allowed_methods = ['post', 'get', 'put']
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
         filtering = {
-            'emis': ALL_WITH_RELATIONS}
+            'emis': ALL_WITH_RELATIONS,
+            'is_zonal_head': ALL}
 
     def prepend_urls(self):
         return [
@@ -70,7 +76,7 @@ class SchoolDataResource(ModelResource):
     class Meta:
         queryset = SchoolData.objects.all()
         resource_name = "data/school"
-        list_allowed_methods = ['post', 'get'] 
+        list_allowed_methods = ['post', 'get']
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
@@ -89,7 +95,7 @@ class AcademicAchievementCodeResource(ModelResource):
     class Meta:
         queryset = AcademicAchievementCode.objects.all()
         resource_name = "data/achievement"
-        list_allowed_methods = ['get'] 
+        list_allowed_methods = ['get']
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
@@ -114,7 +120,7 @@ class TeacherPerformanceDataResource(ModelResource):
     class Meta:
         queryset = TeacherPerformanceData.objects.all()
         resource_name = "data/teacherperformance"
-        list_allowed_methods = ['post', 'get'] 
+        list_allowed_methods = ['post', 'get']
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
@@ -126,7 +132,7 @@ class TeacherPerformanceDataResource(ModelResource):
 class LearnerPerformanceDataResource(ModelResource):
     """
     POSTING DATA
-    
+
     "url": "<base_url>/api/v1/data/learnerperformance/",
     "body": {
                 "data": "data",
@@ -140,7 +146,7 @@ class LearnerPerformanceDataResource(ModelResource):
     class Meta:
         queryset = LearnerPerformanceData.objects.all()
         resource_name = "data/learnerperformance"
-        list_allowed_methods = ['post', 'get'] 
+        list_allowed_methods = ['post', 'get']
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
@@ -157,7 +163,7 @@ class InboundSMSResource(ModelResource):
     "method": "GET",
 
     POSTING DATA
-    
+
     "url": "<base_url>/api/v1/data/sms/",
     "body": {
                 "message": "test_name",
@@ -169,7 +175,7 @@ class InboundSMSResource(ModelResource):
     class Meta:
         queryset = InboundSMS.objects.all()
         resource_name = "data/sms"
-        list_allowed_methods = ['post', 'get'] 
+        list_allowed_methods = ['post', 'get']
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
