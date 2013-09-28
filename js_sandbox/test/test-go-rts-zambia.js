@@ -115,7 +115,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
-    it("entering valid EMIS should ask for School Name", function (done) {
+    it("entering valid EMIS should thank user", function (done) {
         var user = {
             current_state: 'reg_emis',
             answers: {
@@ -125,27 +125,50 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "0001",
+            next_state: "reg_emis_validator",
+            response: "^Thanks for claiming this EMIS. Redial this number if you ever " +
+                "change cellphone number to reclaim the EMIS and continue to receive " +
+                "SMS updates.[^]" +
+                "1. Continue$"
+        });
+        p.then(done, done);
+    });
+
+
+    it("choosing to continue should ask for School Name", function (done) {
+        var user = {
+            current_state: 'reg_emis_validator',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
             next_state: "reg_school_name",
             response: "^Please enter the name of your school, e.g. Kapililonga$"
         });
         p.then(done, done);
     });
 
-    it("entering invalid EMIS should ask for reenter or exit", function (done) {
+    it("entering invalid EMIS twice should exit", function (done) {
         var user = {
-            current_state: 'reg_emis',
+            current_state: 'reg_emis_try_2',
             answers: {
-                initial_state: 'reg_emis'
+                initial_state: 'reg_emis',
+                reg_emis: '000A',
+                reg_emis_error: 'reg_emis_try_2'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "000A",
-            next_state: "reg_emis_error",
-            response: "^There is a problem with the EMIS number you" +
-                " have entered\\.[^]" +
-                "1. Try again[^]" +
-                "2. Exit$"
+            content: "000B",
+            next_state: "reg_exit_emis",
+            response: "^We don't recognise your EMIS number\\. Please send a" +
+                " SMS with the words EMIS ERROR to 739 and your DEST will" +
+                " contact you to resolve the problem\\.$",
+            continue_session: false
         });
         p.then(done, done);
     });
@@ -181,7 +204,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "1",
-            next_state: "reg_emis",
+            next_state: "reg_emis_try_2",
             response: "^Please enter your school's EMIS number. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
@@ -192,7 +215,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             current_state: 'reg_school_name',
             answers: {
                 initial_state: 'reg_emis',
-                reg_emis: '0001'
+                reg_emis: '0001',
+                reg_emis_validator: '0001'
             }
         };
         var p = tester.check_state({
@@ -210,6 +234,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One'
             }
         };
@@ -228,6 +253,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack'
             }
@@ -248,6 +274,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black'
@@ -270,6 +297,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black'
@@ -290,6 +318,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -311,6 +340,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -334,6 +364,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -350,12 +381,36 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
+    it("entering invalid school classrooms number starting with number should error", function (done) {
+        var user = {
+            current_state: 'reg_school_classrooms',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_emis_validator: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11091980',
+                reg_gender: 'male'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "12dd",
+            next_state: "reg_school_classrooms",
+            response: "^Please provide a number value for how many classrooms you have in your school\\.$"
+        });
+        p.then(done, done);
+    });
+
     it("entering teachers number should ask for G1 teachers number", function (done) {
         var user = {
             current_state: 'reg_school_teachers',
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -379,6 +434,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -402,6 +458,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -426,6 +483,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -450,6 +508,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -475,6 +534,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -500,6 +560,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -526,6 +587,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -552,6 +614,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -581,6 +644,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -608,6 +672,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -636,6 +701,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -668,6 +734,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             answers: {
                 initial_state: 'reg_emis',
                 reg_emis: '0001',
+                reg_emis_validator: '0001',
                 reg_school_name: 'School One',
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
@@ -701,7 +768,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "3",
-            next_state: "manage_change_msisdn_emis_lookup",
+            next_state: "manage_change_msisdn_emis",
             response: "^Please enter the school's EMIS number that you are currently registered " +
                 "with. This should have 4-6 digits e.g 4351.$"
         });
@@ -710,15 +777,15 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     it("entering valid EMIS should thank the user and exit", function (done) {
         var user = {
-            current_state: 'manage_change_msisdn_emis_lookup',
+            current_state: 'manage_change_msisdn_emis',
             answers: {
-                initial_state: 'manage_change_msisdn_emis_lookup'
+                initial_state: 'manage_change_msisdn_emis'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "0001",
-            next_state: "manage_change_msisdn_confirm",
+            next_state: "manage_change_msisdn_emis_validator",
             response: "^Thank you! Your cell phone number is now the official" +
                 " number that your school will use to communicate with the" +
                 " Gateway\\.$",
@@ -729,9 +796,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
 
     it("entering invalid EMIS should ask for reenter or exit", function (done) {
         var user = {
-            current_state: 'manage_change_msisdn_emis_lookup',
+            current_state: 'manage_change_msisdn_emis',
             answers: {
-                initial_state: 'manage_change_msisdn_emis_lookup'
+                initial_state: 'manage_change_msisdn_emis'
             }
         };
         var p = tester.check_state({
@@ -766,18 +833,18 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
-    it("entering invalid EMIS and choosing to reenter should ask EMIS", function (done) {
+    it("when changing MSISDN entering invalid EMIS and choosing to reenter should ask EMIS", function (done) {
         var user = {
             current_state: 'manage_change_msisdn_emis_error',
             answers: {
-                initial_state: 'manage_change_msisdn_emis_lookup',
-                manage_change_msisdn_emis_lookup: '000A'
+                initial_state: 'manage_change_msisdn_emis',
+                manage_change_msisdn_emis: '000A'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "1",
-            next_state: "manage_change_msisdn_emis_lookup",
+            next_state: "manage_change_msisdn_emis_try_2",
             response: "^Please enter the school's EMIS number that you are currently registered with. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
@@ -858,7 +925,7 @@ describe("When using the USSD line as an recognised MSISDN to change school", fu
         p.then(done, done);
     });
 
-    it("entering valid EMIS should ask for School classrooms", function (done) {
+    it("entering valid EMIS should confirm claim", function (done) {
         var user = {
             current_state: 'manage_change_emis',
             answers: {
@@ -868,6 +935,25 @@ describe("When using the USSD line as an recognised MSISDN to change school", fu
         var p = tester.check_state({
             user: user,
             content: "2334",
+            next_state: "manage_change_emis_validator",
+            response: "^Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
+                    "number to reclaim the EMIS and continue to receive SMS updates.[^]" +
+                    "1. Continue$"
+        });
+        p.then(done, done);
+    });
+
+    it("choosing to continue after switching EMIS should ask for School classrooms", function (done) {
+        var user = {
+            current_state: 'manage_change_emis_validator',
+            answers: {
+                initial_state: 'manage_change_emis',
+                manage_change_emis: "2334"
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
             next_state: "reg_school_classrooms",
             response: "^How many classrooms do you have in your school\\?$"
         });
@@ -880,6 +966,7 @@ describe("When using the USSD line as an recognised MSISDN to change school", fu
             answers: {
                 initial_state: 'manage_change_emis',
                 manage_change_emis: '2334',
+                manage_change_emis_validator: '2334',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -1604,7 +1691,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         p.then(done, done);
     });
 
-    it("entering teacher training subtotal should ask show success and options", function (done) {
+    it("entering teacher training subtotal should ask Reading Assessment", function (done) {
         var user = {
             current_state: 'perf_teacher_training_subtotal',
             answers: {
@@ -1628,6 +1715,135 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         var p = tester.check_state({
             user: user,
             content: "5",
+            next_state: "perf_teacher_reading_assessment",
+            response: "^Enter the subtotal that the teacher achieved during the interview " +
+                "on Section 7.3. \\(Reading Assessment\\).$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering reading assessment subtotal incorrectly should ask reading assessment subtotal again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_assessment',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "seven",
+            next_state: "perf_teacher_reading_assessment",
+            response: "^Please provide a number value for the Reading Assessment subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Reading Assessment subtotal should ask Readers total", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_assessment',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "7",
+            next_state: "perf_teacher_reading_total",
+            response: "^According to your assessment records, how many of the pupils in the class " +
+                "that was observed have broken through\\/can read\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering reader total incorrectly should ask readers total again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_total',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5',
+                perf_teacher_reading_assessment: '7'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "nine",
+            next_state: "perf_teacher_reading_total",
+            response: "^Please provide a number value for the pupils in the class that have broken " +
+                "through\\/can read\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Readers total show success and options", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_total',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5',
+                perf_teacher_reading_assessment: '7'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
             next_state: "perf_teacher_completed",
             response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
                 "1. Add another teacher\\.[^]" +
@@ -1636,6 +1852,8 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         });
         p.then(done, done);
     });
+
+    
 });
 
 describe("When using the USSD line as an recognised MSISDN - completed Teacher review", function() {

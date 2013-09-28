@@ -37,7 +37,7 @@ class SchoolData(models.Model):
     girls_g2 = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(HeadTeacher,
-                                    verbose_name=u'Teacher')
+                                    verbose_name=u'Head Teacher')
 
     def __unicode__(self):
         return "%s" % self.emis
@@ -102,7 +102,7 @@ class LearnerPerformanceData(models.Model):
     emis = models.ForeignKey('hierarchy.School',
                              verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
-                                   verbose_name=u'Teacher')
+                                   verbose_name=u'Head Teacher')
     def __unicode__(self):
         return "%s" % self.emis
 
