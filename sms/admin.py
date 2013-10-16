@@ -21,7 +21,7 @@ that will be used by form.ModelForm to auto generate the required zones
 dynamically
 """
 zones = Zone.objects.all()
-zones_dict = {obj.id: obj.name for obj in zones}
+zones_dict = dict((obj.id, obj.name) for obj in zones)
 
 for key, value in zones_dict.iteritems():
     TempSMSZones.add_to_class(str(key), models.BooleanField(value))
@@ -60,7 +60,7 @@ class SMSZoneFormset(BaseInlineFormSet):
             if not hasattr(form, 'cleaned_data'):
                 continue
 
-            data = {k: v for k, v in form.cleaned_data.iteritems() if v}
+            data = dict((k, v) for k, v in form.cleaned_data.iteritems() if v)
             if "all" in data and len(data) > 2:
                 raise forms.ValidationError("Choose all or specific zones not both")
 

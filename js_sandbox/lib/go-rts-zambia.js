@@ -14,6 +14,7 @@ var FreeText = vumigo.states.FreeText;
 var EndState = vumigo.states.EndState;
 var InteractionMachine = vumigo.state_machine.InteractionMachine;
 var StateCreator = vumigo.state_machine.StateCreator;
+var JsonApi = vumigo.http_api.JsonApi;
 
 Date.prototype.yyyymmdd = function() {
     var yyyy = this.getFullYear().toString();
@@ -51,32 +52,22 @@ function GoRtsZambia() {
         };
     };
 
-    self.cms_request = function(method, path, data) {
-        data = typeof data !== 'undefined' ? JSON.stringify(data) : null;
-        var url = im.config.cms_api_root + path;
-        var p = im.api_request("http." + method.toLowerCase(), {
-            url: url,
-            headers: self.headers,
-            data: data
-        });
-        p.add_callback(function(result) {
-            var json = self.check_reply(
-                result, url, method.toUpperCase(), data, false);
-            return json;
-        });
-        return p;
-    };
-
     self.cms_get = function(path) {
-        return self.cms_request('GET', path);
+        var json_api = new JsonApi(im);
+        var url = im.config.cms_api_root + path;
+        return json_api.get(url);
     };
 
     self.cms_post = function(path, data) {
-        return self.cms_request('POST', path, data);
+        var json_api = new JsonApi(im);
+        var url = im.config.cms_api_root + path;
+        return json_api.post(url, {data: data, headers: self.headers});
     };
 
     self.cms_put = function(path, data) {
-        return self.cms_request('PUT', path, data);
+        var json_api = new JsonApi(im);
+        var url = im.config.cms_api_root + path;
+        return json_api.put(url, {data: data, headers: self.headers});
     };
 
     self.url_encode = function(params) {
