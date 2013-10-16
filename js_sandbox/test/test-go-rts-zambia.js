@@ -728,7 +728,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
-    it("entering name of zonal head should thank and close", function (done) {
+    it.only("entering name of zonal head should thank and close", function (done) {
         var user = {
             current_state: 'reg_zonal_head_name',
             answers: {
