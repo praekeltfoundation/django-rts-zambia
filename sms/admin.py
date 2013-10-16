@@ -60,7 +60,7 @@ class SMSZoneFormset(BaseInlineFormSet):
             if not hasattr(form, 'cleaned_data'):
                 continue
 
-            data = {k: v for k, v in form.cleaned_data.iteritems() if v}
+            data = dict((k, v) for k, v in form.cleaned_data.iteritems() if v)
             if "all" in data and len(data) > 2:
                 raise forms.ValidationError("Choose all or specific zones not both")
 
