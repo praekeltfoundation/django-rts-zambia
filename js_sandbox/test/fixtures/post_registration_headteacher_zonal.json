@@ -1,7 +1,7 @@
 {
     "url": "http://qa/api/v1/data/headteacher/",
     "method": "POST",
-    "content_type": "application/json",
+    "content_type": "application/json; charset=utf-8",
     "data": {
         "date_of_birth": "1980-09-11",
         "emis": "/api/v1/school/emis/1/",
