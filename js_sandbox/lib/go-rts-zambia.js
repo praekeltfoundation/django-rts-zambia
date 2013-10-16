@@ -81,13 +81,13 @@ function GoRtsZambia() {
     self.cms_post = function(path, data) {
         var json_api = new JsonApi(im);
         var url = im.config.cms_api_root + path;
-        return json_api.post(url, {data: data});
+        return json_api.post(url, {data: data, headers: self.headers});
     };
 
     self.cms_put = function(path, data) {
         var json_api = new JsonApi(im);
         var url = im.config.cms_api_root + path;
-        return json_api.put(url, {data: data});
+        return json_api.put(url, {data: data, headers: self.headers});
     };
 
     self.url_encode = function(params) {

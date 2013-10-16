@@ -1,8 +1,17 @@
 {
     "url": "http://qa/api/v1/data/headteacher/",
     "method": "POST",
-    "content_type": "application/json; charset=utf-8",
-    "data": {"first_name":"Jack","last_name":"Black","msisdn":"1234567","date_of_birth":"1980-09-11","gender":"male","emis":"/api/v1/school/emis/1/","zonal_head_name":"Jim Carey","is_zonal_head":false},
+    "content_type": "application/json",
+    "data": {
+        "date_of_birth":"1980-09-11",
+        "emis":"/api/v1/school/emis/1/",
+        "first_name":"Jack",
+        "gender":"male",
+        "is_zonal_head":false,
+        "last_name":"Black",
+        "msisdn":"1234567",
+        "zonal_head_name":"Jim Carey"
+    },
     "body": {
         "created_at": "2013-08-14T19:57:50.232678",
         "date_of_birth": "1980-09-11T00:00:00",
