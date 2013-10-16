@@ -21,7 +21,7 @@ that will be used by form.ModelForm to auto generate the required zones
 dynamically
 """
 zones = Zone.objects.all()
-zones_dict = {obj.id: obj.name for obj in zones}
+zones_dict = dict((obj.id, obj.name) for obj in zones)
 
 for key, value in zones_dict.iteritems():
     TempSMSZones.add_to_class(str(key), models.BooleanField(value))
