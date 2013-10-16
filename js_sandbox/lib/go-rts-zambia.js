@@ -52,26 +52,6 @@ function GoRtsZambia() {
         };
     };
 
-    // self.cms_request = function(method, path, data) {
-    //     var json_api = new JsonApi(im);
-    //     console.log(data);
-    //     //data = typeof data !== 'undefined' ? JSON.stringify(data) : null;
-    //     var url = im.config.cms_api_root + path;
-    //     var p = json_api.post(url, {data: data});
-        
-    //     // var p = im.api_request("http." + method.toLowerCase(), {
-    //     //     url: url,
-    //     //     headers: self.headers,
-    //     //     data: data
-    //     // });
-    //     p.add_callback(function(result) {
-    //         var json = self.check_reply(
-    //             result, url, method.toUpperCase(), data, false);
-    //         return json;
-    //     });
-    //     return p;
-    // };
-
     self.cms_get = function(path) {
         var json_api = new JsonApi(im);
         var url = im.config.cms_api_root + path;
