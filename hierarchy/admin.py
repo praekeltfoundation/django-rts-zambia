@@ -1,21 +1,26 @@
 from django.contrib import admin
 from models import (Province, District, Zone, School)
 from rts.utils import DistrictIdFilter, ManagePermissions
+from rts.actions import export_select_fields_csv_action
 
 
 class ProvinceAdmin(ManagePermissions):
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name"]
 
 
 class DistrictAdmin(ManagePermissions):
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name", "province"]
 
 
 class ZoneAdmin(ManagePermissions):
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name", "district"]
 
 
 class SchoolAdmin(ManagePermissions):
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["emis", "name", "zone"]
 
 
