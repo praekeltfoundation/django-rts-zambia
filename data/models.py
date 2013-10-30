@@ -46,6 +46,54 @@ class SchoolData(models.Model):
         verbose_name_plural = "School Data"
 
 
+# ####################################################################
+    # Models to store duplicate migrations once deleted
+# ####################################################################
+class HeadTeacherDuplicateStore(models.Model):
+    first_name = models.CharField(max_length=50, verbose_name=u'First Name')
+    last_name = models.CharField(max_length=50, verbose_name=u'Last Name')
+    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    msisdn = models.CharField(max_length=20)
+    date_of_birth = models.DateField()
+    is_zonal_head = models.BooleanField()
+    zonal_head_name = models.CharField(max_length=100, verbose_name=u'Zonal Head')
+    created_at = models.DateTimeField(auto_now_add=True)
+    emis = models.ForeignKey('hierarchy.School',
+                             null=True,
+                             blank=True,
+                             verbose_name=u'EMIS')
+    origin_id = models.IntegerField()
+
+    def __unicode__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+    class Meta:
+        verbose_name = "Head Teacher Duplicate Store"
+
+
+class SchoolDataDuplicateStore(models.Model):
+    emis = models.ForeignKey('hierarchy.School',
+                             verbose_name=u'EMIS')
+    name = models.CharField(max_length=100, verbose_name=u'Name')
+    classrooms = models.IntegerField()
+    teachers = models.IntegerField()
+    teachers_g1 = models.IntegerField()
+    teachers_g2 = models.IntegerField()
+    boys_g2 = models.IntegerField()
+    girls_g2 = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(HeadTeacherDuplicateStore,
+                                    verbose_name=u'Head Teacher Duplicate Store')
+    origin_id = models.IntegerField()
+
+    def __unicode__(self):
+        return "%s" % self.emis
+
+    class Meta:
+        verbose_name_plural = "School Data Duplicate Store"
+
+# ########################## End of Duplicate Data Storage ##########
+
 class AcademicAchievementCode(models.Model):
     achievement = models.CharField(max_length=50)
 
