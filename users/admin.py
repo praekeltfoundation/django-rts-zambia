@@ -14,5 +14,11 @@ class UserAdmin(UserAdmin):
                     "is_active", "date_joined", "is_staff"]
     inlines = (UserDistrictInline, )
 
+
+class UserDistrictAdmin(admin.ModelAdmin):
+    list_display = ["user", "district"]
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(UserDistrict, UserDistrictAdmin)
