@@ -17,14 +17,7 @@ class Migration(DataMigration):
             # Query below gets all the duplicate ids ordered by id descending and sliced from first index,
             # should give all the id's other than the max
 
-            query = (orm.
-                      HeadTeacher.
-                      objects.
-                      filter(emis__emis=emis).
-                      values_list('id', flat=True).
-                      order_by("-id"))
-
-            duplicates = orm.HeadTeacher.objects.filter(pk__in=query[1:])
+            duplicates = orm.HeadTeacher.objects.filter(emis__emis=emis).order_by("-id")[1:]
 
             for duplicate in duplicates:
                 head_teacher_store = orm.HeadTeacherDuplicateStore(first_name=duplicate.first_name,
@@ -54,7 +47,7 @@ class Migration(DataMigration):
                                                           origin_id=duplicate.schooldata_set.all()[0].id
                                                           )
                     school_data_store.save()
-            duplicates.delete()
+                duplicate.delete()
 
     def backwards(self, orm):
         "Write your backwards methods here."
