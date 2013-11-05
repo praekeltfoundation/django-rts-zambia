@@ -5,7 +5,7 @@ from data.models import (HeadTeacher, SchoolData,
 from django.core.management import call_command
 from south.migration import Migrations
 
-
+# http://micknelson.wordpress.com/2013/03/01/testing-django-migrations/
 class TestDuplicatesDataMigration(TransactionTestCase):
     """
     Testing to see if the migration removes and stores the duplicates.
