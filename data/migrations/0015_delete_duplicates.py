@@ -7,14 +7,15 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName".
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
+        """ Write your forwards methods here.
+        Note: Don't use "from appname.models import ModelName".
+        Use orm.ModelName to refer to models in this application,
+        and orm['appname.ModelName'] for models in other applications.
+        """
 
         for emis in orm.HeadTeacher.objects.values_list('emis__emis', flat=True).distinct():
             # Query below gets all the duplicate ids ordered by id descending and sliced from first index,
-            # should give all the id's other than the ,max
+            # should give all the id's other than the max
 
             query = (orm.
                       HeadTeacher.
@@ -26,7 +27,7 @@ class Migration(DataMigration):
             duplicates = orm.HeadTeacher.objects.filter(pk__in=query[1:])
 
             for duplicate in duplicates:
-                store = orm.HeadTeacherDuplicateStore(first_name=duplicate.first_name,
+                head_teacher_store = orm.HeadTeacherDuplicateStore(first_name=duplicate.first_name,
                                                       last_name=duplicate.last_name,
                                                       gender=duplicate.gender,
                                                       msisdn=duplicate.msisdn,
@@ -37,21 +38,22 @@ class Migration(DataMigration):
                                                       emis=duplicate.emis,
                                                       origin_id=duplicate.id
                                                       )
-                store.save()
+                head_teacher_store.save()
 
-                store2 = orm.SchoolDataDuplicateStore(emis=duplicate.schooldata_set.all()[0].emis,
-                                                      name=duplicate.schooldata_set.all()[0].name,
-                                                      classrooms=duplicate.schooldata_set.all()[0].classrooms,
-                                                      teachers=duplicate.schooldata_set.all()[0].teachers,
-                                                      teachers_g1=duplicate.schooldata_set.all()[0].teachers_g1,
-                                                      teachers_g2=duplicate.schooldata_set.all()[0].teachers_g2,
-                                                      boys_g2=duplicate.schooldata_set.all()[0].boys_g2,
-                                                      girls_g2=duplicate.schooldata_set.all()[0].girls_g2,
-                                                      created_at=duplicate.schooldata_set.all()[0].created_at,
-                                                      created_by=orm.HeadTeacherDuplicateStore.objects.get(origin_id=duplicate.id),
-                                                      origin_id=duplicate.schooldata_set.all()[0].id
-                                                      )
-                store2.save()
+                if duplicate.schooldata_set.all():
+                    school_data_store = orm.SchoolDataDuplicateStore(emis=duplicate.schooldata_set.all()[0].emis,
+                                                          name=duplicate.schooldata_set.all()[0].name,
+                                                          classrooms=duplicate.schooldata_set.all()[0].classrooms,
+                                                          teachers=duplicate.schooldata_set.all()[0].teachers,
+                                                          teachers_g1=duplicate.schooldata_set.all()[0].teachers_g1,
+                                                          teachers_g2=duplicate.schooldata_set.all()[0].teachers_g2,
+                                                          boys_g2=duplicate.schooldata_set.all()[0].boys_g2,
+                                                          girls_g2=duplicate.schooldata_set.all()[0].girls_g2,
+                                                          created_at=duplicate.schooldata_set.all()[0].created_at,
+                                                          created_by=orm.HeadTeacherDuplicateStore.objects.get(origin_id=duplicate.id),
+                                                          origin_id=duplicate.schooldata_set.all()[0].id
+                                                          )
+                    school_data_store.save()
             duplicates.delete()
 
     def backwards(self, orm):
