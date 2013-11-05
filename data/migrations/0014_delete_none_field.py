@@ -7,15 +7,16 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName".
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
+        """ Write your forwards methods here.
+        Note: Don't use "from appname.models import ModelName".
+        Use orm.ModelName to refer to models in this application,
+        and orm['appname.ModelName'] for models in other applications.
+        """
 
         none_emis = orm.HeadTeacher.objects.filter(emis=None)
 
         for data in none_emis.all():
-            store = orm.HeadTeacherDuplicateStore(first_name=data.first_name,
+            head_teacher_store = orm.HeadTeacherDuplicateStore(first_name=data.first_name,
                                                   last_name=data.last_name,
                                                   gender=data.gender,
                                                   msisdn=data.msisdn,
@@ -26,10 +27,10 @@ class Migration(DataMigration):
                                                   emis=data.emis,
                                                   origin_id=data.id
                                                   )
-            store.save()
+            head_teacher_store.save()
 
             if data.schooldata_set.all():
-                store2 = orm.SchoolDataDuplicateStore(emis=data.schooldata_set.all()[0].emis,
+                school_data_store = orm.SchoolDataDuplicateStore(emis=data.schooldata_set.all()[0].emis,
                                                       name=data.schooldata_set.all()[0].name,
                                                       classrooms=data.schooldata_set.all()[0].classrooms,
                                                       teachers=data.schooldata_set.all()[0].teachers,
@@ -41,7 +42,7 @@ class Migration(DataMigration):
                                                       created_by=orm.HeadTeacherDuplicateStore.objects.get(origin_id=data.id),
                                                       origin_id=data.schooldata_set.all()[0].id
                                                       )
-                store2.save()
+                school_data_store.save()
         none_emis.delete()
 
     def backwards(self, orm):
