@@ -94,6 +94,7 @@ class SendSMSAdmin(ManagePermissions):
     form = SendSMSForm
     inlines = [SMSZoneInline]
     list_display = ["sms", "created_by", "total_sent_messages", "replies", "district", "created_at"]
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
 
     def __init__(self, *args, **kwargs):
         super(SendSMSAdmin, self).__init__(*args, **kwargs)
