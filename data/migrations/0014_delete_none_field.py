@@ -7,10 +7,9 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        """ Write your forwards methods here.
-        Note: Don't use "from appname.models import ModelName".
-        Use orm.ModelName to refer to models in this application,
-        and orm['appname.ModelName'] for models in other applications.
+        """
+        Selecting objects where the emis is none, storing them in the duplicate store,
+        and then deleting the entries
         """
 
         none_emis = orm.HeadTeacher.objects.filter(emis=None)
