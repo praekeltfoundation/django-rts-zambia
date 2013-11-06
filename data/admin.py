@@ -1,6 +1,7 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, AcademicAchievementCode,
-                    TeacherPerformanceData, LearnerPerformanceData)
+                    TeacherPerformanceData, LearnerPerformanceData,
+                    HeadTeacherDuplicateStore, SchoolDataDuplicateStore)
 
 from rts.actions import export_select_fields_csv_action
 from rts.utils import DistrictIdFilter, ManagePermissions
@@ -79,7 +80,7 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
                 ("attitudes_and_beliefs", "Attitudes And Beliefs"),
                 ("training_subtotal", "Training Subtotal"),
                 ("reading_assessment", "Reading Assessment"),
-                ("reading_total", "Reading Total"), 
+                ("reading_total", "Reading Total"),
                ],
                header=True
               )]
@@ -136,8 +137,19 @@ class AcademicAchievementCodeAdmin(admin.ModelAdmin):
         self.list_display_links = (None, )
 
 
+class SchoolDataDuplicateStoreAdmin(admin.ModelAdmin):
+    list_display = ["id", "origin_id", "emis", "name", "classrooms", "teachers",
+                    "teachers_g1", "teachers_g2", "boys_g2", "girls_g2", "created_by", "created_at"]
+
+
+class HeadTeacherDuplicateStoreAdmin(ManagePermissions):
+    list_display = ["id", "origin_id", "emis", "first_name", "last_name", "msisdn", "gender", "date_of_birth", "is_zonal_head", "zonal_head_name","created_at"]
+
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
 admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
 admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
 admin.site.register(AcademicAchievementCode, AcademicAchievementCodeAdmin)
+
+admin.site.register(SchoolDataDuplicateStore, SchoolDataDuplicateStoreAdmin)
+admin.site.register(HeadTeacherDuplicateStore, HeadTeacherDuplicateStoreAdmin)
