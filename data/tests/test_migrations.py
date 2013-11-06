@@ -10,7 +10,7 @@ class TestDuplicatesDataMigration(TransactionTestCase):
     """
     Testing to see if the migration removes and stores the duplicates.
     """
-    fixtures = ['test_migration_hierarchy.json', 'test_data_migration.json']
+    fixtures = ['test_migration_hierarchy.json', 'test_delete_duplicate_migration.json']
     start_migration = "0014_delete_none_field"
     dest_migration = "0015_delete_duplicates"
     django_application = "data"
@@ -57,7 +57,7 @@ class TestRemoveNoneDataMigration(TransactionTestCase):
     """
     Testing to see if the migration removes and stores the duplicates.
     """
-    fixtures = ['test_migration_hierarchy.json', 'test_data_migration.json']
+    fixtures = ['test_migration_hierarchy.json', 'test_delete_duplicate_migration.json']
     start_migration = "0013_delete_teacherperfomance_learnerperformance_data"
     dest_migration = "0014_delete_none_field"
     django_application = "data"
@@ -89,7 +89,7 @@ class TestRemoveNoneDataMigration(TransactionTestCase):
 
     def test_fixtures_loaded(self):
         head_teacher = HeadTeacher.objects.filter(emis__emis=None).all()
-        self.assertEqual(len(head_teacher), 45)
+        self.assertEqual(len(head_teacher), 1)
 
         self.migrate_to_dest()
         head_teacher = HeadTeacher.objects.filter(emis__emis=None).all()
@@ -100,7 +100,7 @@ class TestRemovePerfomanceDataMigration(TransactionTestCase):
     """
     Testing to see if the migration removes and stores the duplicates.
     """
-    fixtures = ['test_migration_hierarchy.json', 'test_data_migration.json']
+    fixtures = ['test_migration_hierarchy.json', 'test_delete_duplicate_migration.json']
     start_migration = "0012_auto__add_headteacherduplicatestore__add_schooldataduplicatestore"
     dest_migration = "0013_delete_teacherperfomance_learnerperformance_data"
     django_application = "data"
@@ -133,8 +133,8 @@ class TestRemovePerfomanceDataMigration(TransactionTestCase):
     def test_fixtures_loaded(self):
         head_data = TeacherPerformanceData.objects.all()
         learner_data = LearnerPerformanceData.objects.all()
-        self.assertEqual(len(head_data), 1612)
-        self.assertEqual(len(learner_data), 86)
+        self.assertEqual(len(head_data), 10)
+        self.assertEqual(len(learner_data), 1)
 
         self.migrate_to_dest()
         head_data = TeacherPerformanceData.objects.all()
