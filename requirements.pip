@@ -1,5 +1,5 @@
 Django==1.5.1
-South
+South==0.8.1
 gunicorn
 supervisor
 python-memcached
