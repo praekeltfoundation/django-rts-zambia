@@ -6,11 +6,11 @@ from django.conf import settings
 
 @task
 def send_sms(msisdn, sms):
-    sms = VumiGoSender(api_url=settings.API_URL,
+    sms_vumi = VumiGoSender(api_url=settings.API_URL,
                        account_id=settings.ACCOUNT_ID,
                        conversation_id=settings.CONVERSATION_ID,
                        conversation_token=settings.CONVERSATION_TOKEN)
-    sms.send_sms(msisdn, sms)
+    sms_vumi.send_sms(msisdn, sms)
 
 
 @task
