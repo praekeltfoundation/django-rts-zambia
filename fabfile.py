@@ -1,7 +1,7 @@
 from fabric.api import cd, sudo, env
 import os
 
-PROJECT = os.environ.get('PROJECT', 'go-rts-zambia')
+PROJECT = os.environ.get('PROJECT', 'go-rts-qa')
 DEPLOY_USER = os.environ.get('DEPLOY_USER', 'jmbo')
 
 env.path = os.path.join('/', 'var', 'praekelt', PROJECT)

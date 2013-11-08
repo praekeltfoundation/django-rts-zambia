@@ -225,13 +225,6 @@ RAVEN_CONFIG = {
 
 API_LIMIT_PER_PAGE = 0
 
-# Import production settings
-try:
-    from production_settings import *
-except ImportError:
-    pass
-
-
 djcelery.setup_loader()
 BROKER_URL = "django://"
 CELERY_RESULT_BACKEND = "database"
@@ -242,3 +235,9 @@ API_URL = ""
 ACCOUNT_ID = ""
 CONVERSATION_ID = ""
 CONVERSATION_TOKEN = ""
+
+# Import production settings
+try:
+    from production_settings import *
+except ImportError:
+    pass
