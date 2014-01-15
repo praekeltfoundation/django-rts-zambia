@@ -47,3 +47,12 @@ class School(models.Model):
 
     class Meta:
         verbose_name = "4. School"
+
+    def display_district(self):
+        return self.zone.district
+
+    def display_province(self):
+        return self.zone.district.province
+
+    display_district.short_description = "District"
+    display_province.short_description = "Province"
