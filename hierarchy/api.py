@@ -3,7 +3,9 @@ from tastypie import fields
 from models import (Province, District, Zone, School)
 from tastypie.resources import ALL_WITH_RELATIONS, ALL
 from django.conf.urls import url
+from rts.utils import CSVSerializer, CSVModelResource
 
+# Normal JSON serielizer
 
 class ProvinceResource(ModelResource):
     """
@@ -17,6 +19,7 @@ class ProvinceResource(ModelResource):
         allowed_methods = ['get']
         include_resource_uri = True
         queryset = Province.objects.all()
+        serializer = CSVSerializer()
 
 
 class DistrictResource(ModelResource):
@@ -32,6 +35,7 @@ class DistrictResource(ModelResource):
         allowed_methods = ['get']
         include_resource_uri = True
         queryset = District.objects.all()
+        serializer = CSVSerializer()
 
 
 class ZoneResource(ModelResource):
@@ -47,6 +51,7 @@ class ZoneResource(ModelResource):
         allowed_methods = ['get']
         include_resource_uri = True
         queryset = Zone.objects.all()
+        serializer = CSVSerializer()
 
 
 class SchoolResource(ModelResource):
@@ -85,6 +90,84 @@ class EmisResource(ModelResource):
         include_resource_uri = False
         queryset = School.objects.all()
         fields = ['emis']
+        serializer = CSVSerializer()
         filtering = {
             'emis': ALL}
 
+
+
+# CSV serializer
+class ProvinceResourceCSVDownload(CSVModelResource):
+    """
+    Returns csv instead of json
+    """
+    class Meta:
+        resource_name = "csv/province"
+        allowed_methods = ['get']
+        include_resource_uri = False
+        queryset = Province.objects.all()
+        serializer = CSVSerializer()  # Using custom serializer
+
+
+class DistrictResourceCSVDownload(CSVModelResource):
+    """
+    Returns csv instead of json
+    """
+    class Meta:
+        resource_name = "csv/district"
+        allowed_methods = ['get']
+        include_resource_uri = False
+        queryset = District.objects.all()
+        serializer = CSVSerializer()  # Using custom serializer
+
+    def dehydrate(self, bundle):
+        bundle.data['province'] = bundle.obj.province.id
+        return bundle
+
+
+class ZoneResourceCSVDownload(CSVModelResource):
+    """
+    Returns csv instead of json
+    """
+    class Meta:
+        resource_name = "csv/zone"
+        allowed_methods = ['get']
+        include_resource_uri = False
+        queryset = Zone.objects.all()
+        serializer = CSVSerializer()  # Using custom serializer
+
+    def dehydrate(self, bundle):
+        bundle.data['district'] = bundle.obj.district.id
+        return bundle
+
+
+class SchoolResourceCSVDownload(CSVModelResource):
+    """
+    Returns csv instead of json
+    """
+    zone = fields.ForeignKey(ZoneResource, 'zone')
+    class Meta:
+        max_limit = None
+        resource_name = "csv/school"
+        allowed_methods = ['get']
+        include_resource_uri = False
+        queryset = School.objects.all()
+        serializer = CSVSerializer()  # Using custom serializer
+
+    def dehydrate(self, bundle):
+        bundle.data['zone'] = bundle.obj.zone.id
+        return bundle
+
+
+class EmisResourceCSVDownload(CSVModelResource):
+    """
+    Returns csv instead of json
+    """
+    class Meta:
+        resource_name = "csv/hierarchy"
+        allowed_methods = ['get']
+        max_limit = None
+        include_resource_uri = False
+        queryset = School.objects.all()
+        fields = ['emis']
+        serializer = CSVSerializer()  # Using custom serializer
