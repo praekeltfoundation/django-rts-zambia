@@ -1,5 +1,17 @@
-from users.models import UserDistrict
+# Python
+import csv
+import StringIO
+
+# Django
 from django.contrib import admin
+
+
+# Third Party
+from tastypie.resources import ModelResource
+from tastypie.serializers import Serializer
+
+# Project
+from users.models import UserDistrict
 
 
 class DistrictIdFilter:
@@ -33,3 +45,49 @@ class ManagePermissions(admin.ModelAdmin):
             if 'delete_selected' in actions:
                 del actions['delete_selected']
         return actions
+
+
+class CSVModelResource(ModelResource):
+    def determine_format(self, request):
+        return 'text/csv'
+
+class CSVSerializer(Serializer):
+
+    formats = ['csv']
+
+    content_types = dict([('csv', 'text/csv')])
+
+    def to_csv(self, data, options=None):
+        options = options or {}
+        data = self.to_simple(data, options)
+        raw_data = StringIO.StringIO()
+        # import pdb; pdb.set_trace()
+        if "objects" in data:
+            if data['objects']:
+                fields = data['objects'][0].keys()
+                fields = [unicode(field).encode('utf-8') for field in fields]
+                writer = csv.DictWriter(raw_data, fields,
+                                        dialect="excel",
+                                        extrasaction='ignore')
+                header = dict(zip(fields, fields))
+                writer.writerow(header)  # In Python 2.7: `writer.writeheader()`
+
+                for item in data['objects']:
+                    writer.writerow( {k: self.encode(v) for k, v in item.iteritems()})
+        else:
+            print data
+
+        return raw_data.getvalue()
+
+    def from_csv(self, content):
+        raw_data = StringIO.StringIO(content)
+        data = []
+        # Untested, so this might not work exactly right.
+        for item in csv.DictReader(raw_data):
+            data.append(item)
+        return data
+
+    def encode(self, value):
+        if isinstance(value, unicode):
+            return value.encode("utf-8")
+        return value
