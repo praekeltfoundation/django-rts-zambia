@@ -5,6 +5,9 @@ from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
                     LearnerPerformanceData, InboundSMS, AcademicAchievementCode)
 from django.conf.urls import url
 
+# Project
+from rts.utils import CSVSerializer, CSVModelResource
+
 
 class HeadTeacherResource(ModelResource):
     """
@@ -181,3 +184,96 @@ class InboundSMSResource(ModelResource):
         always_return_data = True
         filtering = {
             'created_by': ALL_WITH_RELATIONS}
+
+
+# =========================================================================
+# This is the CSV download function
+# =========================================================================
+class HeadTeacherCSVDownloadResource(CSVModelResource):
+    """
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+
+    class Meta:
+        queryset = HeadTeacher.objects.all()
+        resource_name = "csv/data/headteacher"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        return bundle
+
+
+class SchoolDataCSVDownloadResource(CSVModelResource):
+    """
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = SchoolData.objects.all()
+        resource_name = "csv/data/school"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
+
+
+class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
+    """
+    """
+    class Meta:
+        queryset = AcademicAchievementCode.objects.all()
+        resource_name = "csv/data/achievement"
+        list_allowed_methods = ['get']
+        authorization = Authorization()
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+
+
+class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
+    """
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+    academic_level = fields.ForeignKey(AcademicAchievementCodeResource, 'academic_level')
+
+    class Meta:
+        queryset = TeacherPerformanceData.objects.all()
+        resource_name = "csv/data/teacherperformance"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+
+
+class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
+    """
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = LearnerPerformanceData.objects.all()
+        resource_name = "csv/data/learnerperformance"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+
+class InboundSMSCSVDownloadResource(CSVModelResource):
+    """
+    """
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = InboundSMS.objects.all()
+        resource_name = "csv/data/sms"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
