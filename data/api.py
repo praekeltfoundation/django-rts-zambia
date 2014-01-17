@@ -6,7 +6,7 @@ from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
 from django.conf.urls import url
 
 # Project
-from rts.utils import CSVSerializer, CSVModelResource
+from rts.utils import CSVSerializer, CSVModelResource, OverrideApiAuthentication
 
 
 class HeadTeacherResource(ModelResource):
@@ -200,6 +200,7 @@ class HeadTeacherCSVDownloadResource(CSVModelResource):
         list_allowed_methods = ['get']
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
     def dehydrate(self, bundle):
         bundle.data['emis'] = bundle.obj.emis.id
@@ -218,6 +219,7 @@ class SchoolDataCSVDownloadResource(CSVModelResource):
         list_allowed_methods = ['get']
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
 
     def dehydrate(self, bundle):
@@ -236,6 +238,7 @@ class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
         authorization = Authorization()
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
 
 class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
@@ -251,6 +254,13 @@ class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
         list_allowed_methods = ['get']
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        bundle.data['academic_level'] = bundle.obj.academic_level.id
+        return bundle
 
 
 class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
@@ -265,6 +275,12 @@ class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
         list_allowed_methods = ['get']
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
 
 class InboundSMSCSVDownloadResource(CSVModelResource):
     """
@@ -277,3 +293,8 @@ class InboundSMSCSVDownloadResource(CSVModelResource):
         list_allowed_methods = ['get']
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
