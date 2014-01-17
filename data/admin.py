@@ -11,6 +11,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 class SchoolDataAdmin(ManagePermissions):
     list_display = ["emis", "name", "classrooms", "teachers",
                     "teachers_g1", "teachers_g2", "boys_g2", "girls_g2", "created_by", "created_at"]
+    search_fields = ["emis__emis", "emis__name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("emis", "EMIS"),
@@ -30,6 +31,7 @@ class SchoolDataAdmin(ManagePermissions):
 
 class HeadTeacherAdmin(ManagePermissions):
     list_display = ["emis", "first_name", "last_name", "msisdn", "gender", "date_of_birth", "is_zonal_head", "zonal_head_name","created_at"]
+    search_fields = ["emis__emis", "emis__name", "first_name", "last_name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("created_at", "Created At"),
@@ -59,6 +61,7 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
                     "pupils_books_number", "reading_lesson", "pupil_engagement_score", "attitudes_and_beliefs",
                     "training_subtotal", "ts_number", "reading_assessment", "reading_total", "academic_level",
                     "created_by", "created_at"]
+    search_fields = ["emis__emis", "emis__name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("emis", "EMIS"),
@@ -98,6 +101,7 @@ class LearnerPerformanceDataAdmin(ManagePermissions):
     list_display = ["emis", "gender", "total_number_pupils", "phonetic_awareness", "vocabulary",
                     "reading_comprehension", "writing_diction", "below_minimum_results", "minimum_results",
                     "desirable_results", "outstanding_results", "created_by", "created_at"]
+    search_fields = ["emis__emis", "emis__name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("emis", "EMIS"),
