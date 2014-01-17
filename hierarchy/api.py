@@ -3,16 +3,16 @@ from django.conf.urls import url
 
 # Project
 from models import (Province, District, Zone, School)
-from rts.utils import CSVSerializer, CSVModelResource, OverrideApiAuthentication
+from rts.utils import (CSVSerializer, CSVModelResource,
+                       OverrideApiAuthentication)
 
 # Third Party
 from tastypie.resources import ModelResource
 from tastypie import fields
 from tastypie.resources import ALL_WITH_RELATIONS, ALL
-from tastypie.authentication import ApiKeyAuthentication
+
 
 # Normal JSON serielizer
-
 class ProvinceResource(ModelResource):
     """
     This class:
@@ -35,6 +35,7 @@ class DistrictResource(ModelResource):
         based on the url
     """
     province = fields.ForeignKey(ProvinceResource, 'province', full=True)
+
     class Meta:
         resource_name = "district"
         allowed_methods = ['get']
@@ -50,6 +51,7 @@ class ZoneResource(ModelResource):
         based on the url
     """
     district = fields.ForeignKey(DistrictResource, 'district', full=True)
+
     class Meta:
         resource_name = "zone"
         allowed_methods = ['get']
@@ -65,6 +67,7 @@ class SchoolResource(ModelResource):
         based on the url
     """
     zone = fields.ForeignKey(ZoneResource, 'zone', full=True)
+
     class Meta:
         resource_name = "school"
         allowed_methods = ['get']
@@ -75,7 +78,9 @@ class SchoolResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" %
+                self._meta.resource_name,
+                self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
 
 
@@ -95,7 +100,6 @@ class EmisResource(ModelResource):
         fields = ['emis']
         filtering = {
             'emis': ALL}
-
 
 
 # CSV serializer
@@ -171,6 +175,7 @@ class SchoolResourceCSVDownload(CSVModelResource):
     "method": "GET",
     """
     zone = fields.ForeignKey(ZoneResource, 'zone')
+
     class Meta:
         max_limit = None
         resource_name = "csv/school"
