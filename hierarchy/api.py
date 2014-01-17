@@ -1,9 +1,15 @@
+# Django
+from django.conf.urls import url
+
+# Project
+from models import (Province, District, Zone, School)
+from rts.utils import CSVSerializer, CSVModelResource, OverrideApiAuthentication
+
+# Third Party
 from tastypie.resources import ModelResource
 from tastypie import fields
-from models import (Province, District, Zone, School)
 from tastypie.resources import ALL_WITH_RELATIONS, ALL
-from django.conf.urls import url
-from rts.utils import CSVSerializer, CSVModelResource
+from tastypie.authentication import ApiKeyAuthentication
 
 # Normal JSON serielizer
 
@@ -19,7 +25,6 @@ class ProvinceResource(ModelResource):
         allowed_methods = ['get']
         include_resource_uri = True
         queryset = Province.objects.all()
-        serializer = CSVSerializer()
 
 
 class DistrictResource(ModelResource):
@@ -35,7 +40,6 @@ class DistrictResource(ModelResource):
         allowed_methods = ['get']
         include_resource_uri = True
         queryset = District.objects.all()
-        serializer = CSVSerializer()
 
 
 class ZoneResource(ModelResource):
@@ -51,7 +55,6 @@ class ZoneResource(ModelResource):
         allowed_methods = ['get']
         include_resource_uri = True
         queryset = Zone.objects.all()
-        serializer = CSVSerializer()
 
 
 class SchoolResource(ModelResource):
@@ -90,7 +93,6 @@ class EmisResource(ModelResource):
         include_resource_uri = False
         queryset = School.objects.all()
         fields = ['emis']
-        serializer = CSVSerializer()
         filtering = {
             'emis': ALL}
 
@@ -107,6 +109,7 @@ class ProvinceResourceCSVDownload(CSVModelResource):
         include_resource_uri = False
         queryset = Province.objects.all()
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
 
 class DistrictResourceCSVDownload(CSVModelResource):
@@ -119,6 +122,7 @@ class DistrictResourceCSVDownload(CSVModelResource):
         include_resource_uri = False
         queryset = District.objects.all()
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
     def dehydrate(self, bundle):
         bundle.data['province'] = bundle.obj.province.id
@@ -135,6 +139,7 @@ class ZoneResourceCSVDownload(CSVModelResource):
         include_resource_uri = False
         queryset = Zone.objects.all()
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
     def dehydrate(self, bundle):
         bundle.data['district'] = bundle.obj.district.id
@@ -153,6 +158,7 @@ class SchoolResourceCSVDownload(CSVModelResource):
         include_resource_uri = False
         queryset = School.objects.all()
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
 
     def dehydrate(self, bundle):
         bundle.data['zone'] = bundle.obj.zone.id
@@ -171,3 +177,4 @@ class EmisResourceCSVDownload(CSVModelResource):
         queryset = School.objects.all()
         fields = ['emis']
         serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
