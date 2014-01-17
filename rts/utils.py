@@ -53,6 +53,7 @@ class CSVModelResource(ModelResource):
     def determine_format(self, request):
         return 'text/csv'
 
+
 class CSVSerializer(Serializer):
 
     formats = ['csv']
@@ -72,10 +73,11 @@ class CSVSerializer(Serializer):
                                         dialect="excel",
                                         extrasaction='ignore')
                 header = dict(zip(fields, fields))
-                writer.writerow(header)  # In Python 2.7: `writer.writeheader()`
+                writer.writerow(header)
 
                 for item in data['objects']:
-                    writer.writerow( {k: self.encode(v) for k, v in item.iteritems()})
+                    writer.writerow({k: self.encode(v)
+                                    for k, v in item.iteritems()})
         else:
             print data
 
@@ -98,4 +100,5 @@ class CSVSerializer(Serializer):
 class OverrideApiAuthentication(ApiKeyAuthentication):
     def _unauthorized(self):
         data = "Sorry you are not authorized!"
-        return HttpUnauthorized(content=data, content_type="text/plain; charset=utf-8")
+        return HttpUnauthorized(content=data,
+                                content_type="text/plain; charset=utf-8")
