@@ -2,11 +2,13 @@ from tastypie.resources import ModelResource, ALL_WITH_RELATIONS, ALL
 from tastypie.authorization import Authorization
 from tastypie import fields
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
-                    LearnerPerformanceData, InboundSMS, AcademicAchievementCode)
+                    LearnerPerformanceData, InboundSMS,
+                    AcademicAchievementCode)
 from django.conf.urls import url
 
 # Project
-from rts.utils import CSVSerializer, CSVModelResource, OverrideApiAuthentication
+from rts.utils import (CSVSerializer, CSVModelResource,
+                       OverrideApiAuthentication)
 
 
 class HeadTeacherResource(ModelResource):
@@ -50,7 +52,9 @@ class HeadTeacherResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" %
+                self._meta.resource_name, self.wrap_view('dispatch_detail'),
+                name="api_dispatch_detail"),
         ]
 
 
@@ -74,7 +78,8 @@ class SchoolDataResource(ModelResource):
             }
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
 
     class Meta:
         queryset = SchoolData.objects.all()
@@ -117,8 +122,10 @@ class TeacherPerformanceDataResource(ModelResource):
             }
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
-    academic_level = fields.ForeignKey(AcademicAchievementCodeResource, 'academic_level', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
+    academic_level = fields.ForeignKey(AcademicAchievementCodeResource,
+                                       'academic_level', full=True)
 
     class Meta:
         queryset = TeacherPerformanceData.objects.all()
@@ -144,7 +151,8 @@ class LearnerPerformanceDataResource(ModelResource):
             }
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
 
     class Meta:
         queryset = LearnerPerformanceData.objects.all()
@@ -174,7 +182,8 @@ class InboundSMSResource(ModelResource):
                 "created_by": "/api/v1/data/sms/1/",
             }
     """
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
 
     class Meta:
         queryset = InboundSMS.objects.all()
@@ -232,7 +241,6 @@ class SchoolDataCSVDownloadResource(CSVModelResource):
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
 
-
     def dehydrate(self, bundle):
         bundle.data['emis'] = bundle.obj.emis.id
         bundle.data['created_by'] = bundle.obj.created_by.id
@@ -267,7 +275,8 @@ class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
-    academic_level = fields.ForeignKey(AcademicAchievementCodeResource, 'academic_level')
+    academic_level = fields.ForeignKey(AcademicAchievementCodeResource,
+                                       'academic_level')
 
     class Meta:
         queryset = TeacherPerformanceData.objects.all()
@@ -307,6 +316,7 @@ class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
         bundle.data['emis'] = bundle.obj.emis.id
         bundle.data['created_by'] = bundle.obj.created_by.id
         return bundle
+
 
 class InboundSMSCSVDownloadResource(CSVModelResource):
     """
