@@ -102,6 +102,11 @@ class EmisResource(ModelResource):
 class ProvinceResourceCSVDownload(CSVModelResource):
     """
     Returns csv instead of json
+    GET Province CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/province/?username=name&api_key=key,
+    "method": "GET",
     """
     class Meta:
         resource_name = "csv/province"
@@ -115,6 +120,11 @@ class ProvinceResourceCSVDownload(CSVModelResource):
 class DistrictResourceCSVDownload(CSVModelResource):
     """
     Returns csv instead of json
+    GET District CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/district/?username=name&api_key=key,
+    "method": "GET",
     """
     class Meta:
         resource_name = "csv/district"
@@ -132,6 +142,11 @@ class DistrictResourceCSVDownload(CSVModelResource):
 class ZoneResourceCSVDownload(CSVModelResource):
     """
     Returns csv instead of json
+    GET Zone CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/zone/?username=name&api_key=key,
+    "method": "GET",
     """
     class Meta:
         resource_name = "csv/zone"
@@ -149,6 +164,11 @@ class ZoneResourceCSVDownload(CSVModelResource):
 class SchoolResourceCSVDownload(CSVModelResource):
     """
     Returns csv instead of json
+    GET School CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/school/?username=name&api_key=key,
+    "method": "GET",
     """
     zone = fields.ForeignKey(ZoneResource, 'zone')
     class Meta:

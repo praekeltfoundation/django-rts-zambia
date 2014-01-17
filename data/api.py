@@ -162,6 +162,7 @@ class InboundSMSResource(ModelResource):
     """
     GET SMS
     ::
+
     "url": "<base_url>/api/v1/data/sms/",,
     "method": "GET",
 
@@ -191,6 +192,11 @@ class InboundSMSResource(ModelResource):
 # =========================================================================
 class HeadTeacherCSVDownloadResource(CSVModelResource):
     """
+    GET Head Teacher CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/headteacher/?username=name&api_key=key,
+    "method": "GET",
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
 
@@ -209,6 +215,11 @@ class HeadTeacherCSVDownloadResource(CSVModelResource):
 
 class SchoolDataCSVDownloadResource(CSVModelResource):
     """
+    GET School Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/school/?username=name&api_key=key,
+    "method": "GET",
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
@@ -230,6 +241,11 @@ class SchoolDataCSVDownloadResource(CSVModelResource):
 
 class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
     """
+    GET Academic Achievement Code CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/achievement/?username=name&api_key=key,
+    "method": "GET",
     """
     class Meta:
         queryset = AcademicAchievementCode.objects.all()
@@ -243,6 +259,11 @@ class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
 
 class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
     """
+    GET Teacher Perfomance Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/teacherperformance/?username=name&api_key=key,
+    "method": "GET",
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
@@ -265,6 +286,11 @@ class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
 
 class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
     """
+    GET Learner Performance Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/learnerperformance/?username=name&api_key=key,
+    "method": "GET",
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
@@ -284,6 +310,11 @@ class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
 
 class InboundSMSCSVDownloadResource(CSVModelResource):
     """
+    GET Inbound SMS CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/sms/?username=name&api_key=key,
+    "method": "GET",
     """
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
 
