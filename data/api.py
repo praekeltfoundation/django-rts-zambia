@@ -160,9 +160,9 @@ class LearnerPerformanceDataResource(ModelResource):
 
 class InboundSMSResource(ModelResource):
     """
-    GET SPECIFIC HEADTEACHER ON EMIS
-
-    "url": "<base_url>/api/v1/data/headteacher/?emis__emis=4817",,
+    GET SMS
+    ::
+    "url": "<base_url>/api/v1/data/sms/",,
     "method": "GET",
 
     POSTING DATA
@@ -170,7 +170,7 @@ class InboundSMSResource(ModelResource):
     "url": "<base_url>/api/v1/data/sms/",
     "body": {
                 "message": "test_name",
-                "created_by": "/api/v1/data/headteacher/1/",
+                "created_by": "/api/v1/data/sms/1/",
             }
     """
     created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
