@@ -7,8 +7,10 @@ from django.contrib import admin
 
 
 # Third Party
+from tastypie.authentication import ApiKeyAuthentication
 from tastypie.resources import ModelResource
 from tastypie.serializers import Serializer
+from tastypie.http import HttpUnauthorized
 
 # Project
 from users.models import UserDistrict
@@ -91,3 +93,9 @@ class CSVSerializer(Serializer):
         if isinstance(value, unicode):
             return value.encode("utf-8")
         return value
+
+
+class OverrideApiAuthentication(ApiKeyAuthentication):
+    def _unauthorized(self):
+        data = "Sorry you are not authorized!"
+        return HttpUnauthorized(content=data, content_type="text/plain; charset=utf-8")
