@@ -64,7 +64,7 @@ class CSVSerializer(Serializer):
         options = options or {}
         data = self.to_simple(data, options)
         raw_data = StringIO.StringIO()
-        # import pdb; pdb.set_trace()
+
         if "objects" in data:
             if data['objects']:
                 fields = data['objects'][0].keys()
@@ -86,7 +86,6 @@ class CSVSerializer(Serializer):
     def from_csv(self, content):
         raw_data = StringIO.StringIO(content)
         data = []
-        # Untested, so this might not work exactly right.
         for item in csv.DictReader(raw_data):
             data.append(item)
         return data
