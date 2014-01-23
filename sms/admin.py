@@ -1,8 +1,10 @@
 # Django
+from django.conf.urls.defaults import patterns, url
 from django.forms.models import BaseInlineFormSet
-from django.conf.urls.defaults import patterns
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib import messages
+from django.shortcuts import render
 from django.contrib import admin
 from django.db import models
 from django import forms
@@ -100,6 +102,7 @@ class SendSMSAdmin(ManagePermissions):
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
 
     def __init__(self, *args, **kwargs):
+        # Making sure somebody can't click already sent sms to edit it.
         super(SendSMSAdmin, self).__init__(*args, **kwargs)
         self.list_display_links = (None, )
 
@@ -163,6 +166,41 @@ class SendSMSAdmin(ManagePermissions):
                     for zone_id in temp:
                         self.custom_save_zones(zone_id, result["temp_sms"])
                         task_query_zone.delay(zone_id, result["temp_sms"].sms)
+
+    def zones_view(self, request):
+        pass
+
+    def districts_view(self, request):
+        context = {}
+        return render(request,
+                      "admin/sms/sendsms/districts_view.html",
+                      context)
+
+    def add_view(self, request, form_url='', extra_context=None):
+        if self.is_district_admin():
+            return super(SendSMSAdmin, self).add_view(request, form_url='', extra_context=None)
+
+        elif self.is_rts_staff():
+            return HttpResponseRedirect(reverse("admin:sms_sendsms_districts_view"))
+
+        # If not district_admin or rts_staff redirect back to the app with an error message
+        # And extra security function.
+        messages.error(request, "You don't have the correct permissions to view this page")
+        return HttpResponseRedirect(reverse("admin:index"))
+
+
+    def get_urls(self):
+        urls = super(SendSMSAdmin, self).get_urls()
+        my_urls = patterns('',
+            url(r'/admin/sms/sendsms/sms/zones', self.zones_view, name="sms_sendsms_zones_view"),
+            url(r'/admin/sms/sendsms/sms/districts', self.districts_view, name="sms_sendsms_districts_view"))
+        return my_urls + urls
+
+    def is_district_admin(self):
+        return False
+
+    def is_rts_staff(self):
+        return True
 
 
 class InboundSMSProxy(InboundSMS):
