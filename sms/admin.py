@@ -1,18 +1,21 @@
-from django.contrib import admin
-from sms.models import SendSMS, SMSZones, TempSMSZones
-from users.models import UserDistrict
-from hierarchy.models import Zone, District
-from django import forms
-from django.forms.models import BaseInlineFormSet, inlineformset_factory
-from django.contrib.admin.util import flatten_fieldsets
-from functools import partial
-from django.db import models
-from sms.tasks import task_query_zone
-from rts.utils import DistrictIdFilter, ManagePermissions
+# Django
+from django.forms.models import BaseInlineFormSet
+from django.conf.urls.defaults import patterns
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from data.models import InboundSMS
+from django.contrib import admin
+from django.db import models
+from django import forms
+
+# Project
+from rts.utils import DistrictIdFilter, ManagePermissions
 from rts.actions import export_select_fields_csv_action
+from sms.models import SendSMS, SMSZones, TempSMSZones
+from hierarchy.models import Zone, District
+from sms.tasks import task_query_zone
+from users.models import UserDistrict
+from data.models import InboundSMS
+
 
 
 """
