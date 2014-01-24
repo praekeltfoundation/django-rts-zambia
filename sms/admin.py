@@ -14,6 +14,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 from rts.actions import export_select_fields_csv_action
 from sms.models import SendSMS, SMSZones, TempSMSZones
 from hierarchy.models import Zone, District
+from sms.forms import ChooseDistricsForms
 from sms.tasks import task_query_zone
 from users.models import UserDistrict
 from data.models import InboundSMS
@@ -171,7 +172,24 @@ class SendSMSAdmin(ManagePermissions):
         pass
 
     def districts_view(self, request):
-        context = {}
+        # Replicating views from django ModelAdmin
+        model = self.model
+        opts = model._meta
+
+        # getting all the districts qs
+        districts = District.objects.all()
+
+
+        if request.method == "POST":
+            district_form = ChooseDistricsForms(request.POST, queryset=districts)
+            if district_form.is_valid():
+                messages.success(request, "Is Valid")
+        else:
+            district_form = ChooseDistricsForms(queryset=districts)
+        context = {"title": "Send SMS to Headteachers in Districts",
+                   "opts": opts,
+                   "app_label": opts.app_label,
+                   "district_form": district_form }
         return render(request,
                       "admin/sms/sendsms/districts_view.html",
                       context)
@@ -196,9 +214,12 @@ class SendSMSAdmin(ManagePermissions):
             url(r'/admin/sms/sendsms/sms/districts', self.districts_view, name="sms_sendsms_districts_view"))
         return my_urls + urls
 
+
+    """ NEED TO IMPLEMENT THIS AND UNITTEST"""
     def is_district_admin(self):
         return False
 
+    """ NEED TO IMPLEMENT THIS AND UNITTEST"""
     def is_rts_staff(self):
         return True
 
