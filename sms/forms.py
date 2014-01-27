@@ -18,6 +18,6 @@ class ChooseDistricsForm(forms.Form):
         data = dict((k, v) for k, v in cleaned_data.iteritems() if v and k != "sms")
 
         if "send_to_all" in data and len(data) > 1:
-            raise forms.ValidationError(_("Choose all or specific zones not both"))
+            raise forms.ValidationError(_("Choose all or specific districts not both"))
 
         return cleaned_data
