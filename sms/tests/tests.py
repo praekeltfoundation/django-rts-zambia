@@ -219,5 +219,5 @@ class TestSendSMSToDistrict(TestCase):
                                     data=data,
                                     follow=True)
         self.assertEquals(response.context["district_form"].errors["__all__"][0],
-                          'Choose all or specific zones not both')
+                          'Choose all or specific districts not both')
         self.assertEquals(response.request["PATH_INFO"], self.sms_district_view)
