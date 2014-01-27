@@ -14,7 +14,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 from rts.actions import export_select_fields_csv_action
 from sms.models import SendSMS, SMSZones, TempSMSZones
 from hierarchy.models import Zone, District
-from sms.forms import ChooseDistricsForms
+from sms.forms import ChooseDistricsForm
 from sms.tasks import task_query_zone
 from users.models import UserDistrict
 from data.models import InboundSMS
@@ -108,14 +108,14 @@ class SendSMSAdmin(ManagePermissions):
         self.list_display_links = (None, )
 
     def has_add_permission(self, request):
-        if not UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return False
-        return True
+        if self.is_district_admin(request) or self.is_rts_staff(request):
+            return True
+        return False
 
     def has_change_permission(self, request, obj=None):
-        if not UserDistrict.objects.filter(user_id=request.user.id).exists():
-            return False
-        return True
+        if self.is_district_admin(request) or self.is_rts_staff(request):
+            return True
+        return False
 
     def custom_save_zones(self, key, sms):
         """
@@ -172,6 +172,13 @@ class SendSMSAdmin(ManagePermissions):
         pass
 
     def districts_view(self, request):
+        """
+            This is an internal custom admin view which is used to dynamically creates a send sms to districts form
+            from which the RTS staff can send to selected indifiduals
+        """
+        if not self.is_rts_staff(request):
+            messages.error(request, "You don't have the correct permissions to view this page")
+            return HttpResponseRedirect(reverse("admin:index"))
         # Replicating views from django ModelAdmin
         model = self.model
         opts = model._meta
@@ -179,13 +186,25 @@ class SendSMSAdmin(ManagePermissions):
         # getting all the districts qs
         districts = District.objects.all()
 
-
         if request.method == "POST":
-            district_form = ChooseDistricsForms(request.POST, queryset=districts)
+            district_form = ChooseDistricsForm(request.POST, queryset=districts)
+
             if district_form.is_valid():
-                messages.success(request, "Is Valid")
+                if district_form.cleaned_data["send_to_all"] == True:
+                    # If all is selected, use the queryset
+                    self.save_districts_zones_and_send_sms(request, districts,
+                                                           district_form.cleaned_data["sms"])
+                else:
+                    # Iterating over the rest of the form IDs and checking if True and key is a digit
+                    ids = [int(key) for key, value in district_form.cleaned_data.iteritems() if value and key.isdigit()]
+                    districts_filtered = District.objects.filter(pk__in=ids).all()
+                    self.save_districts_zones_and_send_sms(request, districts_filtered,
+                                                           district_form.cleaned_data["sms"])
+
+                messages.success(request, "The messages have been sent")
+                return HttpResponseRedirect(reverse("admin:sms_sendsms_changelist"))
         else:
-            district_form = ChooseDistricsForms(queryset=districts)
+            district_form = ChooseDistricsForm(queryset=districts)
         context = {"title": "Send SMS to Headteachers in Districts",
                    "opts": opts,
                    "app_label": opts.app_label,
@@ -194,17 +213,32 @@ class SendSMSAdmin(ManagePermissions):
                       "admin/sms/sendsms/districts_view.html",
                       context)
 
+    def save_districts_zones_and_send_sms(self, request, districts_qs, sms):
+        """This function gets the districts queryset and sms, then Creates a new SendSMS object,
+            then saves it in SMSZones clas, after which sends to the celery worker which sends the sms
+        """
+        for district in districts_qs:
+            sendsms = SendSMS.objects.create(sms=sms,
+                                             district=district,
+                                             user=request.user)
+            zones = district.zone_set.all()
+            for zone in zones:
+                self.custom_save_zones(zone.id, sendsms)
+                task_query_zone.delay(zone.id, sendsms.sms)
+
+
     def add_view(self, request, form_url='', extra_context=None):
-        if self.is_district_admin():
+        if self.is_district_admin(request):
             return super(SendSMSAdmin, self).add_view(request, form_url='', extra_context=None)
 
-        elif self.is_rts_staff():
+        elif self.is_rts_staff(request):
             return HttpResponseRedirect(reverse("admin:sms_sendsms_districts_view"))
 
-        # If not district_admin or rts_staff redirect back to the app with an error message
-        # And extra security function.
-        messages.error(request, "You don't have the correct permissions to view this page")
-        return HttpResponseRedirect(reverse("admin:index"))
+        else:
+            # If not district_admin or rts_staff redirect back to the app with an error message
+            # And extra security function.
+            messages.error(request, "You don't have the correct permissions to view this page")
+            return HttpResponseRedirect(reverse("admin:index"))
 
 
     def get_urls(self):
@@ -215,13 +249,15 @@ class SendSMSAdmin(ManagePermissions):
         return my_urls + urls
 
 
-    """ NEED TO IMPLEMENT THIS AND UNITTEST"""
-    def is_district_admin(self):
+    def is_district_admin(self, request):
+        if UserDistrict.objects.filter(user_id=request.user.id).exists():
+            return True
         return False
 
-    """ NEED TO IMPLEMENT THIS AND UNITTEST"""
-    def is_rts_staff(self):
-        return True
+    def is_rts_staff(self, request):
+        if not self.is_district_admin(request) and request.user.is_staff:
+            return True
+        return False
 
 
 class InboundSMSProxy(InboundSMS):
@@ -251,4 +287,5 @@ class InboundSMSAdmin(ManagePermissions):
 
 
 admin.site.register(SendSMS, SendSMSAdmin)
+admin.site.register(SMSZones)
 admin.site.register(InboundSMSProxy, InboundSMSAdmin)
