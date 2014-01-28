@@ -12,7 +12,7 @@ from tastypie import fields
 from tastypie.resources import ALL_WITH_RELATIONS, ALL
 
 
-# Normal JSON serielizer
+# Normal JSON serializer
 class ProvinceResource(ModelResource):
     """
     This class:
