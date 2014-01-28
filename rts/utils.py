@@ -76,11 +76,8 @@ class CSVSerializer(Serializer):
                 writer.writerow(header)
 
                 for item in data['objects']:
-                    output_dict = dict((k, self.encode(v)) for (k, v)in item.iteritems())
+                    output_dict = dict((k, self.encode(v)) for (k, v) in item.iteritems())
                     writer.writerow(output_dict)
-        else:
-            print data
-
         return raw_data.getvalue()
 
     def from_csv(self, content):
