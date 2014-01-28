@@ -329,7 +329,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "2",
             next_state: "reg_school_boys",
-            response: "How many boys do you have in your school?"
+            response: "^How many boys do you have in your school\\?$"
         });
         p.then(done, done);
     });
@@ -352,7 +352,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "50",
             next_state: "reg_school_girls",
-            response: "How many girls do you have in your school?"
+            response: "^How many girls do you have in your school\\?$"
         });
         p.then(done, done);
     });
@@ -375,7 +375,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "fifty",
             next_state: "reg_school_boys",
-            response: "Please provide a number value for how many boys you have in your school."
+            response: "^Please provide a number value for how many boys you have in your school\\.$"
         });
         p.then(done, done);
     });
@@ -399,7 +399,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "51",
             next_state: "reg_school_classrooms",
-            response: "How many classrooms do you have in your school?"
+            response: "^How many classrooms do you have in your school\\?$"
         });
         p.then(done, done);
     });
@@ -423,7 +423,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: user,
             content: "fifty",
             next_state: "reg_school_girls",
-            response: "Please provide a number value for how many girls you have in your school."
+            response: "^Please provide a number value for how many girls you have in your school\\.$"
         });
         p.then(done, done);
     });
