@@ -312,7 +312,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         p.then(done, done);
     });
 
-    it("entering gender should ask for school classrooms number", function (done) {
+    it("entering gender should ask for boys number", function (done) {
         var user = {
             current_state: 'reg_gender',
             answers: {
@@ -328,8 +328,54 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         var p = tester.check_state({
             user: user,
             content: "2",
+            next_state: "reg_school_boys",
+            response: "How many boys do you have in your school?"
+        });
+        p.then(done, done);
+    });
+
+    it("entering boys number in school should ask for girls number", function (done) {
+        var user = {
+            current_state: 'reg_school_boys',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_emis_validator: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11091980',
+                reg_gender: 'male'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "50",
+            next_state: "reg_school_girls",
+            response: "How many girls do you have in your school?"
+        });
+        p.then(done, done);
+    });
+
+    it("entering girls number in school should ask for classroom number", function (done) {
+        var user = {
+            current_state: 'reg_school_girls',
+            answers: {
+                initial_state: 'reg_emis',
+                reg_emis: '0001',
+                reg_emis_validator: '0001',
+                reg_school_name: 'School One',
+                reg_first_name: 'Jack',
+                reg_surname: 'Black',
+                reg_date_of_birth: '11091980',
+                reg_gender: 'male'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "51",
             next_state: "reg_school_classrooms",
-            response: "^How many classrooms do you have in your school\\?$"
+            response: "How many classrooms do you have in your school?"
         });
         p.then(done, done);
     });
@@ -712,7 +758,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_school_teachers_g1: '2',
                 reg_school_teachers_g2: '2',
                 reg_school_students_g2_boys: '10',
-                reg_school_students_g2_girls: '11'
+                reg_school_students_g2_girls: '11',
+                reg_school_boys: "50",
+                reg_school_girls: "51"
             }
         };
         var p = tester.check_state({
@@ -746,7 +794,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_school_teachers_g2: '2',
                 reg_school_students_g2_boys: '10',
                 reg_school_students_g2_girls: '11',
-                reg_zonal_head: 'reg_zonal_head_name'
+                reg_zonal_head: 'reg_zonal_head_name',
+                reg_school_boys: '50',
+                reg_school_girls: '51'
             }
         };
         var p = tester.check_state({
@@ -972,7 +1022,9 @@ describe("When using the USSD line as an recognised MSISDN to change school", fu
                 reg_school_teachers_g1: '2',
                 reg_school_teachers_g2: '2',
                 reg_school_students_g2_boys: '10',
-                reg_school_students_g2_girls: '11'
+                reg_school_students_g2_girls: '11',
+                reg_school_boys: '50',
+                reg_school_girls: '51'
             }
         };
         var p = tester.check_state({
@@ -1853,7 +1905,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         p.then(done, done);
     });
 
-    
+
 });
 
 describe("When using the USSD line as an recognised MSISDN - completed Teacher review", function() {
