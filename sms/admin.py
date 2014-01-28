@@ -168,8 +168,6 @@ class SendSMSAdmin(ManagePermissions):
                         self.custom_save_zones(zone_id, result["temp_sms"])
                         task_query_zone.delay(zone_id, result["temp_sms"].sms)
 
-    def zones_view(self, request):
-        pass
 
     def districts_view(self, request):
         """
@@ -247,7 +245,6 @@ class SendSMSAdmin(ManagePermissions):
     def get_urls(self):
         urls = super(SendSMSAdmin, self).get_urls()
         my_urls = patterns('',
-            url(r'/admin/sms/sendsms/sms/zones', self.zones_view, name="sms_sendsms_zones_view"),
             url(r'/admin/sms/sendsms/sms/districts', self.districts_view, name="sms_sendsms_districts_view"))
         return my_urls + urls
 
