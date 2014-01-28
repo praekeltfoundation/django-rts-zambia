@@ -178,10 +178,17 @@ class TestSendSMSToDistrict(TestCase):
         self.assertEquals(response.request["PATH_INFO"], reverse("admin:sms_sendsms_changelist"))
         self.assertContains(response, "The messages have been sent")
 
+        # Checking that the sms is the same was was sent
         self.assertEquals(SendSMS.objects.all()[0].sms, "SMS MESSAGE")
+
+        # Making sure that all districts were sent to
         self.assertEquals(sorted(District.objects.values_list("name", flat=True)),
                           sorted(SendSMS.objects.values_list("district__name", flat=True)))
 
+        # Checking if the sent_to_all field is true
+        (self.assertTrue(item) for item in SendSMS.objects.values_list("sent_to_all", flat=True))
+
+        # Making sure that all zones were sent to
         self.assertEquals(sorted(District.objects.values_list("zone__name", flat=True)),
                           sorted(SMSZones.objects.values_list("zone__name", flat=True)))
 
@@ -200,8 +207,12 @@ class TestSendSMSToDistrict(TestCase):
 
         self.assertEquals(SendSMS.objects.all()[0].sms, "SMS MESSAGE")
 
-        self.assertEquals(district.name,
-                          SendSMS.objects.all()[0].district.name)
+        # Making sure that the only the required district was sent to
+        self.assertEquals(sorted([district.name]),
+                          sorted(SendSMS.objects.values_list("district__name", flat=True)))
+
+        # Checking if the sent_to_all field is true
+        (self.assertTrue(item) for item in SendSMS.objects.values_list("sent_to_all", flat=True))
 
         district_zones = district.zone_set.all()
         self.assertEquals(sorted([zone.name for zone in district_zones]),
