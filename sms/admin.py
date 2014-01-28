@@ -99,7 +99,7 @@ class SMSZoneInline(admin.StackedInline):
 class SendSMSAdmin(ManagePermissions):
     form = SendSMSForm
     inlines = [SMSZoneInline]
-    list_display = ["sms", "created_by", "total_sent_messages", "replies", "district", "created_at"]
+    list_display = ["sms", "created_by", "total_sent_messages", "replies", "district", "sent_to_all", "created_at"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
 
     def __init__(self, *args, **kwargs):
@@ -192,8 +192,10 @@ class SendSMSAdmin(ManagePermissions):
             if district_form.is_valid():
                 if district_form.cleaned_data["send_to_all"] == True:
                     # If all is selected, use the queryset
-                    self.save_districts_zones_and_send_sms(request, districts,
-                                                           district_form.cleaned_data["sms"])
+                    self.save_districts_zones_and_send_sms(request,
+                                                           districts,
+                                                           district_form.cleaned_data["sms"],
+                                                           to_all=True)
                 else:
                     # Iterating over the rest of the form IDs and checking if True and key is a digit
                     ids = [int(key) for key, value in district_form.cleaned_data.iteritems() if value and key.isdigit()]
@@ -213,14 +215,15 @@ class SendSMSAdmin(ManagePermissions):
                       "admin/sms/sendsms/districts_view.html",
                       context)
 
-    def save_districts_zones_and_send_sms(self, request, districts_qs, sms):
+    def save_districts_zones_and_send_sms(self, request, districts_qs, sms, to_all=False):
         """This function gets the districts queryset and sms, then Creates a new SendSMS object,
             then saves it in SMSZones clas, after which sends to the celery worker which sends the sms
         """
         for district in districts_qs:
             sendsms = SendSMS.objects.create(sms=sms,
                                              district=district,
-                                             user=request.user)
+                                             user=request.user,
+                                             sent_to_all=to_all)
             zones = district.zone_set.all()
             for zone in zones:
                 self.custom_save_zones(zone.id, sendsms)
