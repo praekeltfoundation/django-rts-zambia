@@ -3206,3 +3206,61 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
         p.then(done, done);
     });
 });
+
+
+describe("When using the USSD line as a recognised MSISDN to report update the school data", function() {
+
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 2,
+                    "rts_emis": 1
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    it.only("it should select dsiplay choice to continue update the school registration data", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "4",
+            next_state: "manage_update_school_data",
+            response: "^You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue:\\.$"
+        });
+        p.then(done, done);
+    });
+});
