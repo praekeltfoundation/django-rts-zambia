@@ -481,7 +481,9 @@ function GoRtsZambia() {
                     [
                         new Choice("perf_teacher_ts_number", "Report on teacher performance."),
                         new Choice("perf_learner_boys_total", "Report on learner performance."),
-                        new Choice("manage_change_emis", "Change my school.")
+                        new Choice("manage_change_emis", "Change my school."),
+                        new Choice("manage_update_school_data", " Update my school’s registration data.")
+
                     ]
                 );
             }
@@ -637,6 +639,16 @@ function GoRtsZambia() {
             new Choice("manage_change_msisdn_emis_try_2", "Try again"),
             new Choice("reg_exit_emis", "Exit")
         ]
+    ));
+    //
+    //
+    //
+    //
+
+    self.add_state(new FreeText(
+        "manage_update_school_data",
+        "manage_change_emis_validator",
+        "You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue:."
     ));
 
     self.add_state(new FreeText(
