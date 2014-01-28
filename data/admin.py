@@ -9,7 +9,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 
 
 class SchoolDataAdmin(ManagePermissions):
-    list_display = ["emis", "name", "classrooms", "teachers",
+    list_display = ["emis", "name", "classrooms", "teachers", "boys", "girls",
                     "teachers_g1", "teachers_g2", "boys_g2", "girls_g2", "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
@@ -18,6 +18,8 @@ class SchoolDataAdmin(ManagePermissions):
                 ("created_at", "Created At"),
                 ("created_by", "Created By"),
                 ("name", "Name"),
+                ("boys", "Boys"),
+                ("girls", "Girls"),
                 ("boys_g2", "Grade 2 Boys"),
                 ("girls_g2", "Grade 2 Girls"),
                 ("classrooms", "Classrooms"),
