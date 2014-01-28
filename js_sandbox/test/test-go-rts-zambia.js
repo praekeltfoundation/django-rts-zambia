@@ -439,7 +439,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
-                reg_gender: 'male'
+                reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51'
             }
         };
         var p = tester.check_state({
@@ -463,7 +465,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
-                reg_gender: 'male'
+                reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51'
             }
         };
         var p = tester.check_state({
@@ -486,7 +490,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_first_name: 'Jack',
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
-                reg_gender: 'male'
+                reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51'
             }
         };
         var p = tester.check_state({
@@ -510,6 +516,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5'
             }
         };
@@ -534,6 +542,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5'
             }
         };
@@ -558,6 +568,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5'
             }
@@ -583,6 +595,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5'
             }
@@ -608,6 +622,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2'
@@ -634,6 +650,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2'
@@ -660,6 +678,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -687,6 +707,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -714,6 +736,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -744,6 +768,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -772,6 +798,8 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
@@ -801,14 +829,14 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
                 reg_school_teachers_g2: '2',
                 reg_school_students_g2_boys: '10',
-                reg_school_students_g2_girls: '11',
-                reg_school_boys: "50",
-                reg_school_girls: "51"
+                reg_school_students_g2_girls: '11'
             }
         };
         var p = tester.check_state({
@@ -836,15 +864,15 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
                 reg_surname: 'Black',
                 reg_date_of_birth: '11091980',
                 reg_gender: 'male',
+                reg_school_boys: '50',
+                reg_school_girls: '51',
                 reg_school_classrooms: '5',
                 reg_school_teachers: '5',
                 reg_school_teachers_g1: '2',
                 reg_school_teachers_g2: '2',
                 reg_school_students_g2_boys: '10',
                 reg_school_students_g2_girls: '11',
-                reg_zonal_head: 'reg_zonal_head_name',
-                reg_school_boys: '50',
-                reg_school_girls: '51'
+                reg_zonal_head: 'reg_zonal_head_name'
             }
         };
         var p = tester.check_state({
