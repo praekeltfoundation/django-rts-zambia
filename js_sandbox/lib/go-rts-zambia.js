@@ -287,6 +287,10 @@ function GoRtsZambia() {
                     emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator')) + "/"
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
+
+            } else if (im.get_user_answer('initial_state') == 'manage_update_school_data') {
+                var p = self.get_contact(im);
+                p_ht = self.cms_get("data/headteacher/?emis__emis=" + contact["extras-rts_emis"]);
             } else {
                 // create new headteacher
                 headteacher_data = self.registration_data_headteacher_collect();
