@@ -640,15 +640,16 @@ function GoRtsZambia() {
             new Choice("reg_exit_emis", "Exit")
         ]
     ));
-    //
-    //
-    //
-    //
 
-    self.add_state(new FreeText(
+    self.add_state(new ChoiceState(
         "manage_update_school_data",
-        "manage_change_emis_validator",
-        "You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue:."
+        function(choice) {
+            return choice.value;
+        },
+        "You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue.",
+        [
+            new Choice("reg_school_boys", "Continue")
+        ]
     ));
 
     self.add_state(new FreeText(
