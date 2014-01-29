@@ -1170,10 +1170,11 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -2083,10 +2084,11 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "2",
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -2174,10 +2176,11 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -3163,10 +3166,11 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             user: user,
             content: "1",
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -3251,7 +3255,7 @@ describe("When using the USSD line as a recognised MSISDN to report update the s
         });
     });
 
-    it.only("it should select display choice to continue update the school registration data", function (done) {
+    it("it should select display choice to continue update the school registration data", function (done) {
         var user = {
             current_state: 'initial_state'
         };
@@ -3265,7 +3269,7 @@ describe("When using the USSD line as a recognised MSISDN to report update the s
         p.then(done, done);
     });
 
-    it("on continue pressed should reirect to reg_school_boys", function (done) {
+    it("on continue pressed should redirect to reg_school_boys state", function (done) {
         var user = {
             current_state: 'manage_update_school_data',
             answers: {
