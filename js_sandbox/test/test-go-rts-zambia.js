@@ -25,6 +25,7 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_headteacher_zonal.json',
     'test/fixtures/post_registration_school.json',
     'test/fixtures/post_registration_school_update.json',
+    'test/fixtures/post_registration_school_manage_update_data.json',
     'test/fixtures/post_performance_teacher.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
@@ -3281,6 +3282,35 @@ describe("When using the USSD line as a recognised MSISDN to report update the s
             content: "1",
             next_state: "reg_school_boys",
             response: "^How many boys do you have in your school\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it.only("saying are zonal head after association with new school should thank long and close", function (done) {
+        var user = {
+            current_state: 'reg_zonal_head',
+            answers: {
+                initial_state: 'manage_update_school_data',
+                reg_school_boys: '100',
+                reg_school_girls: '101',
+                reg_school_classrooms: '10',
+                reg_school_teachers: '15',
+                reg_school_teachers_g1: '5',
+                reg_school_teachers_g2: '4',
+                reg_school_students_g2_boys: '55',
+                reg_school_students_g2_girls: '60'
+
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_thanks_zonal_head",
+            response: "^Well done! You are now registered as a Zonal Head" +
+                " Teacher\\. When you are ready, dial in to start" +
+                " reporting\\. You will also receive monthly SMS's from" +
+                " your zone\\.$",
+            continue_session: false
         });
         p.then(done, done);
     });
