@@ -3251,7 +3251,7 @@ describe("When using the USSD line as a recognised MSISDN to report update the s
         });
     });
 
-    it.only("it should select dsiplay choice to continue update the school registration data", function (done) {
+    it.only("it should select display choice to continue update the school registration data", function (done) {
         var user = {
             current_state: 'initial_state'
         };
@@ -3259,7 +3259,24 @@ describe("When using the USSD line as a recognised MSISDN to report update the s
             user: user,
             content: "4",
             next_state: "manage_update_school_data",
-            response: "^You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue:\\.$"
+            response: "^You'll now be asked to re-enter key school details to " +
+                        "ensure the records are accurate. Enter 1 to continue."
+        });
+        p.then(done, done);
+    });
+
+    it("on continue pressed should reirect to reg_school_boys", function (done) {
+        var user = {
+            current_state: 'manage_update_school_data',
+            answers: {
+                initial_state: 'manage_update_school_data'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_school_boys",
+            response: "^How many boys do you have in your school\\?$"
         });
         p.then(done, done);
     });
