@@ -3213,7 +3213,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
 });
 
 
-describe("When using the USSD line as a recognised MSISDN to report update the school data", function() {
+describe("When using the USSD line as a recognised MSISDN to update the school data from the manage_update_school_data state", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
@@ -3286,7 +3286,7 @@ describe("When using the USSD line as a recognised MSISDN to report update the s
         p.then(done, done);
     });
 
-    it.only("saying are zonal head after association with new school should thank long and close", function (done) {
+    it("saying are zonal head after association with new school should thank long and close", function (done) {
         var user = {
             current_state: 'reg_zonal_head',
             answers: {
