@@ -34,7 +34,7 @@ class TestAdminCreation(TestCase):
         Testing posted SMS
         """
         self.client.login(username=self.d1.username,
-                          password="d1") 
+                          password="d1")
         url = reverse("admin:sms_sendsms_add")
         data = {"sms": "Sending the SMS 1",
                 'tempsmszones_set-INITIAL_FORMS': 0,
