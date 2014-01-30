@@ -6,6 +6,8 @@ from tastypie.api import Api
 # Setting the API base name and registering the API resources using
 # Tastypies API function
 api_resources = Api(api_name='v1')
+
+api_resources.register(api.DistrictAdminResource())
 api_resources.register(api.HeadTeacherResource())
 api_resources.register(api.SchoolDataResource())
 api_resources.register(api.TeacherPerformanceDataResource())

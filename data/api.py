@@ -3,12 +3,25 @@ from tastypie.authorization import Authorization
 from tastypie import fields
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
                     LearnerPerformanceData, InboundSMS,
-                    AcademicAchievementCode)
+                    AcademicAchievementCode, DistrictAdmin)
 from django.conf.urls import url
 
 # Project
 from rts.utils import (CSVSerializer, CSVModelResource,
                        OverrideApiAuthentication)
+
+
+class DistrictAdminResource(ModelResource):
+    """
+    """
+    district = fields.ForeignKey("hierarchy.api.DistrictResource", 'district', full=True)
+    class Meta:
+        queryset = DistrictAdmin.objects.all()
+        resource_name = "district_admin"
+        list_allowed_methods = ['post', 'get']
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
 
 
 class HeadTeacherResource(ModelResource):
