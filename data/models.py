@@ -3,6 +3,20 @@ import mockups
 from mockups.generators import ChoiceGenerator, IntegerGenerator
 
 
+class DistrictAdmin(models.Model):
+    first_name = models.CharField(max_length=50, verbose_name=u'First Name')
+    last_name = models.CharField(max_length=50, verbose_name=u'Last Name')
+    district = models.ForeignKey("hierarchy.District")
+    id_number = models.CharField(max_length=30)
+    date_of_birth = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+    class Meta:
+        verbose_name = "District Admin"
+
 
 class HeadTeacher(models.Model):
     first_name = models.CharField(max_length=50, verbose_name=u'First Name')
