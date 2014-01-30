@@ -11,7 +11,9 @@
         "name":"School One",
         "teachers": 5,
         "teachers_g1": 2,
-        "teachers_g2": 2
+        "teachers_g2": 2,
+        "boys": 50,
+        "girls": 51
     },
     "body":  {
         "created_at": "2013-08-14T19:57:50.232678",
@@ -42,7 +44,9 @@
         "name": "School One",
         "resource_uri": "/api/data/school/2/",
         "teachers": 5,
-        "teachers_g1": 2,        
-        "teachers_g2": 2
+        "teachers_g1": 2,
+        "teachers_g2": 2,
+        "boys": 50,
+        "girls": 51
     }
 }

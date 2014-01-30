@@ -157,7 +157,9 @@ function GoRtsZambia() {
             "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1')),
             "teachers_g2": parseInt(im.get_user_answer('reg_school_teachers_g2')),
             "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys')),
-            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'))
+            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls')),
+            "boys": parseInt(im.get_user_answer('reg_school_boys')),
+            "girls": parseInt(im.get_user_answer('reg_school_girls'))
         };
 
         return school_data;
@@ -285,8 +287,12 @@ function GoRtsZambia() {
                     emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator')) + "/"
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
+
+            } else if (im.get_user_answer('initial_state') == 'manage_update_school_data') {
+                var p = self.get_contact(im);
+                p_ht = self.cms_get("data/headteacher/?emis__emis=" + contact["extras-rts_emis"]);
             } else {
-                // create new headteacher 
+                // create new headteacher
                 headteacher_data = self.registration_data_headteacher_collect();
                 p_ht = self.cms_post("data/headteacher/", headteacher_data);
             }
@@ -475,11 +481,13 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to the Zambia School Gateway. What would you like to do?",
+                    "What would you like to do?",
                     [
                         new Choice("perf_teacher_ts_number", "Report on teacher performance."),
                         new Choice("perf_learner_boys_total", "Report on learner performance."),
-                        new Choice("manage_change_emis", "Change my school.")
+                        new Choice("manage_change_emis", "Change my school."),
+                        new Choice("manage_update_school_data", "Update my school’s registration data.")
+
                     ]
                 );
             }
@@ -637,6 +645,17 @@ function GoRtsZambia() {
         ]
     ));
 
+    self.add_state(new ChoiceState(
+        "manage_update_school_data",
+        function(choice) {
+            return choice.value;
+        },
+        "You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue.",
+        [
+            new Choice("reg_school_boys", "Continue")
+        ]
+    ));
+
     self.add_state(new FreeText(
         "manage_change_emis",
         "manage_change_emis_validator",
@@ -744,12 +763,34 @@ function GoRtsZambia() {
 
     self.add_state(new ChoiceState(
         'reg_gender',
-        'reg_school_classrooms',
+        'reg_school_boys',
         "What is your gender?",
         [
             new Choice("female", "Female"),
             new Choice("male", "Male")
         ]
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_boys",
+        "reg_school_girls",
+        "How many boys do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        'Please provide a number value for how many boys you have in your school.'
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_girls",
+        "reg_school_classrooms",
+        "How many girls do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        'Please provide a number value for how many girls you have in your school.'
     ));
 
     self.add_state(new FreeText(
