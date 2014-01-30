@@ -8,6 +8,7 @@ class SendSMS(models.Model):
     replies = models.IntegerField(null=True)
     user = models.ForeignKey(User)
     district = models.ForeignKey('hierarchy.District')
+    sent_to_all = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
