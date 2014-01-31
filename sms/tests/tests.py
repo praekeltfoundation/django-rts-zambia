@@ -169,6 +169,18 @@ class TestSendSMSToZone(TestCase):
                           "Choose all or specific zones not both")
         self.assertEquals(response.request["PATH_INFO"], self.sms_zones_view)
 
+    def test_validation_for_for_nothing_is_selected(self):
+        self.client.login(username=self.district_admin.username,
+                          password="pass123")
+        data = {"sms": "SMS MESSAGE"}
+
+        response = self.client.post(self.sms_zones_view,
+                                    data=data,
+                                    follow=True)
+        self.assertEquals(response.context["zone_form"].errors["__all__"][0],
+                          "Please choose an option")
+        self.assertEquals(response.request["PATH_INFO"], self.sms_zones_view)
+
 
 
 class TestSendSMSToDistrict(TestCase):
@@ -305,4 +317,17 @@ class TestSendSMSToDistrict(TestCase):
                                     follow=True)
         self.assertEquals(response.context["district_form"].errors["__all__"][0],
                           'Choose all or specific districts not both')
+        self.assertEquals(response.request["PATH_INFO"], self.sms_district_view)
+
+
+    def test_validation_for_for_nothing_is_selected(self):
+        self.client.login(username=self.rts_staff.username,
+                          password="pass123")
+        data = {"sms": "SMS MESSAGE"}
+
+        response = self.client.post(self.sms_district_view,
+                                    data=data,
+                                    follow=True)
+        self.assertEquals(response.context["district_form"].errors["__all__"][0],
+                          "Please choose an option")
         self.assertEquals(response.request["PATH_INFO"], self.sms_district_view)
