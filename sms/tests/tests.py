@@ -26,6 +26,9 @@ class TestAdminCreation(TestCase):
 class TestSendSMSToZone(TestCase):
     fixtures = ['test_hierarchy.json', 'test_data.json', 'test_sms_hierarchy_upload.json', 'test_sms_auth.json', 'test_sms_user_district.json']
 
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
+                       CELERY_ALWAYS_EAGER = True,
+                       BROKER_BACKEND = 'memory',)
     def setUp(self):
         # Specific District Admin
         # self.d1 = User.objects.get(username="d1")
@@ -171,6 +174,9 @@ class TestSendSMSToZone(TestCase):
 class TestSendSMSToDistrict(TestCase):
     fixtures = ['test_hierarchy.json', 'test_data.json']
 
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
+                       CELERY_ALWAYS_EAGER = True,
+                       BROKER_BACKEND = 'memory',)
     def setUp(self):
         self.rts_staff = User.objects.create_user('rts_staff',
                                                'rts_staff@thebeatles.com',
@@ -188,7 +194,7 @@ class TestSendSMSToDistrict(TestCase):
                                                              district=District.objects.get(name="Mporokoso"))
 
         self.sms_district_view = reverse("admin:sms_sendsms_districts_view")
-        self.sms_zone_view = reverse("admin:sms_sendsms_zone_view")
+        self.sms_zone_view = reverse("admin:sms_sendsms_zones_view")
         self.sms_add_view = reverse("admin:sms_sendsms_add")
         self.admin_index = reverse("admin:index")
 
