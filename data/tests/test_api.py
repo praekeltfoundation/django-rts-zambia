@@ -75,9 +75,6 @@ class TestDistrictAdmin(ResourceTestCase):
 
 
     def test_good_post_teacherperformance_json_data_by_district_admin(self):
-        """
-            Testing good post teacher performance data.
-        """
         district_admin = utils.create_district_admin()
 
         response = self.api_client.get("%s%s/" % (self.dist_admin_url, district_admin.id))
@@ -167,6 +164,70 @@ class TestDistrictAdmin(ResourceTestCase):
         self.assertEqual("Musungu", teacher.emis.name)
         self.assertEqual(district_admin_id, teacher.created_by_da.id)
         self.assertFalse(teacher.created_by)
+
+
+    def test_good_post_learnerperformance_json_data_by_district_admin(self):
+        district_admin = utils.create_district_admin()
+
+        response = self.api_client.get("%s%s/" % (self.dist_admin_url, district_admin.id))
+        json_item = json.loads(response.content)
+
+        district_admin_uri = json_item['resource_uri']
+        district_admin_id = json_item['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/learnerperformance',
+                      'api_name': 'v1'})
+        response = self.api_client.post(url,
+                                    format="json",
+                                    data={"gender": "female",
+                                    "total_number_pupils": 40,
+                                    "phonetic_awareness": 50,
+                                    "vocabulary": 15,
+                                    "reading_comprehension": 12,
+                                    "writing_diction": 13,
+                                    "below_minimum_results": 14,
+                                    "minimum_results": 15,
+                                    "desirable_results": 16,
+                                    "outstanding_results": 17,
+                                    "created_by_da": district_admin_uri,
+                                    "emis": "/api/v1/school/emis/4813/"
+                                    })
+
+        json_item = json.loads(response.content)
+        self.assertEqual("female", json_item["gender"])
+        self.assertEqual(40, json_item["total_number_pupils"])
+        self.assertEqual(50, json_item["phonetic_awareness"])
+        self.assertEqual(15, json_item["vocabulary"])
+        self.assertEqual(12, json_item["reading_comprehension"])
+        self.assertEqual(13, json_item["writing_diction"])
+        self.assertEqual(14, json_item["below_minimum_results"])
+        self.assertEqual(15, json_item["minimum_results"])
+        self.assertEqual(16, json_item["desirable_results"])
+        self.assertEqual(17, json_item["outstanding_results"])
+        self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["emis"]["name"])
+        self.assertFalse(json_item["created_by"])
+        self.assertEqual(district_admin_uri, json_item["created_by_da"]["resource_uri"])
+        self.assertEqual(district_admin_id, json_item["created_by_da"]["id"])
+
+        learner = LearnerPerformanceData.objects.all()[0]
+        self.assertEqual("female", learner.gender)
+        self.assertEqual(40, learner.total_number_pupils)
+        self.assertEqual(50, learner.phonetic_awareness)
+        self.assertEqual(15, learner.vocabulary)
+        self.assertEqual(12, learner.reading_comprehension)
+        self.assertEqual(13, learner.writing_diction)
+        self.assertEqual(14, learner.below_minimum_results)
+        self.assertEqual(15, learner.minimum_results)
+        self.assertEqual(16, learner.desirable_results)
+        self.assertEqual(17, learner.outstanding_results)
+        self.assertIsNotNone(learner.created_at)
+        self.assertEqual("Musungu", learner.emis.name)
+        self.assertEqual(4813, learner.emis.emis)
+        self.assertEqual(district_admin_id, learner.created_by_da.id)
+        self.assertFalse(learner.created_by)
+
 
 
 class TestHeadteacherAPI(ResourceTestCase):
