@@ -11,7 +11,7 @@ from rts.utils import (CSVSerializer, CSVModelResource,
                        OverrideApiAuthentication)
 
 
-class DistrictAdminUser(ModelResource):
+class DistrictAdminUserResource(ModelResource):
     """
     """
     district = fields.ForeignKey("hierarchy.api.DistrictResource", 'district', full=True)
