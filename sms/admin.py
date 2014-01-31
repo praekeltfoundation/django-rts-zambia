@@ -212,27 +212,31 @@ class SendSMSAdmin(ManagePermissions):
 
     def save_districts_zones_and_send_sms(self, request, districts_qs, sms, to_all=False):
         """This function gets the districts queryset and sms, then Creates a new SendSMS object,
-            then saves it in SMSZones clas, after which sends to the celery worker which sends the sms
+            return each district zones and passes to the shared `run_save_zone_and_send_to_sms` fnc
         """
         for district in districts_qs:
             sendsms = SendSMS.objects.create(sms=sms,
                                              district=district,
                                              user=request.user,
                                              sent_to_all=to_all)
-            zones = district.zone_set.all()
-            for zone in zones:
-                self.custom_save_zones(zone.id, sendsms)
-                task_query_zone.delay(zone.id, sendsms.sms)
+            zones_qs = district.zone_set.all()
+
+            self.run_save_zone_and_send_to_sms(zones_qs, sendsms)
 
 
     def save_zones_and_send_sms(self, request, zones_qs, district_obj, sms, to_all=False):
-        """This function gets the districts queryset and sms, then Creates a new SendSMS object,
-            then saves it in SMSZones clas, after which sends to the celery worker which sends the sms
+        """This function gets the zones queryset and sms, then Creates a new SendSMS object,
+            and passes to the shared `run_save_zone_and_send_to_sms` fnc
         """
         sendsms = SendSMS.objects.create(sms=sms,
                                          district=district_obj,
                                          user=request.user,
                                          sent_to_all=to_all)
+
+        self.run_save_zone_and_send_to_sms(zones_qs, sendsms)
+
+
+    def run_save_zone_and_send_to_sms(self, zones_qs, sendsms):
         for zone in zones_qs:
             self.custom_save_zones(zone.id, sendsms)
             task_query_zone.delay(zone.id, sendsms.sms)
