@@ -10,7 +10,7 @@ from tastypie.test import ResourceTestCase
 
 # Project
 from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
-                         LearnerPerformanceData, InboundSMS, DistrictUser)
+                         LearnerPerformanceData, InboundSMS, DistrictAdminUser)
 from data.tests import utils
 
 
@@ -53,7 +53,7 @@ class TestDistrictAdmin(ResourceTestCase):
         self.assertEqual(data["id_number"], json_item["id_number"])
         self.assertEqual(district.name, json_item["district"]["name"])
 
-        district_admin = DistrictUser.objects.get(id=json_item["id"])
+        district_admin = DistrictAdminUser.objects.get(id=json_item["id"])
         self.assertEqual(data["first_name"], district_admin.first_name)
         self.assertEqual(data["last_name"], district_admin.last_name)
         self.assertEqual(datetime.date(2012, 10, 12), district_admin.date_of_birth)

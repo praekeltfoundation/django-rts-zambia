@@ -3,7 +3,7 @@ import mockups
 from mockups.generators import ChoiceGenerator, IntegerGenerator
 
 
-class DistrictUser(models.Model):
+class DistrictAdminUser(models.Model):
     first_name = models.CharField(max_length=50, verbose_name=u'First Name')
     last_name = models.CharField(max_length=50, verbose_name=u'Last Name')
     district = models.ForeignKey("hierarchy.District")
