@@ -20,6 +20,9 @@ class ChooseDistricsForm(forms.Form):
         if "send_to_all" in data and len(data) > 1:
             raise forms.ValidationError(_("Choose all or specific districts not both"))
 
+        if "send_to_all" not in data and len(data) == 0:
+            raise forms.ValidationError(_("Please choose an option"))
+
         return cleaned_data
 
 
@@ -40,5 +43,8 @@ class ChooseZonesForm(forms.Form):
 
         if "send_to_all" in data and len(data) > 1:
             raise forms.ValidationError(_("Choose all or specific zones not both"))
+
+        if "send_to_all" not in data and len(data) == 0:
+            raise forms.ValidationError(_("Please choose an option"))
 
         return cleaned_data
