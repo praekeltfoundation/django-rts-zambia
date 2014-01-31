@@ -7,7 +7,7 @@ from tastypie.api import Api
 # Tastypies API function
 api_resources = Api(api_name='v1')
 
-api_resources.register(api.DistrictUserResource())
+api_resources.register(api.DistrictAdminUserResource())
 api_resources.register(api.HeadTeacherResource())
 api_resources.register(api.SchoolDataResource())
 api_resources.register(api.TeacherPerformanceDataResource())
