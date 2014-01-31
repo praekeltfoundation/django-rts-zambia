@@ -8,8 +8,8 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'DistrictUser'
-        db.create_table(u'data_districtuser', (
+        # Adding model 'DistrictAdminUser'
+        db.create_table(u'data_districtadminuser', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
@@ -18,12 +18,12 @@ class Migration(SchemaMigration):
             ('date_of_birth', self.gf('django.db.models.fields.DateField')()),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
-        db.send_create_signal(u'data', ['DistrictUser'])
+        db.send_create_signal(u'data', ['DistrictAdminUser'])
 
 
     def backwards(self, orm):
-        # Deleting model 'DistrictUser'
-        db.delete_table(u'data_districtuser')
+        # Deleting model 'DistrictAdminUser'
+        db.delete_table(u'data_districtadminuser')
 
 
     models = {
@@ -32,8 +32,8 @@ class Migration(SchemaMigration):
             'achievement': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        u'data.districtuser': {
-            'Meta': {'object_name': 'DistrictUser'},
+        u'data.districtadminuser': {
+            'Meta': {'object_name': 'DistrictAdminUser'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_of_birth': ('django.db.models.fields.DateField', [], {}),
             'district': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['hierarchy.District']"}),
