@@ -35,7 +35,7 @@
   </ul>
 {% endif %}{% endif %}
 {% endblock %}
-<form action="{% url 'admin:sms_sendsms_districts_view' %}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+<form action="{% url 'admin:sms_sendsms_zones_view' %}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
 
     {{ zone_form.as_p }}
 
