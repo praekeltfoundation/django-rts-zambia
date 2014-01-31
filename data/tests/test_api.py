@@ -503,6 +503,9 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(8, json_item["academic_level"]["id"])
         self.assertEqual(4813, json_item["emis"]["emis"])
         self.assertEqual("Musungu", json_item["emis"]["name"])
+        self.assertFalse(json_item["created_by_da"])
+        self.assertEqual(headteacher_uri, json_item["created_by"]["resource_uri"])
+        self.assertEqual(headteacher_id, json_item["created_by"]["id"])
 
         teacher = TeacherPerformanceData.objects.get(pk=1)
         self.assertEqual("male", teacher.gender)
@@ -527,6 +530,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(4813, teacher.emis.emis)
         self.assertEqual(4813, teacher.created_by.emis.emis)
         self.assertEqual(headteacher_id, teacher.created_by.id)
+        self.assertFalse(teacher.created_by_da)
 
 
 class TestLearnerPerformanceDataAPI(ResourceTestCase):
