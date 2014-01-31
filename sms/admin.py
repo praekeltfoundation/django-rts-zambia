@@ -20,69 +20,6 @@ from users.models import UserDistrict
 from data.models import InboundSMS
 
 
-# class SMSZoneForm(forms.ModelForm):
-#     all = forms.BooleanField(label="All", required=False)
-
-#     class Meta:
-#         model = TempSMSZones
-#         exclude = ["zone",
-#                    "send_sms",
-#                    "num_sent"]
-
-
-# class SendSMSForm(forms.ModelForm):
-
-#     sms = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 20}))
-#     class Meta:
-#         models = SendSMS
-#         exclude = ["total_sent",
-#                     "replies",
-#                    "user",
-#                    "district",
-#                    "created_at"]
-
-#     def __init__(self, *args, **kwargs):
-#         super(SendSMSForm, self).__init__(*args, **kwargs)
-
-
-# class SMSZoneFormset(BaseInlineFormSet):
-#     def clean(self):
-#         super(SMSZoneFormset, self).clean()
-
-#         for form in self.forms:
-#             if not hasattr(form, 'cleaned_data'):
-#                 continue
-
-#             data = dict((k, v) for k, v in form.cleaned_data.iteritems() if v)
-#             if "all" in data and len(data) > 2:
-#                 raise forms.ValidationError("Choose all or specific zones not both")
-
-
-
-# class SMSZoneInline(admin.StackedInline):
-#     model = TempSMSZones
-#     form = SMSZoneForm
-#     formset = SMSZoneFormset
-#     max_num = 1
-
-#     def get_fieldsets(self, request, obj=None):
-#         fields_array = super(SMSZoneInline, self).get_fieldsets(request, obj=None)
-#         fields = fields_array[0][1]
-#         result = []
-#         temp = []
-#         if UserDistrict.objects.filter(user_id=request.user.id).exists():
-            # district = District.objects.get(id=request.user.userdistrict.district_id)
-            # zones = district.zone_set.all()
-#             query_dict = [temp.append(str(obj.id)) for obj in zones]
-
-#         for field in fields["fields"]:
-#             if field in temp:
-#                 result.append(field)
-#         result.insert(0, "all")
-#         fields_array = [(None, {'fields': result})]
-#         return fields_array
-
-
 class SendSMSAdmin(ManagePermissions):
     list_display = ["sms", "created_by", "total_sent_messages", "replies", "district", "sent_to_all", "created_at"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
@@ -119,10 +56,6 @@ class SendSMSAdmin(ManagePermissions):
         return HttpResponseRedirect(reverse("admin:sms_sendsms_changelist"))
 
     def zones_view(self, request):
-        # ===============================
-        # Add validation & test for nothing selected
-        # Add test and validation for districts form
-        # ===============================
         if not self.is_district_admin(request):
             messages.error(request, "You don't have the correct permissions to view this page")
             return HttpResponseRedirect(reverse("admin:index"))
