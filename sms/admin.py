@@ -14,7 +14,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 from rts.actions import export_select_fields_csv_action
 from sms.models import SendSMS, SMSZones, TempSMSZones
 from hierarchy.models import Zone, District
-from sms.forms import ChooseDistricsForm
+from sms.forms import ChooseDistrictsForm
 from sms.tasks import task_query_zone
 from users.models import UserDistrict
 from data.models import InboundSMS
@@ -185,7 +185,7 @@ class SendSMSAdmin(ManagePermissions):
         districts = District.objects.all()
 
         if request.method == "POST":
-            district_form = ChooseDistricsForm(request.POST, queryset=districts)
+            district_form = ChooseDistrictsForm(request.POST, queryset=districts)
 
             if district_form.is_valid():
                 if district_form.cleaned_data["send_to_all"] == True:
@@ -204,7 +204,7 @@ class SendSMSAdmin(ManagePermissions):
                 messages.success(request, "The messages have been sent")
                 return HttpResponseRedirect(reverse("admin:sms_sendsms_changelist"))
         else:
-            district_form = ChooseDistricsForm(queryset=districts)
+            district_form = ChooseDistrictsForm(queryset=districts)
         context = {"title": "Send SMS to Headteachers in Districts",
                    "opts": opts,
                    "app_label": opts.app_label,
