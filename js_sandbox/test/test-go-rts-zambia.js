@@ -3319,13 +3319,29 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
 
     it("choosing a district should go to enter first name state", function (done) {
         var user = {
-            current_state: 'reg_district_official'
+            current_state: 'reg_district_official',
+            answers: {}
         };
         var p = tester.check_state({
             user: user,
             content: "2",
             next_state: "reg_district_official_first_name",
             response: "^Please enter your FIRST name\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on entering your first name should ask for your surname", function (done) {
+        var user = {
+            current_state: 'reg_district_official_first_name',
+            answers: {
+                reg_district_official: 15}
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "Sponge Bob",
+            next_state: "reg_district_official_surname",
+            response: "^Now please enter your SURNAME\\.$"
         });
         p.then(done, done);
     });
