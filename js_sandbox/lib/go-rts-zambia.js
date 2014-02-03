@@ -465,7 +465,8 @@ function GoRtsZambia() {
                     },
                     "Welcome to the Zambia School Gateway! What would you like to do?",
                     [
-                        new Choice("reg_emis", "Register as a new user."),
+                        new Choice("reg_emis", "Register as a Head Teacher."),
+                        new Choice("reg_district_official", "Register as a District Official."),
                         new Choice("manage_change_emis_error", "Change my school."),
                         new Choice("manage_change_msisdn_emis", "Change my primary cell phone number.")
                     ]
@@ -488,6 +489,15 @@ function GoRtsZambia() {
         });
         return p;
     });
+
+// District official
+/**********************************************************/
+    self.add_state(new FreeText(
+        "reg_district_official",
+        "reg_emis_validator",
+        "Please enter your district name."
+    ));
+/**********************************************************/
 
     self.add_state(new FreeText(
         "reg_emis",
