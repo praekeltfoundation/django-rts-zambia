@@ -94,7 +94,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             content: null,
             next_state: "initial_state",
             response: "^Welcome to the Zambia School Gateway! What would you like to do\\?[^]" +
-                    "1. Register as a new user\\.[^]" +
+                    "1. Register as a Head Teacher\\.[^]" +
                     "2. Change my school\\.[^]" +
                     "3. Change my primary cell phone number\\.$"
         });
@@ -3202,6 +3202,60 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             next_state: "end_state",
             response: "^Goodbye! Thank you for using the Gateway\\.$",
             continue_session: false
+        });
+        p.then(done, done);
+    });
+});
+
+
+describe.only("When using the USSD line as an unrecognised MSISDN - register as district admin", function() {
+
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    it("selecting to register as district admin should ask for first name", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "reg_district_official",
+            response: "^Please enter your district name.$"
         });
         p.then(done, done);
     });
