@@ -157,7 +157,9 @@ function GoRtsZambia() {
             "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1')),
             "teachers_g2": parseInt(im.get_user_answer('reg_school_teachers_g2')),
             "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys')),
-            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'))
+            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls')),
+            "boys": parseInt(im.get_user_answer('reg_school_boys')),
+            "girls": parseInt(im.get_user_answer('reg_school_girls'))
         };
 
         return school_data;
@@ -286,7 +288,7 @@ function GoRtsZambia() {
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
             } else {
-                // create new headteacher 
+                // create new headteacher
                 headteacher_data = self.registration_data_headteacher_collect();
                 p_ht = self.cms_post("data/headteacher/", headteacher_data);
             }
@@ -659,7 +661,7 @@ function GoRtsZambia() {
         if (self.check_valid_emis(EMIS)) { // EMIS valid
             return new ChoiceState(
                 "manage_change_emis_validator",
-                "reg_school_classrooms",
+                "reg_school_boys",
                 "Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
                     "number to reclaim the EMIS and continue to receive SMS updates.",
                 [
@@ -744,12 +746,34 @@ function GoRtsZambia() {
 
     self.add_state(new ChoiceState(
         'reg_gender',
-        'reg_school_classrooms',
+        'reg_school_boys',
         "What is your gender?",
         [
             new Choice("female", "Female"),
             new Choice("male", "Male")
         ]
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_boys",
+        "reg_school_girls",
+        "How many boys do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        'Please provide a number value for how many boys you have in your school.'
+    ));
+
+    self.add_state(new FreeText(
+        "reg_school_girls",
+        "reg_school_classrooms",
+        "How many girls do you have in your school?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content);
+        },
+        'Please provide a number value for how many girls you have in your school.'
     ));
 
     self.add_state(new FreeText(
