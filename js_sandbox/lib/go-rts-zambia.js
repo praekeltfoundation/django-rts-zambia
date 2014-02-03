@@ -357,6 +357,15 @@ function GoRtsZambia() {
         return p;
     };
 
+    self.cms_district_load = function () {
+        var p = self.cms_get("district/");
+        p.add_callback(function(result){
+            var districts_dict = result.objects;
+            im.config.districts_dict = districts_dict;
+        });
+        return p;
+    };
+
     self.cms_performance_teacher = function(im) {
         var p = self.get_contact(im);
         p.add_callback(function(result) {
@@ -1386,7 +1395,11 @@ function GoRtsZambia() {
 
     self.on_config_read = function(event){
         // Run calls out to the APIs to load dynamic states
-        return self.cms_hierarchy_load();
+        var p = new Promise();
+        p.add_callback(self.cms_hierarchy_load);
+        p.add_callback(self.cms_district_load);
+        p.callback();
+        return p;
     };
 }
 
