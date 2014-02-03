@@ -1081,8 +1081,8 @@ describe("When using the USSD line as an recognised MSISDN to change school", fu
         var p = tester.check_state({
             user: user,
             content: "1",
-            next_state: "reg_school_classrooms",
-            response: "^How many classrooms do you have in your school\\?$"
+            next_state: "reg_school_boys",
+            response: "^How many boys do you have in your school\\?$"
         });
         p.then(done, done);
     });
