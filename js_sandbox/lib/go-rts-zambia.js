@@ -541,7 +541,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_district_official_surname",
         "reg_district_official_surname",
-        "Please enter your surname."
+        "Now please enter your SURNAME."
     ));
 /**********************************************************/
 
