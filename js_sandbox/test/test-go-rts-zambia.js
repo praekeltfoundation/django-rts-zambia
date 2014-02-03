@@ -19,6 +19,7 @@ describe("test_api", function() {
 
 var test_fixtures_full = [
     'test/fixtures/get_hierarchy.json',
+    'test/fixtures/get_district.json',
     'test/fixtures/put_registration_update_msisdn.json',
     'test/fixtures/put_registration_update_emis.json',
     'test/fixtures/post_registration_headteacher.json',
@@ -3247,7 +3248,7 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         });
     });
 
-    it("selecting to register as district admin should ask for first name", function (done) {
+    it("selecting to register as district admin should ask for district name", function (done) {
         var user = {
             current_state: 'initial_state'
         };
@@ -3255,7 +3256,76 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
             user: user,
             content: "2",
             next_state: "reg_district_official",
-            response: "^Please enter your district name.$"
+            response: "^Please enter your district name\\.[^]" +
+                "1. Chembe[^]" +
+                "2. Chinsali[^]" +
+                "3. Chipata[^]" +
+                "4. Chipili[^]" +
+                "5. Isoka[^]" +
+                "6. Limulunga[^]" +
+                "7. Lundazi[^]" +
+                "8. Mansa[^]" +
+                "9. More$"
+
+        });
+        p.then(done, done);
+    });
+
+    it("choosing more a second time should show more districts", function (done) {
+        var user = {
+            current_state: 'reg_district_official',
+            answers: {}
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
+            next_state: "reg_district_official",
+            response: "^Please enter your district name\\.[^]" +
+                "1. Mongu[^]" +
+                "2. Mporokoso[^]" +
+                "3. Mufumbwe[^]" +
+                "4. Mulobezi[^]" +
+                "5. Mungwi[^]" +
+                "6. Mwandi[^]" +
+                "7. Mwense[^]" +
+                "8. Sesheke[^]" +
+                "9. More[^]" +
+                "10. Back$"
+
+        });
+        p.then(done, done);
+    });
+
+    it("choosing more a third time should show more districts", function (done) {
+        var user = {
+            current_state: 'reg_district_official',
+            answers: {},
+            pages: {
+                    reg_district_official: 8
+                }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
+            next_state: "reg_district_official",
+            response: "^Please enter your district name\\.[^]" +
+                "1. Shiwang'andu[^]" +
+                "2. Solwezi[^]" +
+                "3. Back$"
+
+        });
+        p.then(done, done);
+    });
+
+    it("choosing a district should go to enter first name state", function (done) {
+        var user = {
+            current_state: 'reg_district_official'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "reg_district_official_first_name",
+            response: "^Please enter your FIRST name\\.$"
         });
         p.then(done, done);
     });
