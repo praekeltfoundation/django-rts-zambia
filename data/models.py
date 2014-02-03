@@ -31,6 +31,8 @@ class SchoolData(models.Model):
     name = models.CharField(max_length=100, verbose_name=u'Name')
     classrooms = models.IntegerField()
     teachers = models.IntegerField()
+    boys = models.IntegerField(null=True)  # null = True, to prevent migration and unittest issues
+    girls = models.IntegerField(null=True)  # null = True, to prevent migration and unittest issues
     teachers_g1 = models.IntegerField()
     teachers_g2 = models.IntegerField()
     boys_g2 = models.IntegerField()

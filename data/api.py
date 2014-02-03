@@ -2,8 +2,13 @@ from tastypie.resources import ModelResource, ALL_WITH_RELATIONS, ALL
 from tastypie.authorization import Authorization
 from tastypie import fields
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
-                    LearnerPerformanceData, InboundSMS, AcademicAchievementCode)
+                    LearnerPerformanceData, InboundSMS,
+                    AcademicAchievementCode)
 from django.conf.urls import url
+
+# Project
+from rts.utils import (CSVSerializer, CSVModelResource,
+                       OverrideApiAuthentication)
 
 
 class HeadTeacherResource(ModelResource):
@@ -47,7 +52,9 @@ class HeadTeacherResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>%s)/emis/(?P<emis>[\w\d_.-]+)/$" %
+                self._meta.resource_name, self.wrap_view('dispatch_detail'),
+                name="api_dispatch_detail"),
         ]
 
 
@@ -71,7 +78,8 @@ class SchoolDataResource(ModelResource):
             }
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
 
     class Meta:
         queryset = SchoolData.objects.all()
@@ -114,8 +122,10 @@ class TeacherPerformanceDataResource(ModelResource):
             }
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
-    academic_level = fields.ForeignKey(AcademicAchievementCodeResource, 'academic_level', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
+    academic_level = fields.ForeignKey(AcademicAchievementCodeResource,
+                                       'academic_level', full=True)
 
     class Meta:
         queryset = TeacherPerformanceData.objects.all()
@@ -141,7 +151,8 @@ class LearnerPerformanceDataResource(ModelResource):
             }
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
 
     class Meta:
         queryset = LearnerPerformanceData.objects.all()
@@ -157,9 +168,10 @@ class LearnerPerformanceDataResource(ModelResource):
 
 class InboundSMSResource(ModelResource):
     """
-    GET SPECIFIC HEADTEACHER ON EMIS
+    GET SMS
+    ::
 
-    "url": "<base_url>/api/v1/data/headteacher/?emis__emis=4817",,
+    "url": "<base_url>/api/v1/data/sms/",,
     "method": "GET",
 
     POSTING DATA
@@ -167,10 +179,11 @@ class InboundSMSResource(ModelResource):
     "url": "<base_url>/api/v1/data/sms/",
     "body": {
                 "message": "test_name",
-                "created_by": "/api/v1/data/headteacher/1/",
+                "created_by": "/api/v1/data/sms/1/",
             }
     """
-    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by', full=True)
 
     class Meta:
         queryset = InboundSMS.objects.all()
@@ -181,3 +194,148 @@ class InboundSMSResource(ModelResource):
         always_return_data = True
         filtering = {
             'created_by': ALL_WITH_RELATIONS}
+
+
+# =========================================================================
+# This is the CSV download function
+# =========================================================================
+class HeadTeacherCSVDownloadResource(CSVModelResource):
+    """
+    GET Head Teacher CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/headteacher/?username=name&api_key=key,
+    "method": "GET",
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+
+    class Meta:
+        queryset = HeadTeacher.objects.all()
+        resource_name = "csv/data/headteacher"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        return bundle
+
+
+class SchoolDataCSVDownloadResource(CSVModelResource):
+    """
+    GET School Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/school/?username=name&api_key=key,
+    "method": "GET",
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = SchoolData.objects.all()
+        resource_name = "csv/data/school"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
+
+
+class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
+    """
+    GET Academic Achievement Code CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/achievement/?username=name&api_key=key,
+    "method": "GET",
+    """
+    class Meta:
+        queryset = AcademicAchievementCode.objects.all()
+        resource_name = "csv/data/achievement"
+        list_allowed_methods = ['get']
+        authorization = Authorization()
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+
+class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
+    """
+    GET Teacher Perfomance Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/teacherperformance/?username=name&api_key=key,
+    "method": "GET",
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+    academic_level = fields.ForeignKey(AcademicAchievementCodeResource,
+                                       'academic_level')
+
+    class Meta:
+        queryset = TeacherPerformanceData.objects.all()
+        resource_name = "csv/data/teacherperformance"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        bundle.data['academic_level'] = bundle.obj.academic_level.id
+        return bundle
+
+
+class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
+    """
+    GET Learner Performance Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/learnerperformance/?username=name&api_key=key,
+    "method": "GET",
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = LearnerPerformanceData.objects.all()
+        resource_name = "csv/data/learnerperformance"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
+
+
+class InboundSMSCSVDownloadResource(CSVModelResource):
+    """
+    GET Inbound SMS CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/sms/?username=name&api_key=key,
+    "method": "GET",
+    """
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = InboundSMS.objects.all()
+        resource_name = "csv/data/sms"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+
+    def dehydrate(self, bundle):
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
