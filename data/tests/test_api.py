@@ -194,6 +194,8 @@ class TestSchoolDataAPI(ResourceTestCase):
                                     data={"name": "test_name",
                                     "classrooms": 30,
                                     "teachers": 40,
+                                    "boys": 115,
+                                    "girls": 120,
                                     "teachers_g1": 4,
                                     "teachers_g2": 8,
                                     "boys_g2": 15,
@@ -212,6 +214,8 @@ class TestSchoolDataAPI(ResourceTestCase):
         self.assertEqual(15, json_item["boys_g2"])
         self.assertEqual(12, json_item["girls_g2"])
         self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual(115, json_item["boys"])
+        self.assertEqual(120, json_item["girls"])
         self.assertEqual("Musungu", json_item["emis"]["name"])
 
         schooldata = SchoolData.objects.get(pk=1)
@@ -221,6 +225,8 @@ class TestSchoolDataAPI(ResourceTestCase):
         self.assertEqual(4, schooldata.teachers_g1)
         self.assertEqual(8, schooldata.teachers_g2)
         self.assertEqual(15, schooldata.boys_g2)
+        self.assertEqual(115, schooldata.boys)
+        self.assertEqual(120, schooldata.girls)
         self.assertEqual(12, schooldata.girls_g2)
         self.assertIsNotNone(schooldata.created_at)
         self.assertEqual("Musungu", schooldata.emis.name)
