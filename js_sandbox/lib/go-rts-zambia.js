@@ -10,6 +10,7 @@ var Promise = vumigo.promise.Promise;
 var success = vumigo.promise.success;
 var Choice = vumigo.states.Choice;
 var ChoiceState = vumigo.states.ChoiceState;
+var PaginatedChoiceState = vumigo.states.PaginatedChoiceState;
 var FreeText = vumigo.states.FreeText;
 var EndState = vumigo.states.EndState;
 var InteractionMachine = vumigo.state_machine.InteractionMachine;
@@ -360,8 +361,8 @@ function GoRtsZambia() {
     self.cms_district_load = function () {
         var p = self.cms_get("district/");
         p.add_callback(function(result){
-            var districts_dict = result.objects;
-            im.config.districts_dict = districts_dict;
+            var districts_json = result.objects;
+            im.config.districts_json = districts_json;
         });
         return p;
     };
@@ -501,10 +502,46 @@ function GoRtsZambia() {
 
 // District official
 /**********************************************************/
+
+    self.sortByKey = function(array, key) {
+        return array.sort(function(a,b){
+            var x = a[key]; var y = b[key];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
+    };
+
+    self.add_creator('reg_district_official', function(state_name, im){
+        var choices = [];
+
+        districts_json = im.config.districts_json;
+        districts_json.sort(function(a, b){
+                                return ((a.name < b.name) ?
+                                        -1 : ((a.name > b.name) ? 1 : 0)); });
+
+        districts_json = self.sortByKey(districts_json, "name");
+        for (var i=0; i<districts_json.length; i++){
+            var district = districts_json[i];
+            choices[i] = new Choice(district.id, district.name);
+        }
+        return new PaginatedChoiceState(state_name,
+                                        "reg_district_official_first_name",
+                                        "Please enter your district name.",
+                                        choices,
+                                        null,
+                                        null,
+                                        {});
+    });
+
     self.add_state(new FreeText(
-        "reg_district_official",
-        "reg_emis_validator",
-        "Please enter your district name."
+        "reg_district_official_first_name",
+        "reg_district_official_surname",
+        "Please enter your FIRST name."
+    ));
+
+    self.add_state(new FreeText(
+        "reg_district_official_surname",
+        "reg_district_official_surname",
+        "Please enter your surname."
     ));
 /**********************************************************/
 
