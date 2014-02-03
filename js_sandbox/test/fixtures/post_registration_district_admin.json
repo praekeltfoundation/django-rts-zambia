@@ -1,0 +1,31 @@
+{
+    "url": "http://qa/api/v1/data/district_admin/",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+            "first_name": "test_first_name",
+            "last_name": "test_last_name",
+            "date_of_birth": "2012-10-12T10:00:00",
+            "district": "/api/v1/district/1/",
+            "id_number": "za123456789"
+        },
+    "body": {
+        "created_at": "2014-02-03T12:22:38.158000",
+        "date_of_birth": "2012-10-12T10:00:00",
+        "district": {
+            "id": 1,
+            "name": "Mporokoso",
+            "province": {
+                "id": 1,
+                "name": "Northern Province",
+                "resource_uri": "/api/v1/province/1/"
+            },
+            "resource_uri": "/api/v1/district/1/"
+        },
+        "first_name": "test_first_name",
+        "id": 2,
+        "id_number": "za123456789",
+        "last_name": "test_last_name",
+        "resource_uri": "/api/v1/district_admin/2/"
+    }
+}
