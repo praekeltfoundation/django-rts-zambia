@@ -149,6 +149,38 @@ function GoRtsZambia() {
         }
     };
 
+    self.add_emis_district_official_to_contacts = function(content){
+        if (self.check_valid_emis(content)) {
+            // store in config if EMIS is valid
+            p_c = self.get_contact(im);
+            p_c.add_callback(function(result) {
+                var contact = result.contact;
+                var fields = {
+                    "rts_emis": content
+                };
+
+                var p_extra = im.api_request('contacts.update_extras', {
+                        key: contact.key,
+                        fields: fields
+                    });
+
+                p_extra.add_callback(function(result){
+                    if (result.success === true) {
+                        return true;
+                    } else {
+                        var p_log = im.log(result);
+                        return false;
+                    }
+                });
+                return p_extra;
+            });
+            return p_c;
+
+        } else {
+            return false;
+        }
+    };
+
     self.registration_data_school_collect = function(){
         var school_data = {
             "name": im.get_user_answer('reg_school_name'),
@@ -504,6 +536,26 @@ function GoRtsZambia() {
         });
         return p;
     });
+
+    self.add_state(new FreeText(
+        "add_emis_perf_teacher_ts_number",
+        "perf_teacher_ts_number",
+        "Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.",
+        function(content){
+            return self.add_emis_district_official_to_contacts(content);
+        },
+        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351."
+    ));
+
+    self.add_state(new FreeText(
+        "add_emis_perf_learner_boys_total",
+        "perf_learner_boys_total",
+        "Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.",
+        function(content){
+            return self.add_emis_district_official_to_contacts(content);
+        },
+        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351."
+    ));
 
     self.add_state(new FreeText(
         "reg_emis",
