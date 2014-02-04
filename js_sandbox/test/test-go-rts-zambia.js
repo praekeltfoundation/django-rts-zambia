@@ -3316,7 +3316,7 @@ describe("When using the USSD line as a recognised MSISDN to update the school d
     });
 });
 
-describe("", function() {
+describe("When a district admin is using the USSD line as a recognised MSISDN to add performance data", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
@@ -3348,7 +3348,8 @@ describe("", function() {
                 api.add_contact(dummy_contact);
                 api.update_contact_extras(dummy_contact, {
                     "rts_id": 2,
-                    "rts_emis": 1
+                    "rts_district_official_id_number": 1,
+                    "rts_district_official_district_id": 1
                 });
 
                 fixtures.forEach(function (f) {
@@ -3359,13 +3360,10 @@ describe("", function() {
         });
     });
 
-    it("", function (done) {
-        var user = {
-            current_state: 'initial_state'
-        };
+    it("first display navigation menu", function (done) {
         var p = tester.check_state({
-            user: user,
-            content: "",
+            user: null,
+            content: null,
             next_state: "",
             response: ""
         });

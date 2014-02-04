@@ -460,6 +460,7 @@ function GoRtsZambia() {
         var p = self.get_contact(im);
 
         p.add_callback(function(result) {
+            var choices;
             if (result.contact["extras-rts_id"] === undefined){
                 // unrecognised user
                 return new ChoiceState(
@@ -476,19 +477,28 @@ function GoRtsZambia() {
                 );
             } else {
                 // recognised user
+                if (result.contact["district_official_district_id"] === undefined) {
+                    // Assumes if they don't have a district they are a head teacher
+                    choices = [
+                            new Choice("perf_teacher_ts_number", "Report on teacher performance."),
+                            new Choice("perf_learner_boys_total", "Report on learner performance."),
+                            new Choice("manage_change_emis", "Change my school."),
+                            new Choice("manage_update_school_data", "Update my school’s registration data.")
+
+                        ];
+                } else {
+                    choices = [
+                            new Choice("add_emis_perf_teacher_ts_number", "Report on teacher performance."),
+                            new Choice("add_emis_perf_learner_boys_total", "Report on learner performance.")
+                        ];
+                }
                 return new ChoiceState(
                     state_name,
                     function(choice) {
                         return choice.value;
                     },
                     "What would you like to do?",
-                    [
-                        new Choice("perf_teacher_ts_number", "Report on teacher performance."),
-                        new Choice("perf_learner_boys_total", "Report on learner performance."),
-                        new Choice("manage_change_emis", "Change my school."),
-                        new Choice("manage_update_school_data", "Update my school’s registration data.")
-
-                    ]
+                    choices
                 );
             }
         });
