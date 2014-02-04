@@ -106,6 +106,8 @@ class TestDataCSVAPI(TestCase):
                               unicode(obj.teachers_g2),
                               unicode(obj.boys_g2),
                               unicode(obj.girls_g2),
+                              unicode(obj.boys),
+                              unicode(obj.girls),
                               unicode(obj.created_by.id),
                               self.convert_date_time_to_tastypie(obj.created_at),
                               unicode(obj.id),
@@ -119,6 +121,8 @@ class TestDataCSVAPI(TestCase):
                                       "teachers_g2",
                                       "girls_g2",
                                       "boys_g2",
+                                      "girls",
+                                      "boys",
                                       "created_at",
                                       "created_by",
                                       "emis"]))

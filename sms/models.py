@@ -8,6 +8,7 @@ class SendSMS(models.Model):
     replies = models.IntegerField(null=True)
     user = models.ForeignKey(User)
     district = models.ForeignKey('hierarchy.District')
+    sent_to_all = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -37,14 +38,3 @@ class SMSZones(models.Model):
     class Meta:
         verbose_name = "SMS Zone"
         verbose_name_plural = "SMS Zone"
-
-
-class TempSMSZones(models.Model):
-    temp_sms = models.ForeignKey(SendSMS, verbose_name=u'SMSing')
-
-    def __unicode__(self):
-        return "%s" % self.temp_sms
-
-    class Meta:
-        verbose_name = "SMS To Zone"
-        verbose_name_plural = "SMS To Zones"

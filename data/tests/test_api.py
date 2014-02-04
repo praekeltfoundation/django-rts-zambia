@@ -1,9 +1,75 @@
-from tastypie.test import ResourceTestCase
-from django.core.urlresolvers import reverse
-import json
-from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
-                         LearnerPerformanceData, InboundSMS)
+# Python
 import datetime
+import json
+
+# Django
+from django.core.urlresolvers import reverse
+
+# Thirdy Party
+from tastypie.test import ResourceTestCase
+
+# Project
+from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
+                         LearnerPerformanceData, InboundSMS, DistrictAdminUser)
+from data.tests import utils
+
+
+
+class TestDistrictAdmin(ResourceTestCase):
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestDistrictAdmin, self).setUp()
+        self.dist_admin_url = reverse('api_dispatch_list',
+                                      kwargs={'resource_name': 'district_admin',
+                                      'api_name': 'v1'})
+
+    def test_basic_api_functionality(self):
+        # Checks if there is actually and endpoint
+        response = self.api_client.get(self.dist_admin_url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
+
+
+    def test_post_good_disrict_admin_data(self):
+        # Checks if data can be posted to the API
+        district = utils.create_district()
+        data = {"first_name": "test_first_name",
+                "last_name": "test_last_name",
+                "date_of_birth": "2012-10-12T10:00:00",
+                "district": "/api/v1/district/%s/" % district.id,
+                "id_number": "za123456789",
+                }
+
+        response = self.api_client.post(self.dist_admin_url, format="json", data=data)
+
+        # Testing the JSON response
+        json_item = json.loads(response.content)
+        self.assertEqual(data["first_name"], json_item["first_name"])
+        self.assertEqual(data["last_name"], json_item["last_name"])
+        self.assertEqual(data["date_of_birth"], json_item["date_of_birth"])
+        self.assertEqual(data["id_number"], json_item["id_number"])
+        self.assertEqual(district.name, json_item["district"]["name"])
+
+        district_admin = DistrictAdminUser.objects.get(id=json_item["id"])
+        self.assertEqual(data["first_name"], district_admin.first_name)
+        self.assertEqual(data["last_name"], district_admin.last_name)
+        self.assertEqual(datetime.date(2012, 10, 12), district_admin.date_of_birth)
+        self.assertEqual(data["id_number"], district_admin.id_number)
+        self.assertEqual(district.name, district_admin.district.name)
+
+    def test_post_with_non_existent_district_for_district_admin_data(self):
+        data = {"first_name": "test_first_name",
+                "last_name": "test_last_name",
+                "date_of_birth": "2012-10-12T10:00:00",
+                "district": "/api/v1/district/%s/" % 1212, # Non existent district
+                "id_number": "za123456789",
+                }
+        response = self.api_client.post(self.dist_admin_url, format="json", data=data)
+        json_item = json.loads(response.content)
+        self.assertIn("error", json_item)
 
 
 class TestHeadteacherAPI(ResourceTestCase):

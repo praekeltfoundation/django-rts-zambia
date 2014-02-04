@@ -141,6 +141,8 @@ def create_school_data(emis=None,
                        teachers_g2=random.randint(1, 10),
                        boys_g2=random.randint(1, 10),
                        girls_g2=random.randint(1, 10),
+                       boys=random.randint(1, 10),
+                       girls=random.randint(1, 10),
                        created_by=None):
 
     if not emis:
@@ -157,6 +159,8 @@ def create_school_data(emis=None,
             "teachers_g2": teachers_g2,
             "boys_g2": boys_g2,
             "girls_g2": girls_g2,
+            "boys": boys,
+            "girls": girls,
             "created_by": created_by}
 
     schooldata, _ = SchoolData.objects.get_or_create(**data)
