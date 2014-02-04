@@ -7,7 +7,7 @@
             "last_name": "Square Pants",
             "date_of_birth": "1985-11-27",
             "district": "/api/v1/district/15/",
-            "id_number": "za123456789"
+            "id_number": "123454321"
         },
     "body": {
         "created_at": "2014-02-03T12:22:38.158000",
