@@ -191,7 +191,7 @@ function GoRtsZambia() {
             "last_name": im.get_user_answer("reg_district_official_surname"),
             "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_district_official_dob')).yyyymmdd(),
             "district": "/api/v1/district/" + im.get_user_answer("reg_district_official") +"/",
-            "id_number": "za123456789"
+            "id_number": im.get_user_answer("reg_district_official_id_number")
         };
         return district_admin_data;
     };
@@ -555,8 +555,14 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "reg_district_official_surname",
-        "reg_district_official_dob",
+        "reg_district_official_id_number",
         "Now please enter your SURNAME."
+    ));
+
+    self.add_state(new FreeText(
+        "reg_district_official_id_number",
+        "reg_district_official_dob",
+        "Please enter your ID number."
     ));
 
     self.add_state(new FreeText(
@@ -569,12 +575,6 @@ function GoRtsZambia() {
         },
         "Please enter your date of birth formatted DDMMYYYY"
     ));
-
-    // self.add_state(new FreeText(
-    //     "reg_district_official_surname",
-    //     "reg_district_official_dob",
-    //     "Now please enter your SURNAME."
-    // ));
 
     self.add_state(new EndState(
             "reg_thanks_district_admin",
