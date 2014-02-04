@@ -472,18 +472,26 @@ function GoRtsZambia() {
                 );
             } else {
                 // recognised user
-                return new ChoiceState(
-                    state_name,
-                    function(choice) {
-                        return choice.value;
-                    },
-                    "Welcome to the Zambia School Gateway. What would you like to do?",
-                    [
-                        new Choice("perf_teacher_ts_number", "Report on teacher performance."),
-                        new Choice("perf_learner_boys_total", "Report on learner performance."),
-                        new Choice("manage_change_emis", "Change my school.")
-                    ]
-                );
+                if (im.config.performance_monitoring_active){ // Performance monitoring active
+                    return new ChoiceState(
+                        state_name,
+                        function(choice) {
+                            return choice.value;
+                        },
+                        "Welcome to the Zambia School Gateway. What would you like to do?",
+                        [
+                            new Choice("perf_teacher_ts_number", "Report on teacher performance."),
+                            new Choice("perf_learner_boys_total", "Report on learner performance."),
+                            new Choice("manage_change_emis", "Change my school.")
+                        ]
+                    );
+                } else { // Performance monitoring disabled
+                    return new EndState(
+                        "end_state_suspended",
+                        im.config.performance_monitoring_suspended_message,
+                        "initial_state"
+                    );
+                }
             }
         });
         return p;
