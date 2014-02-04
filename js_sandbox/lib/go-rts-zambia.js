@@ -185,7 +185,7 @@ function GoRtsZambia() {
         return headteacher_data;
     };
 
-    self.registration_district_admin_collect = function(){
+    self.registration_official_admin_collect = function(){
         var district_admin_data = {
             "first_name": im.get_user_answer("reg_district_official_first_name"),
             "last_name": im.get_user_answer("reg_district_official_surname"),
@@ -348,8 +348,51 @@ function GoRtsZambia() {
     };
 
     self.cms_district_admin_registration = function(im){
-        var district_admin_data = self.registration_district_admin_collect();
-        return self.cms_post("district_admin/", district_admin_data)
+        var district_official_data;
+        var p_c;
+        var p_official_admin;  // Posts districts admin data
+
+        p_c = self.get_contact(im);
+        p_c.add_callback(function(result){
+            var contact = result.contact;
+            district_official_data = self.registration_official_admin_collect();
+            p_district_official = self.cms_post("district_admin/", district_official_data);
+            p_district_official.add_callback(function(result){
+                var district_official_id = result.id;
+                var district_official_id_number = result.id_number;
+                var district_official_district_id = result.district.id;
+
+                var fields = {
+                    "rts_id": JSON.stringify(district_official_id),
+                    "rts_district_official_id_number": JSON.stringify(district_official_id_number),
+                    "rts_district_official_district_id": JSON.stringify(district_official_official_district_id)
+                };
+
+                var p_extra = im.api_request('contacts.update_extras', {
+                        key: contact.key,
+                        fields: fields
+                    });
+
+                p_extra.add_callback(function(result){
+                    if (result.success === true){
+                        var contact = result.contact;
+                        contact['name'] = im.get_user_answer("reg_district_official_first_name");
+                        contact['surname'] = ("reg_district_official_surname");
+                        return im.api_request('contacts.update', {
+                            key: result.contact.key,
+                            fields: contact
+                        });
+
+                    } else {
+                        var p_log = im.log(result);
+                        return p_log;
+                    }
+                    return p_extra;
+                });
+            });
+            return p_district_official;
+        });
+        return p_c;
     };
 
     self.cms_registration_update_msisdn = function(im) {
