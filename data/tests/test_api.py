@@ -568,7 +568,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(headteacher_uri, json_item["created_by"]["resource_uri"])
         self.assertEqual(headteacher_id, json_item["created_by"]["id"])
 
-        teacher = TeacherPerformanceData.objects.get(pk=1)
+        teacher = TeacherPerformanceData.objects.all()[0]
         self.assertEqual("male", teacher.gender)
         self.assertEqual(30, teacher.age)
         self.assertEqual("11+", teacher.years_experience)
