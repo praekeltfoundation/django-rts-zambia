@@ -356,7 +356,7 @@ function GoRtsZambia() {
         p_c.add_callback(function(result){
             var contact = result.contact;
             district_official_data = self.registration_official_admin_collect();
-            p_district_official = self.cms_post("district_admin/", district_official_data);
+            var p_district_official = self.cms_post("district_admin/", district_official_data);
             p_district_official.add_callback(function(result){
                 var district_official_id = result.id;
                 var district_official_id_number = result.id_number;
@@ -569,7 +569,7 @@ function GoRtsZambia() {
     self.add_creator('reg_district_official', function(state_name, im){
         var choices = [];
 
-        districts_json = im.config.districts_json;
+        var districts_json = im.config.districts_json;
         districts_json.sort(function(a, b){
                                 return ((a.name < b.name) ?
                                         -1 : ((a.name > b.name) ? 1 : 0)); });
