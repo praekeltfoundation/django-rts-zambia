@@ -3316,7 +3316,7 @@ describe("When using the USSD line as a recognised MSISDN to update the school d
     });
 });
 
-describe.only("When a district admin is using the USSD line as a recognised MSISDN to add performance data", function() {
+describe("When a district admin is using the USSD line as a recognised MSISDN to add teacher performance data", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
@@ -3368,6 +3368,154 @@ describe.only("When a district admin is using the USSD line as a recognised MSIS
             response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on selecting to report on teacher perfomance should ask for for EMIS", function (done) {
+
+        var user = {
+            current_state: 'initial_state'
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "add_emis_perf_teacher_ts_number",
+            response: "^Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding correct emis should go on to ask about the teachers TS number", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_teacher_ts_number',
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_teacher_ts_number",
+            response: "^Please enter the teacher's TS number.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding wrong emis should go on to ask for the emis number again", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_teacher_ts_number',
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "7197871",
+            next_state: "add_emis_perf_teacher_ts_number",
+            response: "^The emis does not exist, please try again. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+});
+
+
+describe.only("When a district admin is using the USSD line as a recognised MSISDN to add learner performance data", function() {
+
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 2,
+                    "rts_district_official_id_number": 1,
+                    "rts_district_official_district_id": 1
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    it("first display navigation menu", function (done) {
+        var p = tester.check_state({
+            user: null,
+            content: null,
+            next_state: "initial_state",
+            response: "^What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on selecting to report on learner perfomance should ask for for EMIS", function (done) {
+
+        var user = {
+            current_state: 'initial_state'
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "add_emis_perf_learner_boys_total",
+            response: "^Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding correct emis should go on to ask about the teachers TS number", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_learner_boys_total',
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_learner_boys_total",
+            response: "^How many boys took part in the learner assessment\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding wrong emis should go on to ask for the emis number again", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_learner_boys_total',
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "7197871",
+            next_state: "add_emis_perf_learner_boys_total",
+            response: "^The emis does not exist, please try again. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
