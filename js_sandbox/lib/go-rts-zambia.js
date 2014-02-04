@@ -477,7 +477,7 @@ function GoRtsZambia() {
                 );
             } else {
                 // recognised user
-                if (result.contact["district_official_district_id"] === undefined) {
+                if (result.contact["extras-rts_district_official_district_id"] === undefined) {
                     // Assumes if they don't have a district they are a head teacher
                     choices = [
                             new Choice("perf_teacher_ts_number", "Report on teacher performance."),

@@ -3316,7 +3316,7 @@ describe("When using the USSD line as a recognised MSISDN to update the school d
     });
 });
 
-describe("When a district admin is using the USSD line as a recognised MSISDN to add performance data", function() {
+describe.only("When a district admin is using the USSD line as a recognised MSISDN to add performance data", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
@@ -3364,8 +3364,10 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
         var p = tester.check_state({
             user: null,
             content: null,
-            next_state: "",
-            response: ""
+            next_state: "initial_state",
+            response: "^What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance.$"
         });
         p.then(done, done);
     });
