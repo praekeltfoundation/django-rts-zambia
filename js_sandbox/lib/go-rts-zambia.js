@@ -488,12 +488,12 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to the Zambia School Gateway! What would you like to do?",
+                    "Welcome to the Zambia School Gateway! Options:",
                     [
-                        new Choice("reg_emis", "Register as a Head Teacher."),
-                        new Choice("reg_district_official", "Register as a District Official."),
-                        new Choice("manage_change_emis_error", "Change my school."),
-                        new Choice("manage_change_msisdn_emis", "Change my primary cell phone number.")
+                        new Choice("reg_emis", "Register as Head Teacher"),
+                        new Choice("reg_district_official", "Register as District Official"),
+                        new Choice("manage_change_emis_error", "Change my school"),
+                        new Choice("manage_change_msisdn_emis", "Change my primary cell number")
                     ]
                 );
             } else {

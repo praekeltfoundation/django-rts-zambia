@@ -95,10 +95,11 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway! What would you like to do\\?[^]" +
-                    "1. Register as a Head Teacher\\.[^]" +
-                    "2. Change my school\\.[^]" +
-                    "3. Change my primary cell phone number\\.$"
+            response: "^Welcome to the Zambia School Gateway! Options\\:[^]" +
+                    "1. Register as Head Teacher[^]" +
+                    "2. Register as District Official[^]" +
+                    "3. Change my school[^]" +
+                    "4. Change my primary cell number$"
         });
         p.then(done, done);
     });
@@ -895,7 +896,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "3",
+            content: "4",
             next_state: "manage_change_msisdn_emis",
             response: "^Please enter the school's EMIS number that you are currently registered " +
                 "with. This should have 4-6 digits e.g 4351.$"
@@ -984,7 +985,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "2",
+            content: "3",
             next_state: "manage_change_emis_error",
             response: "^Your cell phone number is unrecognised. Please associate your new number with " +
                 "your old EMIS first before requesting to change school.[^]" +
@@ -3210,7 +3211,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
 });
 
 
-describe.only("When using the USSD line as an unrecognised MSISDN - register as district admin", function() {
+describe("When using the USSD line as an unrecognised MSISDN - register as district admin", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
