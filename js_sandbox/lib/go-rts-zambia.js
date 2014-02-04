@@ -185,6 +185,16 @@ function GoRtsZambia() {
         return headteacher_data;
     };
 
+    self.registration_district_admin_collect = function(){
+        var district_admin_data = {
+            "first_name": im.get_user_answer("reg_district_official_first_name"),
+            "last_name": im.get_user_answer("reg_district_official_surname"),
+            "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_district_dob')).yyyymmdd(),
+            "district": "/api/v1/district/" + im.get_user_answer("reg_district_official") +"/",
+            "id_number": "za123456789"
+        };
+        return district_admin_data;
+    };
 
 
     self.performance_data_teacher_collect = function(emis, id){
@@ -331,6 +341,11 @@ function GoRtsZambia() {
             return p_ht;
         });
         return p_c;
+    };
+
+    self.cms_district_admin_registration = function(im){
+        var district_admin_data = self.registration_district_admin_collect();
+        return self.cms_post("district_admin/", district_admin_data)
     };
 
     self.cms_registration_update_msisdn = function(im) {
@@ -546,9 +561,28 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "reg_district_dob",
-        "reg_district_dob",
-        "Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980."
+        "reg_thanks_district_admin",
+        "Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980.",
+        function(content) {
+            // check that the value provided is date format we expect
+            return self.check_and_parse_date(content);
+        },
+        "Please enter your date of birth formatted DDMMYYYY"
     ));
+
+    self.add_state(new EndState(
+            "reg_thanks_district_admin",
+            "Congratulations! You are now registered as a user of the" +
+            " Gateway! Please dial in again when you are ready to start" +
+            " reporting on teacher and learner performance.",
+            "initial_state",
+            {
+                on_enter: function(){
+                    return self.cms_district_admin_registration(im);
+                }
+            }
+        )
+    );
 /**********************************************************/
 
     self.add_state(new FreeText(
