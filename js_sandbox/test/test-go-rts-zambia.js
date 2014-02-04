@@ -3354,7 +3354,7 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         p.then(done, done);
     });
 
-    it("on entering your surname should ask for your date of birth", function (done) {
+    it("on entering your surname should ask for the id number", function (done) {
         var user = {
             current_state: 'reg_district_official_surname',
             answers: {
@@ -3366,6 +3366,26 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         var p = tester.check_state({
             user: user,
             content: "Square Pants",
+            next_state: "reg_district_official_id_number",
+            response: "^Please enter your ID number\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on entering the ID number should ask for date of  birth", function(done){
+        var user = {
+            current_state: 'reg_district_official_id_number',
+            answers: {
+                initial_state: 'reg_district_official',
+                reg_district_official: 15,
+                reg_district_official_first_name: "Sponge Bob",
+                reg_district_official_surname: "Square Pants"
+            }
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "123454321",
             next_state: "reg_district_official_dob",
             response: "^Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980\\.$"
         });
@@ -3379,7 +3399,8 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
                 initial_state: 'reg_district_official_official',
                 reg_district_official: 15,
                 reg_district_official_first_name: "Sponge Bob",
-                reg_district_official_surname: "Square Pants"
+                reg_district_official_surname: "Square Pants",
+                reg_district_official_id_number: "123454321"
             }
         };
 
@@ -3402,7 +3423,8 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
                 initial_state: 'reg_district_official',
                 reg_district_official: 15,
                 reg_district_official_first_name: "Sponge Bob",
-                reg_district_official_surname: "Square Pants"
+                reg_district_official_surname: "Square Pants",
+                reg_district_official_id_number: "123454321"
             }
         };
 
@@ -3414,24 +3436,4 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         });
         p.then(done, done);
     });
-
-    // it("it should ask for district admin's ID number", function(done){
-    //     var user = {
-    //         current_state: 'reg_district_official_dob',
-    //         answers: {
-    //             initial_state: 'reg_district_official',
-    //             reg_district_official: 15,
-    //             reg_district_official_first_name: "Sponge Bob",
-    //             reg_district_official_surname: "Square Pants"
-    //         }
-    //     };
-
-    //     var p = tester.check_state({
-    //         user: user,
-    //         content: "123456789",
-    //         next_state: "reg_district_official_dob",
-    //         response: "^Please enter your date of birth formatted DDMMYYYY$"
-    //     });
-    //     p.then(done, done);
-    // });
 });
