@@ -3394,4 +3394,24 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         });
         p.then(done, done);
     });
+
+    it("on entering the wrong date of birth it should show the thank you message and register district admin", function(done){
+        var user = {
+            current_state: 'reg_district_dob',
+            answers: {
+                initial_state: 'reg_district_official',
+                reg_district_official: 15,
+                reg_district_official_first_name: "Sponge Bob",
+                reg_district_official_surname: "Square Pants"
+            }
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "123456789",
+            next_state: "reg_district_dob",
+            response: "^Please enter your date of birth formatted DDMMYYYY$"
+        });
+        p.then(done, done);
+    });
 });
