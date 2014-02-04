@@ -516,15 +516,7 @@ function GoRtsZambia() {
     });
 
 // District official
-/**********************************************************/
-
-    self.sortByKey = function(array, key) {
-        return array.sort(function(a,b){
-            var x = a[key]; var y = b[key];
-            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-        });
-    };
-
+/********************************************************************************************/
     self.add_creator('reg_district_official', function(state_name, im){
         var choices = [];
 
@@ -533,7 +525,6 @@ function GoRtsZambia() {
                                 return ((a.name < b.name) ?
                                         -1 : ((a.name > b.name) ? 1 : 0)); });
 
-        districts_json = self.sortByKey(districts_json, "name");
         for (var i=0; i<districts_json.length; i++){
             var district = districts_json[i];
             choices[i] = new Choice(district.id, district.name);
@@ -568,7 +559,8 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "reg_district_official_dob",
         "reg_thanks_district_admin",
-        "Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980.",
+        "Please enter your date of birth. Start with the day,"+
+        " followed by the month and year, e.g. 27111980.",
         function(content) {
             // check that the value provided is date format we expect
             return self.check_and_parse_date(content);
@@ -589,7 +581,8 @@ function GoRtsZambia() {
             }
         )
     );
-/**********************************************************/
+
+/********************************************************************************************/
 
     self.add_state(new FreeText(
         "reg_emis",
