@@ -3345,4 +3345,20 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         });
         p.then(done, done);
     });
+
+    it("on entering your surname should ask for your date of birth", function (done) {
+        var user = {
+            current_state: 'reg_district_official_surname',
+            answers: {
+                reg_district_official: 15}
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "Square Pants",
+            next_state: "reg_district_dob",
+            response: "^Please enter your date of birth. Start with the day, followed by " +
+                "the month and year, e.g. 27111980$"
+        });
+        p.then(done, done);
+    });
 });
