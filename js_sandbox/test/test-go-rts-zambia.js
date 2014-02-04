@@ -29,7 +29,8 @@ var test_fixtures_full = [
     'test/fixtures/post_performance_teacher.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
-    'test/fixtures/get_headteacher_filter_emis.json'
+    'test/fixtures/get_headteacher_filter_emis.json',
+    'test/fixtures/post_registration_district_admin.json'
 ];
 
 var tester;
@@ -3274,7 +3275,9 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
     it("choosing more a second time should show more districts", function (done) {
         var user = {
             current_state: 'reg_district_official',
-            answers: {}
+            answers: {
+                initial_state: 'reg_district_official'
+            }
         };
         var p = tester.check_state({
             user: user,
@@ -3299,7 +3302,9 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
     it("choosing more a third time should show more districts", function (done) {
         var user = {
             current_state: 'reg_district_official',
-            answers: {},
+            answers: {
+                initial_state: 'reg_district_official'
+            },
             pages: {
                     reg_district_official: 8
                 }
@@ -3320,7 +3325,9 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
     it("choosing a district should go to enter first name state", function (done) {
         var user = {
             current_state: 'reg_district_official',
-            answers: {}
+            answers: {
+                initial_state: 'reg_district_official'
+            }
         };
         var p = tester.check_state({
             user: user,
@@ -3335,6 +3342,7 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         var user = {
             current_state: 'reg_district_official_first_name',
             answers: {
+                initial_state: 'reg_district_official',
                 reg_district_official: 15}
         };
         var p = tester.check_state({
@@ -3350,14 +3358,39 @@ describe.only("When using the USSD line as an unrecognised MSISDN - register as 
         var user = {
             current_state: 'reg_district_official_surname',
             answers: {
-                reg_district_official: 15}
+                initial_state: 'reg_district_official',
+                reg_district_official: 15,
+                reg_district_official_first_name: "Sponge Bob"
+            }
         };
         var p = tester.check_state({
             user: user,
             content: "Square Pants",
             next_state: "reg_district_dob",
-            response: "^Please enter your date of birth. Start with the day, followed by " +
-                "the month and year, e.g. 27111980$"
+            response: "^Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on entering the correct date of birth it should show the thank you message and register district admin", function(done){
+        var user = {
+            current_state: 'reg_district_dob',
+            answers: {
+                initial_state: 'reg_district_official',
+                reg_district_official: 15,
+                reg_district_official_first_name: "Sponge Bob",
+                reg_district_official_surname: "Square Pants"
+            }
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "27111985",
+            next_state: "reg_thanks_district_admin",
+            response: "^Congratulations! You are now registered as a user of" +
+                " the Gateway! Please dial in again when you are ready to" +
+                " start reporting on teacher and learner performance\\.$",
+            continue_session: false
         });
         p.then(done, done);
     });
