@@ -540,8 +540,14 @@ function GoRtsZambia() {
 
     self.add_state(new FreeText(
         "reg_district_official_surname",
-        "reg_district_official_surname",
+        "reg_district_dob",
         "Now please enter your SURNAME."
+    ));
+
+    self.add_state(new FreeText(
+        "reg_district_dob",
+        "reg_district_dob",
+        "Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980."
     ));
 /**********************************************************/
 
