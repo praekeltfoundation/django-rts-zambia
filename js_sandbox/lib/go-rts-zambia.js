@@ -244,6 +244,32 @@ function GoRtsZambia() {
         return data;
     };
 
+    self.performance_data_teacher_collect_by_district_official = function(emis, id){
+        var data = {
+            "ts_number": im.get_user_answer('perf_teacher_ts_number'),
+            "gender": im.get_user_answer('perf_teacher_gender'),
+            "age": im.get_user_answer('perf_teacher_age'),
+            "years_experience": im.get_user_answer('perf_teacher_years_experience'),
+            "g2_pupils_present": im.get_user_answer('perf_teacher_g2_pupils_present'),
+            "g2_pupils_registered": im.get_user_answer('perf_teacher_g2_pupils_registered'),
+            "classroom_environment_score": im.get_user_answer('perf_teacher_classroom_environment_score'),
+            "t_l_materials": im.get_user_answer('perf_teacher_t_l_materials'),
+            "pupils_materials_score": im.get_user_answer('perf_teacher_pupils_materials_score'),
+            "pupils_books_number": im.get_user_answer('perf_teacher_pupils_books_number'),
+            "reading_lesson": im.get_user_answer('perf_teacher_reading_lesson'),
+            "pupil_engagement_score": im.get_user_answer('perf_teacher_pupil_engagement_score'),
+            "attitudes_and_beliefs": im.get_user_answer('perf_teacher_attitudes_and_beliefs'),
+            "training_subtotal": im.get_user_answer('perf_teacher_training_subtotal'),
+            "academic_level": "/api/v1/data/achievement/" + im.get_user_answer('perf_teacher_academic_level') + "/",
+            "reading_assessment": im.get_user_answer('perf_teacher_reading_assessment'),
+            "reading_total": im.get_user_answer('perf_teacher_reading_total'),
+            "emis": "/api/v1/school/emis/" + emis + "/",
+            "created_by_da": "/api/v1/district_admin/" + id + "/"
+        };
+
+        return data;
+    };
+
     self.performance_data_learner_collect = function(emis, id){
         var data_boys = {
             "gender": "boys",
@@ -429,13 +455,19 @@ function GoRtsZambia() {
 
     self.cms_performance_teacher = function(im) {
         var p = self.get_contact(im);
+        var data;
         p.add_callback(function(result) {
             var emis = parseInt(result.contact["extras-rts_emis"]);
             var id = parseInt(result.contact["extras-rts_id"]);
             // Need to ensure no double save
             var contact_key = result.contact.key;
             if (parseInt(result.contact["extras-rts_last_save_performance_teacher"]) != parseInt(im.get_user_answer('perf_teacher_ts_number'))) {
-                var data = self.performance_data_teacher_collect(emis, id);
+
+                if (im.get_user_answer('initial_state') == 'add_emis_perf_teacher_ts_number') {
+                    data = self.performance_data_teacher_collect_by_district_official(emis, id);
+                } else {
+                    data = data = self.performance_data_teacher_collect(emis, id);
+                }
                 var p_tp = self.cms_post("data/teacherperformance/", data);
 
                 p_tp.add_callback(function(contact_key) {
