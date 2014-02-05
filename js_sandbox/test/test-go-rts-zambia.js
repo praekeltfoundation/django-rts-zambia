@@ -3421,7 +3421,7 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
 });
 
 
-describe.only("When a district admin is using the USSD line as a recognised MSISDN to add learner performance data", function() {
+describe("When a district admin is using the USSD line as a recognised MSISDN to add learner performance data", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
