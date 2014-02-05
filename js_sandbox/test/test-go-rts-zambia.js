@@ -27,6 +27,7 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_school_update.json',
     'test/fixtures/post_registration_school_manage_update_data.json',
     'test/fixtures/post_performance_teacher.json',
+    'test/fixtures/post_performance_teacher_by_district_official.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
     'test/fixtures/post_performance_learner_boys_by_district_official.json',
@@ -3318,7 +3319,7 @@ describe("When using the USSD line as a recognised MSISDN to update the school d
     });
 });
 
-describe("When a district admin is using the USSD line as a recognised MSISDN to add teacher performance data", function() {
+describe.only("When a district admin is using the USSD line as a recognised MSISDN to add teacher performance data", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
@@ -3349,7 +3350,8 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
 
                 api.add_contact(dummy_contact);
                 api.update_contact_extras(dummy_contact, {
-                    "rts_id": 2,
+                    "rts_id": 3,
+                    "rts_emis": 2525,
                     "rts_district_official_id_number": 1,
                     "rts_district_official_district_id": 1
                 });
@@ -3415,6 +3417,41 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
             content: "7197871",
             next_state: "add_emis_perf_teacher_ts_number",
             response: "^The emis does not exist, please try again. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to go to exit should thank and close", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_total',
+            answers: {
+                initial_state: 'add_emis_perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5',
+                perf_teacher_reading_assessment: '7'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
+            next_state: "perf_teacher_completed",
+            response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
+                "1. Add another teacher\\.[^]" +
+                "2. Go back to the main menu\\.[^]" +
+                "3. Exit\\.$"
         });
         p.then(done, done);
     });
