@@ -291,7 +291,7 @@ function GoRtsZambia() {
             "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
             "emis": "/api/v1/school/emis/" + emis + "/",
-            "created_by": "/api/v1/data/headteacher/" + id + "/"
+            "created_by_da": "/api/v1/district_admin/" + id + "/"
         };
 
         var data_girls = {
@@ -306,7 +306,7 @@ function GoRtsZambia() {
             "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
             "emis": "/api/v1/school/emis/" + emis + "/",
-            "created_by": "/api/v1/data/headteacher/" + id + "/"
+            "created_by_da": "/api/v1/district_admin/" + id + "/"
         };
 
         return [data_boys, data_girls];
@@ -457,7 +457,12 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             var emis = result.contact["extras-rts_emis"];
             var id = result.contact["extras-rts_id"];
-            var data = self.performance_data_learner_collect(emis, id);
+
+            if (im.get_user_answer('initial_state') == 'add_emis_perf_learner_boys_total') {
+                var data = self.performance_data_learner_collect_by_district_official(emis, id)
+            } else {
+                var data = self.performance_data_learner_collect(emis, id);
+            }
             var data_boys = data[0];
             var data_girls = data[1];
             // Need to ensure no double save
