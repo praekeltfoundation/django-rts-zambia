@@ -152,7 +152,7 @@ function GoRtsZambia() {
     self.add_emis_district_official_to_contacts = function(content){
         if (self.check_valid_emis(content)) {
             // store in config if EMIS is valid
-            p_c = self.get_contact(im);
+            var p_c = self.get_contact(im);
             p_c.add_callback(function(result) {
                 var contact = result.contact;
                 var fields = {
