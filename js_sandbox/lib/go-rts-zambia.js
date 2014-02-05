@@ -278,6 +278,40 @@ function GoRtsZambia() {
         return [data_boys, data_girls];
     };
 
+    self.performance_data_learner_collect_by_district_official = function(emis, id){
+        var data_boys = {
+            "gender": "boys",
+            "total_number_pupils": im.get_user_answer('perf_learner_boys_total'),
+            "phonetic_awareness": im.get_user_answer('perf_learner_boys_phonetic_awareness'),
+            "vocabulary": im.get_user_answer('perf_learner_boys_vocabulary'),
+            "reading_comprehension": im.get_user_answer('perf_learner_boys_reading_comprehension'),
+            "writing_diction": im.get_user_answer('perf_learner_boys_writing_diction'),
+            "outstanding_results": im.get_user_answer('perf_learner_boys_outstanding_results'),
+            "desirable_results": im.get_user_answer('perf_learner_boys_desirable_results'),
+            "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
+            "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
+            "emis": "/api/v1/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+
+        var data_girls = {
+            "gender": "girls",
+            "total_number_pupils": im.get_user_answer('perf_learner_girls_total'),
+            "phonetic_awareness": im.get_user_answer('perf_learner_girls_phonetic_awareness'),
+            "vocabulary": im.get_user_answer('perf_learner_girls_vocabulary'),
+            "reading_comprehension": im.get_user_answer('perf_learner_girls_reading_comprehension'),
+            "writing_diction": im.get_user_answer('perf_learner_girls_writing_diction'),
+            "outstanding_results": im.get_user_answer('perf_learner_girls_outstanding_results'),
+            "desirable_results": im.get_user_answer('perf_learner_girls_desirable_results'),
+            "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
+            "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
+            "emis": "/api/v1/school/emis/" + emis + "/",
+            "created_by": "/api/v1/data/headteacher/" + id + "/"
+        };
+
+        return [data_boys, data_girls];
+    };
+
     self.get_contact = function(im){
         var p = im.api_request('contacts.get_or_create', {
             delivery_class: 'ussd',

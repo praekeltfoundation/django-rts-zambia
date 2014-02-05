@@ -3419,7 +3419,7 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
 });
 
 
-describe("When a district admin is using the USSD line as a recognised MSISDN to add learner performance data", function() {
+describe.only("When a district admin is using the USSD line as a recognised MSISDN to add learner performance data", function() {
 
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
@@ -3509,6 +3509,9 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
 
         var user = {
             current_state: 'add_emis_perf_learner_boys_total',
+            answers : {
+                initial_state: "add_emis_perf_learner_boys_total"
+            }
         };
 
         var p = tester.check_state({
@@ -3516,6 +3519,42 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
             content: "7197871",
             next_state: "add_emis_perf_learner_boys_total",
             response: "^The emis does not exist, please try again. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to go to exit should thank and close", function (done) {
+        // Should go straight to the end state of the system
+        var user = {
+            current_state: 'perf_learner_completed',
+            answers: {
+                initial_state: 'add_emis_perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_boys_writing_diction: '37',
+                perf_learner_girls_writing_diction: '38',
+                perf_learner_boys_outstanding_results: '39',
+                perf_learner_girls_outstanding_results: '40',
+                perf_learner_boys_desirable_results: '41',
+                perf_learner_girls_desirable_results: '42',
+                perf_learner_boys_minimum_results: '43',
+                perf_learner_girls_minimum_results: '44',
+                perf_learner_boys_below_minimum_results: '45',
+                perf_learner_girls_below_minimum_results: '46'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "end_state",
+            response: "^Goodbye! Thank you for using the Gateway\\.$",
+            continue_session: false
         });
         p.then(done, done);
     });
