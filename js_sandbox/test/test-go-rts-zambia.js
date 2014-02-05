@@ -29,6 +29,8 @@ var test_fixtures_full = [
     'test/fixtures/post_performance_teacher.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
+    'test/fixtures/post_performance_learner_boys_by_district_official.json',
+    'test/fixtures/post_performance_learner_girls_by_district_official.json',
     'test/fixtures/get_headteacher_filter_emis.json'
 ];
 
@@ -3450,7 +3452,8 @@ describe.only("When a district admin is using the USSD line as a recognised MSIS
 
                 api.add_contact(dummy_contact);
                 api.update_contact_extras(dummy_contact, {
-                    "rts_id": 2,
+                    "rts_id": 3,
+                    "rts_emis": 2525,
                     "rts_district_official_id_number": 1,
                     "rts_district_official_district_id": 1
                 });
@@ -3494,6 +3497,9 @@ describe.only("When a district admin is using the USSD line as a recognised MSIS
 
         var user = {
             current_state: 'add_emis_perf_learner_boys_total',
+            answers : {
+                initial_state: "add_emis_perf_learner_boys_total"
+            }
         };
 
         var p = tester.check_state({
@@ -3530,22 +3536,23 @@ describe.only("When a district admin is using the USSD line as a recognised MSIS
             answers: {
                 initial_state: 'add_emis_perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
                 perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
                 perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
                 perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
                 perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
                 perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
                 perf_learner_boys_minimum_results: '43',
-                perf_learner_girls_minimum_results: '44',
                 perf_learner_boys_below_minimum_results: '45',
+
+                perf_learner_girls_total: '42',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_girls_writing_diction: '38',
+                perf_learner_girls_outstanding_results: '40',
+                perf_learner_girls_desirable_results: '42',
+                perf_learner_girls_minimum_results: '44',
                 perf_learner_girls_below_minimum_results: '46'
             }
         };
