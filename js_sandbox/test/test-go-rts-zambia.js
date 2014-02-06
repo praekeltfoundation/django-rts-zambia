@@ -25,6 +25,7 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_headteacher_zonal.json',
     'test/fixtures/post_registration_school.json',
     'test/fixtures/post_registration_school_update.json',
+    'test/fixtures/post_registration_school_manage_update_data.json',
     'test/fixtures/post_performance_teacher.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
@@ -1170,10 +1171,11 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -2083,10 +2085,11 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             user: user,
             content: "2",
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -2174,10 +2177,11 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -3163,10 +3167,11 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             user: user,
             content: "1",
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway. What would you like to do\\?[^]" +
+            response: "^What would you like to do\\?[^]" +
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
-                    "3. Change my school\\.$"
+                    "3. Change my school\\.[^]" +
+                    "4. Update my school’s registration data\\.$"
         });
         p.then(done, done);
     });
@@ -3201,6 +3206,110 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             content: "2",
             next_state: "end_state",
             response: "^Goodbye! Thank you for using the Gateway\\.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+});
+
+
+describe("When using the USSD line as a recognised MSISDN to update the school data from the manage_update_school_data state", function() {
+
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 2,
+                    "rts_emis": 1
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    it("it should select display choice to continue update the school registration data", function (done) {
+        var user = {
+            current_state: 'initial_state'
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "4",
+            next_state: "manage_update_school_data",
+            response: "^You'll now be asked to re-enter key school details to " +
+                        "ensure the records are accurate. Enter 1 to continue."
+        });
+        p.then(done, done);
+    });
+
+    it("on continue pressed should redirect to reg_school_boys state", function (done) {
+        var user = {
+            current_state: 'manage_update_school_data',
+            answers: {
+                initial_state: 'manage_update_school_data'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_school_boys",
+            response: "^How many boys do you have in your school\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("saying are zonal head after association with new school should thank long and close", function (done) {
+        var user = {
+            current_state: 'reg_zonal_head',
+            answers: {
+                initial_state: 'manage_update_school_data',
+                reg_school_boys: '100',
+                reg_school_girls: '101',
+                reg_school_classrooms: '10',
+                reg_school_teachers: '15',
+                reg_school_teachers_g1: '5',
+                reg_school_teachers_g2: '4',
+                reg_school_students_g2_boys: '55',
+                reg_school_students_g2_girls: '60'
+
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "reg_thanks_zonal_head",
+            response: "^Well done! You are now registered as a Zonal Head" +
+                " Teacher\\. When you are ready, dial in to start" +
+                " reporting\\. You will also receive monthly SMS's from" +
+                " your zone\\.$",
             continue_session: false
         });
         p.then(done, done);

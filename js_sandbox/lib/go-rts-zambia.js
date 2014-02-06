@@ -287,6 +287,10 @@ function GoRtsZambia() {
                     emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator')) + "/"
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
+
+            } else if (im.get_user_answer('initial_state') == 'manage_update_school_data') {
+                var p = self.get_contact(im);
+                p_ht = self.cms_get("data/headteacher/?emis__emis=" + contact["extras-rts_emis"]);
             } else {
                 // create new headteacher
                 headteacher_data = self.registration_data_headteacher_collect();
@@ -477,11 +481,13 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to the Zambia School Gateway. What would you like to do?",
+                    "What would you like to do?",
                     [
                         new Choice("perf_teacher_ts_number", "Report on teacher performance."),
                         new Choice("perf_learner_boys_total", "Report on learner performance."),
-                        new Choice("manage_change_emis", "Change my school.")
+                        new Choice("manage_change_emis", "Change my school."),
+                        new Choice("manage_update_school_data", "Update my school’s registration data.")
+
                     ]
                 );
             }
@@ -636,6 +642,17 @@ function GoRtsZambia() {
         [
             new Choice("manage_change_msisdn_emis_try_2", "Try again"),
             new Choice("reg_exit_emis", "Exit")
+        ]
+    ));
+
+    self.add_state(new ChoiceState(
+        "manage_update_school_data",
+        function(choice) {
+            return choice.value;
+        },
+        "You'll now be asked to re-enter key school details to ensure the records are accurate. Enter 1 to continue.",
+        [
+            new Choice("reg_school_boys", "Continue")
         ]
     ));
 
