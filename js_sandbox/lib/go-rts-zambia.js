@@ -678,7 +678,7 @@ function GoRtsZambia() {
         if (self.check_valid_emis(EMIS)) { // EMIS valid
             return new ChoiceState(
                 "manage_change_emis_validator",
-                "reg_school_classrooms",
+                "reg_school_boys",
                 "Thanks for claiming this EMIS. Redial this number if you ever change cellphone " +
                     "number to reclaim the EMIS and continue to receive SMS updates.",
                 [
