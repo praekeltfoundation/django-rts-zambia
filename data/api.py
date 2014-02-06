@@ -3,12 +3,42 @@ from tastypie.authorization import Authorization
 from tastypie import fields
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
                     LearnerPerformanceData, InboundSMS,
-                    AcademicAchievementCode)
+                    AcademicAchievementCode, DistrictAdminUser)
 from django.conf.urls import url
 
 # Project
 from rts.utils import (CSVSerializer, CSVModelResource,
                        OverrideApiAuthentication)
+
+
+class DistrictAdminUserResource(ModelResource):
+    """
+    GET District Admin
+    ::
+
+    "url": "<base_url>/api/v1/district_admin/,
+    "method": "GET",
+
+    POST FORMAT_MODULE_PATH
+    ::
+
+    "url": "<base_url>/api/v1/district_admin/,
+    "method": "POST",
+    "content_type": "application/json",
+    "body": {"first_name": "test_first_name",
+    "last_name": "test_last_name",
+    "date_of_birth": "2012-10-12T10:00:00",
+    "district": "/api/v1/district/1/",
+    "id_number": "za123456789"}
+    """
+    district = fields.ForeignKey("hierarchy.api.DistrictResource", 'district', full=True)
+    class Meta:
+        queryset = DistrictAdminUser.objects.all()
+        resource_name = "district_admin"
+        list_allowed_methods = ['post', 'get']
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
 
 
 class HeadTeacherResource(ModelResource):
