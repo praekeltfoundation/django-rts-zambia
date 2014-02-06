@@ -348,14 +348,10 @@ function GoRtsZambia() {
     };
 
     self.cms_district_admin_registration = function(im){
-        var district_official_data;
-        var p_c;
-        var p_official_admin;  // Posts districts admin data
-
-        p_c = self.get_contact(im);
+        var p_c = self.get_contact(im);
         p_c.add_callback(function(result){
             var contact = result.contact;
-            district_official_data = self.registration_official_admin_collect();
+            var district_official_data = self.registration_official_admin_collect();
             var p_district_official = self.cms_post("district_admin/", district_official_data);
             p_district_official.add_callback(function(result){
                 var district_official_id = result.id;
@@ -369,9 +365,9 @@ function GoRtsZambia() {
                 };
 
                 var p_extra = im.api_request('contacts.update_extras', {
-                        key: contact.key,
-                        fields: fields
-                    });
+                    key: contact.key,
+                    fields: fields
+                });
 
                 p_extra.add_callback(function(result){
                     if (result.success === true){
@@ -387,8 +383,8 @@ function GoRtsZambia() {
                         var p_log = im.log(result);
                         return p_log;
                     }
-                    return p_extra;
                 });
+                return p_extra;
             });
             return p_district_official;
         });
