@@ -150,36 +150,32 @@ function GoRtsZambia() {
         }
     };
 
-    self.add_emis_district_official_to_contacts = function(content){
-        if (self.check_valid_emis(content)) {
-            // store in config if EMIS is valid
-            var p_c = self.get_contact(im);
-            p_c.add_callback(function(result) {
-                var contact = result.contact;
-                var fields = {
-                    "rts_emis": content
-                };
+    self.add_emis_district_official_to_contacts = function(state_name){
+        var emis = im.get_user_answer(state_name);
+        // store in config if EMIS is valid
+        var p_c = self.get_contact(im);
+        p_c.add_callback(function(result) {
+            var contact = result.contact;
+            var fields = {
+                "rts_emis": emis
+            };
 
-                var p_extra = im.api_request('contacts.update_extras', {
-                        key: contact.key,
-                        fields: fields
-                    });
-
-                p_extra.add_callback(function(result){
-                    if (result.success === true) {
-                        return true;
-                    } else {
-                        var p_log = im.log(result);
-                        return false;
-                    }
+            var p_extra = im.api_request('contacts.update_extras', {
+                    key: contact.key,
+                    fields: fields
                 });
-                return p_extra;
-            });
-            return p_c;
 
-        } else {
-            return false;
-        }
+            p_extra.add_callback(function(result){
+                if (result.success === true) {
+                    return true;
+                } else {
+                    var p_log = im.log(result);
+                    return false;
+                }
+            });
+            return p_extra;
+        });
+        return p_c;
     };
 
     self.registration_data_school_collect = function(){
@@ -718,9 +714,14 @@ function GoRtsZambia() {
         "perf_teacher_ts_number",
         "Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.",
         function(content){
-            return self.add_emis_district_official_to_contacts(content);
+            return self.check_valid_emis(content);
         },
-        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351."
+        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351.",
+        {
+            on_exit: function(){
+                return self.add_emis_district_official_to_contacts("add_emis_perf_teacher_ts_number");
+            }
+        }
     ));
 
     self.add_state(new FreeText(
@@ -728,9 +729,14 @@ function GoRtsZambia() {
         "perf_learner_boys_total",
         "Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.",
         function(content){
-            return self.add_emis_district_official_to_contacts(content);
+            return self.check_valid_emis(content);
         },
-        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351."
+        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351.",
+        {
+            on_exit: function(){
+                return self.add_emis_district_official_to_contacts("add_emis_perf_learner_boys_total");
+            }
+        }
     ));
 
     self.add_state(new FreeText(
