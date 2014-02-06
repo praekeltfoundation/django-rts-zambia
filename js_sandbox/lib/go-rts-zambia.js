@@ -419,8 +419,11 @@ function GoRtsZambia() {
     self.cms_district_load = function () {
         var p = self.cms_get("district/");
         p.add_callback(function(result){
-            var districts_json = result.objects;
-            im.config.districts_json = districts_json;
+            var districts = result.objects;
+            districts.sort(function(a, b){
+                                    return ((a.name < b.name) ?
+                                            -1 : ((a.name > b.name) ? 1 : 0)); });
+            im.config.districts = districts;
         });
         return p;
     };
@@ -573,13 +576,10 @@ function GoRtsZambia() {
     self.add_creator('reg_district_official', function(state_name, im){
         var choices = [];
 
-        var districts_json = im.config.districts_json;
-        districts_json.sort(function(a, b){
-                                return ((a.name < b.name) ?
-                                        -1 : ((a.name > b.name) ? 1 : 0)); });
-
-        for (var i=0; i<districts_json.length; i++){
-            var district = districts_json[i];
+        var districts = im.config.districts;
+        
+        for (var i=0; i<districts.length; i++){
+            var district = districts[i];
             choices[i] = new Choice(district.id, district.name);
         }
         return new PaginatedChoiceState(state_name,
