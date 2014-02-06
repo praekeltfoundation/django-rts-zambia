@@ -6,7 +6,7 @@ import random
 from hierarchy.models import (Province, District, Zone, School)
 from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
                          LearnerPerformanceData, InboundSMS,
-                         AcademicAchievementCode)
+                         AcademicAchievementCode, DistrictAdminUser)
 
 
 NAMES = ['Aaliyah', 'Abayomi', 'Abebe', 'Abebi', 'Abena', 'Abeo', 'Ada']
@@ -132,6 +132,23 @@ def create_headteacher(first_name=random_name(),
     headteacher, _ = HeadTeacher.objects.get_or_create(**data)
     return headteacher
 
+
+def create_district_admin(first_name=random_name(),
+                          last_name=random_surname(),
+                          id_number=random_msisdn_value(),
+                          date_of_birth=random_datetime().date(),
+                          district=None):
+
+    if not district:
+        district = create_district()
+
+    data = {"first_name": first_name,
+            "last_name": last_name,
+            "id_number": id_number,
+            "date_of_birth": date_of_birth,
+            "district": district}
+    district_admin, _ = DistrictAdminUser.objects.get_or_create(**data)
+    return district_admin
 
 def create_school_data(emis=None,
                        name=random_name(),

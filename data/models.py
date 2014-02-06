@@ -143,7 +143,11 @@ class TeacherPerformanceData(models.Model):
     emis = models.ForeignKey('hierarchy.School',
                              verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
-                                   verbose_name=u'Head Teacher')
+                                   verbose_name=u'Head Teacher',
+                                   null=True)
+    created_by_da = models.ForeignKey(DistrictAdminUser,
+                                      verbose_name=u'District Admin User',
+                                      null=True)
     def __unicode__(self):
         return "%s" % self.emis
 
@@ -166,7 +170,11 @@ class LearnerPerformanceData(models.Model):
     emis = models.ForeignKey('hierarchy.School',
                              verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
+                                   null=True,
                                    verbose_name=u'Head Teacher')
+    created_by_da = models.ForeignKey(DistrictAdminUser,
+                                      verbose_name=u'District Admin User',
+                                      null=True)
     def __unicode__(self):
         return "%s" % self.emis
 

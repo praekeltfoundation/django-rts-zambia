@@ -10,6 +10,7 @@ var Promise = vumigo.promise.Promise;
 var success = vumigo.promise.success;
 var Choice = vumigo.states.Choice;
 var ChoiceState = vumigo.states.ChoiceState;
+var PaginatedChoiceState = vumigo.states.PaginatedChoiceState;
 var FreeText = vumigo.states.FreeText;
 var EndState = vumigo.states.EndState;
 var InteractionMachine = vumigo.state_machine.InteractionMachine;
@@ -216,6 +217,16 @@ function GoRtsZambia() {
         return headteacher_data;
     };
 
+    self.registration_official_admin_collect = function(){
+        var district_admin_data = {
+            "first_name": im.get_user_answer("reg_district_official_first_name"),
+            "last_name": im.get_user_answer("reg_district_official_surname"),
+            "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_district_official_dob')).yyyymmdd(),
+            "district": "/api/v1/district/" + im.get_user_answer("reg_district_official") +"/",
+            "id_number": im.get_user_answer("reg_district_official_id_number")
+        };
+        return district_admin_data;
+    };
 
 
     self.performance_data_teacher_collect = function(emis, id){
@@ -428,6 +439,50 @@ function GoRtsZambia() {
         return p_c;
     };
 
+    self.cms_district_admin_registration = function(im){
+        var p_c = self.get_contact(im);
+        p_c.add_callback(function(result){
+            var contact = result.contact;
+            var district_official_data = self.registration_official_admin_collect();
+            var p_district_official = self.cms_post("district_admin/", district_official_data);
+            p_district_official.add_callback(function(result){
+                var district_official_id = result.id;
+                var district_official_id_number = result.id_number;
+                var district_official_district_id = result.district.id;
+
+                var fields = {
+                    "rts_id": JSON.stringify(district_official_id),
+                    "rts_district_official_id_number": JSON.stringify(district_official_id_number),
+                    "rts_district_official_district_id": JSON.stringify(district_official_official_district_id)
+                };
+
+                var p_extra = im.api_request('contacts.update_extras', {
+                    key: contact.key,
+                    fields: fields
+                });
+
+                p_extra.add_callback(function(result){
+                    if (result.success === true){
+                        var contact = result.contact;
+                        contact['name'] = im.get_user_answer("reg_district_official_first_name");
+                        contact['surname'] = ("reg_district_official_surname");
+                        return im.api_request('contacts.update', {
+                            key: result.contact.key,
+                            fields: contact
+                        });
+
+                    } else {
+                        var p_log = im.log(result);
+                        return p_log;
+                    }
+                });
+                return p_extra;
+            });
+            return p_district_official;
+        });
+        return p_c;
+    };
+
     self.cms_registration_update_msisdn = function(im) {
         var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis'));
         var p = self.cms_get("data/headteacher/?emis__emis=" + emis);
@@ -449,6 +504,18 @@ function GoRtsZambia() {
                 array_emis.push(result.objects[i].emis);
             }
             im.config.array_emis = array_emis;
+        });
+        return p;
+    };
+
+    self.cms_district_load = function () {
+        var p = self.cms_get("district/");
+        p.add_callback(function(result){
+            var districts = result.objects;
+            districts.sort(function(a, b){
+                                    return ((a.name < b.name) ?
+                                            -1 : ((a.name > b.name) ? 1 : 0)); });
+            im.config.districts = districts;
         });
         return p;
     };
@@ -571,42 +638,116 @@ function GoRtsZambia() {
                     function(choice) {
                         return choice.value;
                     },
-                    "Welcome to the Zambia School Gateway! What would you like to do?",
+                    "Welcome to the Zambia School Gateway! Options:",
                     [
-                        new Choice("reg_emis", "Register as a new user."),
-                        new Choice("manage_change_emis_error", "Change my school."),
-                        new Choice("manage_change_msisdn_emis", "Change my primary cell phone number.")
+                        new Choice("reg_emis", "Register as Head Teacher"),
+                        new Choice("reg_district_official", "Register as District Official"),
+                        new Choice("manage_change_emis_error", "Change my school"),
+                        new Choice("manage_change_msisdn_emis", "Change my primary cell number")
                     ]
                 );
             } else {
-                // recognised user
-                if (result.contact["extras-rts_district_official_district_id"] === undefined) {
-                    // Assumes if they don't have a district they are a head teacher
-                    choices = [
-                            new Choice("perf_teacher_ts_number", "Report on teacher performance."),
-                            new Choice("perf_learner_boys_total", "Report on learner performance."),
-                            new Choice("manage_change_emis", "Change my school."),
-                            new Choice("manage_update_school_data", "Update my school’s registration data.")
-
-                        ];
-                } else {
-                    choices = [
-                            new Choice("add_emis_perf_teacher_ts_number", "Report on teacher performance."),
-                            new Choice("add_emis_perf_learner_boys_total", "Report on learner performance.")
-                        ];
+                if (im.config.performance_monitoring_active){ // Performance monitoring active
+                    // recognised user
+                    if (result.contact["extras-rts_district_official_district_id"] === undefined) {
+                        // Assumes if they don't have a district they are a head teacher
+                        choices = [
+                                new Choice("perf_teacher_ts_number", "Report on teacher performance."),
+                                new Choice("perf_learner_boys_total", "Report on learner performance."),
+                                new Choice("manage_change_emis", "Change my school."),
+                                new Choice("manage_update_school_data", "Update my school’s registration data.")
+                            ];
+                    } else {
+                        choices = [
+                                new Choice("add_emis_perf_teacher_ts_number", "Report on teacher performance."),
+                                new Choice("add_emis_perf_learner_boys_total", "Report on learner performance.")
+                            ];
+                    }
+                    return new ChoiceState(
+                        state_name,
+                        function(choice) {
+                            return choice.value;
+                        },
+                        "What would you like to do?",
+                        choices
+                    );
+                } else { // Performance monitoring disabled
+                    return new EndState(
+                        "end_state_suspended",
+                        im.config.performance_monitoring_suspended_message,
+                        "initial_state"
+                    );
                 }
-                return new ChoiceState(
-                    state_name,
-                    function(choice) {
-                        return choice.value;
-                    },
-                    "What would you like to do?",
-                    choices
-                );
             }
         });
         return p;
     });
+
+// District official
+/********************************************************************************************/
+    self.add_creator('reg_district_official', function(state_name, im){
+        var choices = [];
+
+        var districts = im.config.districts;
+        
+        for (var i=0; i<districts.length; i++){
+            var district = districts[i];
+            choices[i] = new Choice(district.id, district.name);
+        }
+        return new PaginatedChoiceState(state_name,
+                                        "reg_district_official_first_name",
+                                        "Please enter your district name.",
+                                        choices,
+                                        null,
+                                        null,
+                                        {});
+    });
+
+    self.add_state(new FreeText(
+        "reg_district_official_first_name",
+        "reg_district_official_surname",
+        "Please enter your FIRST name."
+    ));
+
+    self.add_state(new FreeText(
+        "reg_district_official_surname",
+        "reg_district_official_id_number",
+        "Now please enter your SURNAME."
+    ));
+
+    self.add_state(new FreeText(
+        "reg_district_official_id_number",
+        "reg_district_official_dob",
+        "Please enter your ID number."
+    ));
+
+    self.add_state(new FreeText(
+        "reg_district_official_dob",
+        "reg_thanks_district_admin",
+        "Please enter your date of birth. Start with the day,"+
+        " followed by the month and year, e.g. 27111980.",
+        function(content) {
+            // check that the value provided is date format we expect
+            return self.check_and_parse_date(content);
+        },
+        "Please enter your date of birth formatted DDMMYYYY"
+    ));
+
+    self.add_state(new EndState(
+            "reg_thanks_district_admin",
+            "Congratulations! You are now registered as a user of the" +
+            " Gateway! Please dial in again when you are ready to start" +
+            " reporting on teacher and learner performance.",
+            "initial_state",
+            {
+                on_enter: function(){
+                    return self.cms_district_admin_registration(im);
+                }
+            }
+        )
+    );
+
+/********************************************************************************************/
 
     self.add_state(new FreeText(
         "add_emis_perf_teacher_ts_number",
@@ -1526,7 +1667,11 @@ function GoRtsZambia() {
 
     self.on_config_read = function(event){
         // Run calls out to the APIs to load dynamic states
-        return self.cms_hierarchy_load();
+        var p = new Promise();
+        p.add_callback(self.cms_hierarchy_load);
+        p.add_callback(self.cms_district_load);
+        p.callback();
+        return p;
     };
 }
 

@@ -153,7 +153,13 @@ class TeacherPerformanceDataResource(ModelResource):
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
     created_by = fields.ForeignKey(HeadTeacherResource,
-                                   'created_by', full=True)
+                                   'created_by',
+                                   null=True,
+                                   full=True)
+    created_by_da = fields.ForeignKey(DistrictAdminUserResource,
+                                      'created_by_da',
+                                       null=True,
+                                       full=True)
     academic_level = fields.ForeignKey(AcademicAchievementCodeResource,
                                        'academic_level', full=True)
 
@@ -182,7 +188,13 @@ class LearnerPerformanceDataResource(ModelResource):
     """
     emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
     created_by = fields.ForeignKey(HeadTeacherResource,
-                                   'created_by', full=True)
+                                   'created_by',
+                                   null=True,
+                                   full=True)
+    created_by_da = fields.ForeignKey(DistrictAdminUserResource,
+                                      'created_by_da',
+                                       null=True,
+                                       full=True)
 
     class Meta:
         queryset = LearnerPerformanceData.objects.all()

@@ -19,6 +19,7 @@ describe("test_api", function() {
 
 var test_fixtures_full = [
     'test/fixtures/get_hierarchy.json',
+    'test/fixtures/get_district.json',
     'test/fixtures/put_registration_update_msisdn.json',
     'test/fixtures/put_registration_update_emis.json',
     'test/fixtures/post_registration_headteacher.json',
@@ -32,7 +33,8 @@ var test_fixtures_full = [
     'test/fixtures/post_performance_learner_girls.json',
     'test/fixtures/post_performance_learner_boys_by_district_official.json',
     'test/fixtures/post_performance_learner_girls_by_district_official.json',
-    'test/fixtures/get_headteacher_filter_emis.json'
+    'test/fixtures/get_headteacher_filter_emis.json',
+    'test/fixtures/post_registration_district_admin.json'
 ];
 
 var tester;
@@ -47,7 +49,9 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
                 });
 
                 var dummy_contact = {
@@ -97,10 +101,11 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
             user: null,
             content: null,
             next_state: "initial_state",
-            response: "^Welcome to the Zambia School Gateway! What would you like to do\\?[^]" +
-                    "1. Register as a new user\\.[^]" +
-                    "2. Change my school\\.[^]" +
-                    "3. Change my primary cell phone number\\.$"
+            response: "^Welcome to the Zambia School Gateway! Options\\:[^]" +
+                    "1. Register as Head Teacher[^]" +
+                    "2. Register as District Official[^]" +
+                    "3. Change my school[^]" +
+                    "4. Change my primary cell number$"
         });
         p.then(done, done);
     });
@@ -897,7 +902,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "3",
+            content: "4",
             next_state: "manage_change_msisdn_emis",
             response: "^Please enter the school's EMIS number that you are currently registered " +
                 "with. This should have 4-6 digits e.g 4351.$"
@@ -986,7 +991,7 @@ describe("When using the USSD line as an unrecognised MSISDN", function() {
         };
         var p = tester.check_state({
             user: user,
-            content: "2",
+            content: "3",
             next_state: "manage_change_emis_error",
             response: "^Your cell phone number is unrecognised. Please associate your new number with " +
                 "your old EMIS first before requesting to change school.[^]" +
@@ -1009,7 +1014,9 @@ describe("When using the USSD line as an recognised MSISDN to change school", fu
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
                 });
 
                 var dummy_contact = {
@@ -1134,7 +1141,9 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
                 });
 
                 var dummy_contact = {
@@ -1999,7 +2008,9 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
                 });
 
                 var dummy_contact = {
@@ -2140,7 +2151,9 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
                 });
 
                 var dummy_contact = {
@@ -3106,7 +3119,9 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
                 });
 
                 var dummy_contact = {
@@ -3215,9 +3230,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
     });
 });
 
-
 describe("When using the USSD line as a recognised MSISDN to update the school data from the manage_update_school_data state", function() {
-
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
     var fixtures = test_fixtures_full;
@@ -3226,7 +3239,9 @@ describe("When using the USSD line as a recognised MSISDN to update the school d
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: 'Sorry, no performance monitoring active. Please redial later.'
                 });
 
                 var dummy_contact = {
@@ -3329,7 +3344,10 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
+                
                 });
 
                 var dummy_contact = {
@@ -3468,7 +3486,10 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
             custom_setup: function (api) {
                 api.config_store.config = JSON.stringify({
                     sms_short_code: "1234",
-                    cms_api_root: 'http://qa/api/v1/'
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
+                
                 });
 
                 var dummy_contact = {
@@ -3598,6 +3619,63 @@ describe("When a district admin is using the USSD line as a recognised MSISDN to
             content: "2",
             next_state: "end_state",
             response: "^Goodbye! Thank you for using the Gateway\\.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+});
+
+describe("When using the USSD line as an recognised MSISDN to report on teachers when line suspended", function() {
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: false,
+                    performance_monitoring_suspended_message: 'Sorry, no performance monitoring active. Please redial later.'
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 2,
+                    "rts_emis": 1
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+    // first test should always start 'null, null' because we haven't
+    // started interacting yet
+    it("display end state with message", function (done) {
+        var p = tester.check_state({
+            user: null,
+            content: null,
+            next_state: "end_state_suspended",
+            response: "^Sorry, no performance monitoring active. Please redial later.$",
             continue_session: false
         });
         p.then(done, done);

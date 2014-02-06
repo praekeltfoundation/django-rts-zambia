@@ -1,0 +1,31 @@
+{
+    "url": "http://qa/api/v1/district_admin/",
+    "method": "POST",
+    "content_type": "application/json",
+    "data": {
+            "first_name": "Sponge Bob",
+            "last_name": "Square Pants",
+            "date_of_birth": "1985-11-27",
+            "district": "/api/v1/district/15/",
+            "id_number": "123454321"
+        },
+    "body": {
+        "created_at": "2014-02-03T12:22:38.158000",
+        "date_of_birth": "1985-11-27T10:00:00",
+        "district": {
+            "id": 1,
+            "name": "Mporokoso",
+            "province": {
+                "id": 15,
+                "name": "Northern Province",
+                "resource_uri": "/api/v1/province/1/"
+            },
+            "resource_uri": "/api/v1/district/1/"
+        },
+        "first_name": "Sponge Bob",
+        "id": 2,
+        "id_number": "za123456789",
+        "last_name": "Square Pants",
+        "resource_uri": "/api/v1/district_admin/2/"
+    }
+}
