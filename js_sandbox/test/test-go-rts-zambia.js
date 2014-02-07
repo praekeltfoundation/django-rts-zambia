@@ -1515,7 +1515,30 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "great",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Please provide a number value for the Classroom Environment subtotal\\.$"
+            response: "^Please provide a valid number value for the Classroom Environment subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering classroom environment score too high should ask classroom environment score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_classroom_environment_score',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
+            next_state: "perf_teacher_classroom_environment_score",
+            response: "^Please provide a valid number value for the Classroom Environment subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1536,7 +1559,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         };
         var p = tester.check_state({
             user: user,
-            content: "10",
+            content: "7",
             next_state: "perf_teacher_t_l_materials",
             response: "^Enter the subtotal that the teacher achieved during the classroom " +
                 "observation for Section 3 \\(Teaching and Learning Materials\\)\\.$"
