@@ -1160,9 +1160,9 @@ function GoRtsZambia() {
             "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 7);
         },
-        'Please provide a number value for the Teaching and Learning Materials subtotal.'
+        'Please provide a valid number value for the Teaching and Learning Materials subtotal.'
     ));
 
     self.add_state(new FreeText(
