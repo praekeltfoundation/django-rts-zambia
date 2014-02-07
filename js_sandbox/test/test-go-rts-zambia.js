@@ -2578,7 +2578,25 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lots",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering boys phonics too high should ask for total boys phonics again", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_phonetic_awareness',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "53",
+            next_state: "perf_learner_boys_phonetic_awareness",
+            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });

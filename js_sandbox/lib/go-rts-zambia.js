@@ -1323,9 +1323,9 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving 4 out of 6" +
+        "Please provide a valid number value for total boys achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
     ));
 
@@ -1348,7 +1348,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving 3 out of 6" +
         " correct answers for Vocabulary."
@@ -1372,7 +1372,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving 2 out of 4" +
         " correct answers for Comprehension."
@@ -1396,7 +1396,7 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving 2 out of 4" +
         " correct answers for Writing."
@@ -1420,7 +1420,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving 16 out of 20 or more."
     ));
@@ -1442,7 +1442,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving between 12 and 15 out of 20."
     ));
@@ -1464,7 +1464,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving between 8 and 11 out of 20."
     ));
@@ -1486,7 +1486,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
         "Please provide a number value for total boys achieving between 0 and 7 out of 20."
     ));
