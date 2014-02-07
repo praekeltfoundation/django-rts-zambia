@@ -1208,9 +1208,9 @@ function GoRtsZambia() {
             "for Section 6 (Learner Engagement)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 17);
         },
-        "Please provide a number value for the Learner Engagement subtotal."
+        "Please provide a valid number value for the Learner Engagement subtotal."
     ));
 
     self.add_state(new FreeText(

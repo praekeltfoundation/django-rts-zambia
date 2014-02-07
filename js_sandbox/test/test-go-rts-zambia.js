@@ -1875,7 +1875,35 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "low",
             next_state: "perf_teacher_pupil_engagement_score",
-            response: "^Please provide a number value for the Learner Engagement subtotal\\.$"
+            response: "^Please provide a valid number value for the Learner Engagement subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering pupil engagement score subtotal too high should ask pupil engagement score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupil_engagement_score',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "18",
+            next_state: "perf_teacher_pupil_engagement_score",
+            response: "^Please provide a valid number value for the Learner Engagement subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1901,7 +1929,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         };
         var p = tester.check_state({
             user: user,
-            content: "22",
+            content: "17",
             next_state: "perf_teacher_attitudes_and_beliefs",
             response: "^Enter the subtotal that the teacher achieved during the interview " +
                 "on Section 7.1. \\(Teacher Attitudes and Beliefs\\)$"
