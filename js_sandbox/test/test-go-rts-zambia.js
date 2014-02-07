@@ -1586,7 +1586,31 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "rubbish",
             next_state: "perf_teacher_t_l_materials",
-            response: "^Please provide a number value for the Teaching and Learning Materials subtotal\\.$"
+            response: "^Please provide a valid number value for the Teaching and Learning Materials subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering T&L Materials Score too high should ask T&L Materials Score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_t_l_materials',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "8",
+            next_state: "perf_teacher_t_l_materials",
+            response: "^Please provide a valid number value for the Teaching and Learning Materials subtotal\\.$"
         });
         p.then(done, done);
     });
