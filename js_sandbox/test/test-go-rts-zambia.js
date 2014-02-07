@@ -1298,7 +1298,43 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One",
             next_state: "perf_teacher_age",
-            response: "^Please provide a number value for the teacher's age\\.$"
+            response: "^Please provide a valid number value for the teacher's age\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher age too low should ask for age again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_age',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "19",
+            next_state: "perf_teacher_age",
+            response: "^Please provide a valid number value for the teacher's age\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher age too high should ask for age again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_age',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "76",
+            next_state: "perf_teacher_age",
+            response: "^Please provide a valid number value for the teacher's age\\.$"
         });
         p.then(done, done);
     });

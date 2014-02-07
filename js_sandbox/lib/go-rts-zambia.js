@@ -1084,9 +1084,9 @@ function GoRtsZambia() {
         "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 20 && content <= 75);
         },
-        "Please provide a number value for the teacher's age."
+        "Please provide a valid number value for the teacher's age."
     ));
 
     self.add_state(new ChoiceState(
