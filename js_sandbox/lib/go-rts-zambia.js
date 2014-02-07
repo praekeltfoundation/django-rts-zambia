@@ -1232,9 +1232,9 @@ function GoRtsZambia() {
             "7.2. (Teacher Training)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 3);
         },
-        "Please provide a number value for the Teacher Training interview subtotal."
+        "Please provide a valid number value for the Teacher Training interview subtotal."
     ));
 
     self.add_state(new FreeText(
