@@ -1184,9 +1184,9 @@ function GoRtsZambia() {
             "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 6);
         },
-        "Please provide a number value for the Learner Materials subtotal."
+        "Please provide a valid number value for the Learner Materials subtotal."
     ));
 
     self.add_state(new FreeText(
