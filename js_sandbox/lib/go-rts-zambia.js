@@ -1196,9 +1196,9 @@ function GoRtsZambia() {
             "for Section 5 (Time on Task and Reading Practice)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 14);
         },
-        "Please provide a number value for the Time on Task and Reading Practice subtotal."
+        "Please provide a valid number value for the Time on Task and Reading Practice subtotal."
     ));
 
     self.add_state(new FreeText(

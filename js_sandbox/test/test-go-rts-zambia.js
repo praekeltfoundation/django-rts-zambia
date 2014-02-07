@@ -1792,7 +1792,34 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "forty five mins",
             next_state: "perf_teacher_reading_lesson",
-            response: "^Please provide a number value for the Time on Task and Reading Practice subtotal\\.$"
+            response: "^Please provide a valid number value for the Time on Task and Reading Practice subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Time on Task subtotal to high should ask Time on Task again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_lesson',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "15",
+            next_state: "perf_teacher_reading_lesson",
+            response: "^Please provide a valid number value for the Time on Task and Reading Practice subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1817,7 +1844,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         };
         var p = tester.check_state({
             user: user,
-            content: "45",
+            content: "14",
             next_state: "perf_teacher_pupil_engagement_score",
             response: "^Enter the subtotal that the teacher achieved during the " +
                 "classroom observation for Section 6 \\(Learner Engagement\\)$"
