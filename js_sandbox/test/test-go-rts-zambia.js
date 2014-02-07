@@ -2142,7 +2142,38 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "seven",
             next_state: "perf_teacher_reading_assessment",
-            response: "^Please provide a number value for the Reading Assessment subtotal\\.$"
+            response: "^Please provide a valid number value for the Reading Assessment subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering reading assessment subtotal incorrectly should ask reading assessment subtotal again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_assessment',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "11",
+            next_state: "perf_teacher_reading_assessment",
+            response: "^Please provide a valid number value for the Reading Assessment subtotal\\.$"
         });
         p.then(done, done);
     });

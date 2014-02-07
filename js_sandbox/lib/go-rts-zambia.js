@@ -1244,9 +1244,9 @@ function GoRtsZambia() {
             "on Section 7.3. (Reading Assessment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 10);
         },
-        "Please provide a number value for the Reading Assessment subtotal."
+        "Please provide a valid number value for the Reading Assessment subtotal."
     ));
 
     self.add_state(new FreeText(
