@@ -1961,7 +1961,36 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "great",
             next_state: "perf_teacher_attitudes_and_beliefs",
-            response: "^Please provide a number value for the Teacher Attitudes and Beliefs subtotal\\.$"
+            response: "^Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering attitudes and beliefs subtotal too high should ask attitudes and beliefs again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_attitudes_and_beliefs',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "17",
+            next_state: "perf_teacher_attitudes_and_beliefs",
+            response: "^Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1988,7 +2017,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         };
         var p = tester.check_state({
             user: user,
-            content: "17",
+            content: "16",
             next_state: "perf_teacher_training_subtotal",
             response: "^Enter the subtotal that the teacher achieved during the interview on " +
                 "Section 7.2. \\(Teacher Training\\)$"

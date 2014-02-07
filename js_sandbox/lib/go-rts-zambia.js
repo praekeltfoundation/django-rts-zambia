@@ -1220,9 +1220,9 @@ function GoRtsZambia() {
             "7.1. (Teacher Attitudes and Beliefs)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= 16);
         },
-        "Please provide a number value for the Teacher Attitudes and Beliefs subtotal."
+        "Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal."
     ));
 
     self.add_state(new FreeText(
