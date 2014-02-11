@@ -1216,7 +1216,39 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One Hundred and Six",
             next_state: "perf_teacher_ts_number",
-            response: "^Please provide a number value for the teacher's TS number\\.$"
+            response: "^Please provide a valid number value for the teacher's TS number\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher TS number too high should ask for teacher TS number again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_ts_number',
+            answers: {
+                initial_state: 'perf_teacher_ts_number'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1000000",
+            next_state: "perf_teacher_ts_number",
+            response: "^Please provide a valid number value for the teacher's TS number\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher TS number too low should ask for teacher TS number again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_ts_number',
+            answers: {
+                initial_state: 'perf_teacher_ts_number'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "10000",
+            next_state: "perf_teacher_ts_number",
+            response: "^Please provide a valid number value for the teacher's TS number\\.$"
         });
         p.then(done, done);
     });
@@ -1230,7 +1262,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         };
         var p = tester.check_state({
             user: user,
-            content: "106",
+            content: "100001",
             next_state: "perf_teacher_gender",
             response: "^What is the gender of the teacher\\?[^]" +
             "1. Male[^]" +
@@ -1269,7 +1301,43 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "One",
             next_state: "perf_teacher_age",
-            response: "^Please provide a number value for the teacher's age\\.$"
+            response: "^Please provide a valid number value for the teacher's age\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher age too low should ask for age again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_age',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "19",
+            next_state: "perf_teacher_age",
+            response: "^Please provide a valid number value for the teacher's age\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher age too high should ask for age again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_age',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "76",
+            next_state: "perf_teacher_age",
+            response: "^Please provide a valid number value for the teacher's age\\.$"
         });
         p.then(done, done);
     });
@@ -1450,7 +1518,30 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "great",
             next_state: "perf_teacher_classroom_environment_score",
-            response: "^Please provide a number value for the Classroom Environment subtotal\\.$"
+            response: "^Please provide a valid number value for the Classroom Environment subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering classroom environment score too high should ask classroom environment score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_classroom_environment_score',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "9",
+            next_state: "perf_teacher_classroom_environment_score",
+            response: "^Please provide a valid number value for the Classroom Environment subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1471,7 +1562,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         };
         var p = tester.check_state({
             user: user,
-            content: "10",
+            content: "7",
             next_state: "perf_teacher_t_l_materials",
             response: "^Enter the subtotal that the teacher achieved during the classroom " +
                 "observation for Section 3 \\(Teaching and Learning Materials\\)\\.$"
@@ -1498,7 +1589,31 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "rubbish",
             next_state: "perf_teacher_t_l_materials",
-            response: "^Please provide a number value for the Teaching and Learning Materials subtotal\\.$"
+            response: "^Please provide a valid number value for the Teaching and Learning Materials subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering T&L Materials Score too high should ask T&L Materials Score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_t_l_materials',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "8",
+            next_state: "perf_teacher_t_l_materials",
+            response: "^Please provide a valid number value for the Teaching and Learning Materials subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1600,7 +1715,33 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "score is seventy five",
             next_state: "perf_teacher_pupils_materials_score",
-            response: "^Please provide a number value for the Learner Materials subtotal\\.$"
+            response: "^Please provide a valid number value for the Learner Materials subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Learner Materials number too high should ask Learner Materials number again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupils_materials_score',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "7",
+            next_state: "perf_teacher_pupils_materials_score",
+            response: "^Please provide a valid number value for the Learner Materials subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1624,7 +1765,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         };
         var p = tester.check_state({
             user: user,
-            content: "75",
+            content: "5",
             next_state: "perf_teacher_reading_lesson",
             response: "^Enter the subtotal that the teacher achieved during the classroom " +
                 "observation for Section 5 \\(Time on Task and Reading Practice\\)$"
@@ -1654,7 +1795,34 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             user: user,
             content: "forty five mins",
             next_state: "perf_teacher_reading_lesson",
-            response: "^Please provide a number value for the Time on Task and Reading Practice subtotal\\.$"
+            response: "^Please provide a valid number value for the Time on Task and Reading Practice subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering Time on Task subtotal to high should ask Time on Task again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_lesson',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "15",
+            next_state: "perf_teacher_reading_lesson",
+            response: "^Please provide a valid number value for the Time on Task and Reading Practice subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1679,7 +1847,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         };
         var p = tester.check_state({
             user: user,
-            content: "45",
+            content: "14",
             next_state: "perf_teacher_pupil_engagement_score",
             response: "^Enter the subtotal that the teacher achieved during the " +
                 "classroom observation for Section 6 \\(Learner Engagement\\)$"
@@ -1710,7 +1878,35 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "low",
             next_state: "perf_teacher_pupil_engagement_score",
-            response: "^Please provide a number value for the Learner Engagement subtotal\\.$"
+            response: "^Please provide a valid number value for the Learner Engagement subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering pupil engagement score subtotal too high should ask pupil engagement score again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_pupil_engagement_score',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "18",
+            next_state: "perf_teacher_pupil_engagement_score",
+            response: "^Please provide a valid number value for the Learner Engagement subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1736,7 +1932,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         };
         var p = tester.check_state({
             user: user,
-            content: "22",
+            content: "17",
             next_state: "perf_teacher_attitudes_and_beliefs",
             response: "^Enter the subtotal that the teacher achieved during the interview " +
                 "on Section 7.1. \\(Teacher Attitudes and Beliefs\\)$"
@@ -1768,7 +1964,36 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "great",
             next_state: "perf_teacher_attitudes_and_beliefs",
-            response: "^Please provide a number value for the Teacher Attitudes and Beliefs subtotal\\.$"
+            response: "^Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering attitudes and beliefs subtotal too high should ask attitudes and beliefs again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_attitudes_and_beliefs',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "17",
+            next_state: "perf_teacher_attitudes_and_beliefs",
+            response: "^Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1795,7 +2020,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         };
         var p = tester.check_state({
             user: user,
-            content: "17",
+            content: "16",
             next_state: "perf_teacher_training_subtotal",
             response: "^Enter the subtotal that the teacher achieved during the interview on " +
                 "Section 7.2. \\(Teacher Training\\)$"
@@ -1828,7 +2053,37 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "five",
             next_state: "perf_teacher_training_subtotal",
-            response: "^Please provide a number value for the Teacher Training interview subtotal\\.$"
+            response: "^Please provide a valid number value for the Teacher Training interview subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering teacher training subtotal too high should ask teacher training subtotal again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_training_subtotal',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "4",
+            next_state: "perf_teacher_training_subtotal",
+            response: "^Please provide a valid number value for the Teacher Training interview subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -1856,7 +2111,7 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
         };
         var p = tester.check_state({
             user: user,
-            content: "5",
+            content: "3",
             next_state: "perf_teacher_reading_assessment",
             response: "^Enter the subtotal that the teacher achieved during the interview " +
                 "on Section 7.3. \\(Reading Assessment\\).$"
@@ -1890,7 +2145,38 @@ it("entering pupil engagement score subtotal incorrectly should ask pupil engage
             user: user,
             content: "seven",
             next_state: "perf_teacher_reading_assessment",
-            response: "^Please provide a number value for the Reading Assessment subtotal\\.$"
+            response: "^Please provide a valid number value for the Reading Assessment subtotal\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering reading assessment subtotal incorrectly should ask reading assessment subtotal again", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_assessment',
+            answers: {
+                initial_state: 'perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "11",
+            next_state: "perf_teacher_reading_assessment",
+            response: "^Please provide a valid number value for the Reading Assessment subtotal\\.$"
         });
         p.then(done, done);
     });
@@ -2295,7 +2581,25 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lots",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering boys phonics too high should ask for total boys phonics again", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_phonetic_awareness',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "53",
+            next_state: "perf_learner_boys_phonetic_awareness",
+            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -2333,7 +2637,26 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "loads",
             next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+        });
+        p.then(done, done);
+    });
+
+    it("entering girls phonics too high should ask for total girls phonics again", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_phonetic_awareness',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_girls_total: '42',
+                perf_learner_boys_phonetic_awareness: '31'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "43",
+            next_state: "perf_learner_girls_phonetic_awareness",
+            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -2373,7 +2696,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "less",
             next_state: "perf_learner_boys_vocabulary",
-            response: "^Please provide a number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
+            response: "^Please provide a valid number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -2415,7 +2738,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_vocabulary",
-            response: "^Please provide a number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
+            response: "^Please provide a valid number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -2459,7 +2782,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lessly",
             next_state: "perf_learner_boys_reading_comprehension",
-            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
+            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -2505,7 +2828,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_reading_comprehension",
-            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
+            response: "^Please provide a valid number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -2553,7 +2876,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_writing_diction",
-            response: "^Please provide a number value for total boys achieving 2 out of 4 correct answers for Writing\\.$"
+            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Writing\\.$"
         });
         p.then(done, done);
     });
@@ -2603,7 +2926,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_writing_diction",
-            response: "^Please provide a number value for total girls achieving 2 out of 4 correct answers for Writing\\.$"
+            response: "^Please provide a valid number value for total girls achieving 2 out of 4 correct answers for Writing\\.$"
         });
         p.then(done, done);
     });
@@ -2654,7 +2977,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_outstanding_results",
-            response: "^Please provide a number value for total boys achieving 16 out of 20 or more\\.$"
+            response: "^Please provide a valid number value for total boys achieving 16 out of 20 or more\\.$"
         });
         p.then(done, done);
     });
@@ -2707,7 +3030,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_outstanding_results",
-            response: "^Please provide a number value for total girls achieving 16 out of 20 or more\\.$"
+            response: "^Please provide a valid number value for total girls achieving 16 out of 20 or more\\.$"
         });
         p.then(done, done);
     });
@@ -2762,7 +3085,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_desirable_results",
-            response: "^Please provide a number value for total boys achieving between 12 and 15 out of 20\\.$"
+            response: "^Please provide a valid number value for total boys achieving between 12 and 15 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2819,7 +3142,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_desirable_results",
-            response: "^Please provide a number value for total girls achieving between 12 and 15 out of 20\\.$"
+            response: "^Please provide a valid number value for total girls achieving between 12 and 15 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2879,7 +3202,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greater",
             next_state: "perf_learner_boys_minimum_results",
-            response: "^Please provide a number value for total boys achieving between 8 and 11 out of 20\\.$"
+            response: "^Please provide a valid number value for total boys achieving between 8 and 11 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2940,7 +3263,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatest",
             next_state: "perf_learner_girls_minimum_results",
-            response: "^Please provide a number value for total girls achieving between 8 and 11 out of 20\\.$"
+            response: "^Please provide a valid number value for total girls achieving between 8 and 11 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -2969,7 +3292,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         };
         var p = tester.check_state({
             user: user,
-            content: "44",
+            content: "42",
             next_state: "perf_learner_boys_below_minimum_results",
             response: "^In total, how many boys achieved between 0 and 7 out of 20\\?$"
         });
@@ -3003,7 +3326,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greatering",
             next_state: "perf_learner_boys_below_minimum_results",
-            response: "^Please provide a number value for total boys achieving between 0 and 7 out of 20\\.$"
+            response: "^Please provide a valid number value for total boys achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -3068,7 +3391,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "greating",
             next_state: "perf_learner_girls_below_minimum_results",
-            response: "^Please provide a number value for total girls achieving between 0 and 7 out of 20\\.$"
+            response: "^Please provide a valid number value for total girls achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
@@ -3099,7 +3422,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         };
         var p = tester.check_state({
             user: user,
-            content: "46",
+            content: "42",
             next_state: "perf_learner_completed",
             response: "^Congratulations. You have finished reporting on the learner assessment.[^]" +
                 "1. Go back to the main menu\\.[^]" +

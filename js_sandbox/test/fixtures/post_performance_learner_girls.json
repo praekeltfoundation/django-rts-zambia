@@ -3,7 +3,7 @@
     "method": "POST",
     "content_type": "application/json",
     "data": {
-        "below_minimum_results": "46",
+        "below_minimum_results": "42",
         "created_by": "/api/v1/data/headteacher/2/",
         "desirable_results": "42",
         "emis": "/api/v1/school/emis/1/",
