@@ -150,6 +150,34 @@ function GoRtsZambia() {
         }
     };
 
+    self.add_emis_district_official_to_contacts = function(state_name){
+        var emis = im.get_user_answer(state_name);
+        // store in config if EMIS is valid
+        var p_c = self.get_contact(im);
+        p_c.add_callback(function(result) {
+            var contact = result.contact;
+            var fields = {
+                "rts_emis": emis
+            };
+
+            var p_extra = im.api_request('contacts.update_extras', {
+                    key: contact.key,
+                    fields: fields
+                });
+
+            p_extra.add_callback(function(result){
+                if (result.success === true) {
+                    return true;
+                } else {
+                    var p_log = im.log(result);
+                    return false;
+                }
+            });
+            return p_extra;
+        });
+        return p_c;
+    };
+
     self.registration_data_school_collect = function(){
         var school_data = {
             "name": im.get_user_answer('reg_school_name'),
@@ -197,7 +225,20 @@ function GoRtsZambia() {
     };
 
 
-    self.performance_data_teacher_collect = function(emis, id){
+    self.performance_data_teacher_collect_by_head = function(emis, id){
+        var data = self.performance_data_teacher_collect(emis);
+        data["created_by"] = "/api/v1/data/headteacher/" + id + "/";
+        return data;
+    };
+
+    self.performance_data_teacher_collect_by_district_official = function(emis, id){
+        var data = self.performance_data_teacher_collect(emis);
+        data["created_by_da"] = "/api/v1/district_admin/" + id + "/";
+        return data;
+    };
+
+
+    self.performance_data_teacher_collect = function(emis){
         var data = {
             "ts_number": im.get_user_answer('perf_teacher_ts_number'),
             "gender": im.get_user_answer('perf_teacher_gender'),
@@ -216,14 +257,27 @@ function GoRtsZambia() {
             "academic_level": "/api/v1/data/achievement/" + im.get_user_answer('perf_teacher_academic_level') + "/",
             "reading_assessment": im.get_user_answer('perf_teacher_reading_assessment'),
             "reading_total": im.get_user_answer('perf_teacher_reading_total'),
-            "emis": "/api/v1/school/emis/" + emis + "/",
-            "created_by": "/api/v1/data/headteacher/" + id + "/"
+            "emis": "/api/v1/school/emis/" + emis + "/"
         };
 
         return data;
     };
 
-    self.performance_data_learner_collect = function(emis, id){
+    self.performance_data_learner_collect_by_head = function(emis, id){
+        var data = self.performance_data_learner_collect(emis);
+        data.boys.created_by = "/api/v1/data/headteacher/" + id + "/";
+        data.girls.created_by = "/api/v1/data/headteacher/" + id + "/";
+        return data;
+    };
+
+    self.performance_data_learner_collect_by_district_official = function(emis, id){
+        var data = self.performance_data_learner_collect(emis);
+        data.boys.created_by_da = "/api/v1/district_admin/" + id + "/";
+        data.girls.created_by_da = "/api/v1/district_admin/" + id + "/";
+        return data;
+    };
+
+    self.performance_data_learner_collect = function(emis){
         var data_boys = {
             "gender": "boys",
             "total_number_pupils": im.get_user_answer('perf_learner_boys_total'),
@@ -235,8 +289,7 @@ function GoRtsZambia() {
             "desirable_results": im.get_user_answer('perf_learner_boys_desirable_results'),
             "minimum_results": im.get_user_answer('perf_learner_boys_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_boys_below_minimum_results'),
-            "emis": "/api/v1/school/emis/" + emis + "/",
-            "created_by": "/api/v1/data/headteacher/" + id + "/"
+            "emis": "/api/v1/school/emis/" + emis + "/"
         };
 
         var data_girls = {
@@ -250,11 +303,10 @@ function GoRtsZambia() {
             "desirable_results": im.get_user_answer('perf_learner_girls_desirable_results'),
             "minimum_results": im.get_user_answer('perf_learner_girls_minimum_results'),
             "below_minimum_results": im.get_user_answer('perf_learner_girls_below_minimum_results'),
-            "emis": "/api/v1/school/emis/" + emis + "/",
-            "created_by": "/api/v1/data/headteacher/" + id + "/"
+            "emis": "/api/v1/school/emis/" + emis + "/"
         };
 
-        return [data_boys, data_girls];
+        return {boys:data_boys, girls: data_girls};
     };
 
     self.get_contact = function(im){
@@ -430,13 +482,19 @@ function GoRtsZambia() {
 
     self.cms_performance_teacher = function(im) {
         var p = self.get_contact(im);
+        var data;
         p.add_callback(function(result) {
             var emis = parseInt(result.contact["extras-rts_emis"]);
             var id = parseInt(result.contact["extras-rts_id"]);
             // Need to ensure no double save
             var contact_key = result.contact.key;
             if (parseInt(result.contact["extras-rts_last_save_performance_teacher"]) != parseInt(im.get_user_answer('perf_teacher_ts_number'))) {
-                var data = self.performance_data_teacher_collect(emis, id);
+
+                if (im.get_user_answer('initial_state') == 'add_emis_perf_teacher_ts_number') {
+                    data = self.performance_data_teacher_collect_by_district_official(emis, id);
+                } else {
+                    data = self.performance_data_teacher_collect_by_head(emis, id);
+                }
                 var p_tp = self.cms_post("data/teacherperformance/", data);
 
                 p_tp.add_callback(function(contact_key) {
@@ -458,9 +516,14 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             var emis = result.contact["extras-rts_emis"];
             var id = result.contact["extras-rts_id"];
-            var data = self.performance_data_learner_collect(emis, id);
-            var data_boys = data[0];
-            var data_girls = data[1];
+
+            if (im.get_user_answer('initial_state') == 'add_emis_perf_learner_boys_total') {
+                var data = self.performance_data_learner_collect_by_district_official(emis, id);
+            } else {
+                var data = self.performance_data_learner_collect_by_head(emis, id);
+            }
+            var data_boys = data.boys;
+            var data_girls = data.girls;
             // Need to ensure no double save
             var contact_key = result.contact.key;
             if (result.contact["extras-rts_last_save_performance_learner"] != 'true') {
@@ -527,6 +590,7 @@ function GoRtsZambia() {
         var p = self.get_contact(im);
 
         p.add_callback(function(result) {
+            var choices;
             if (result.contact["extras-rts_id"] === undefined){
                 // unrecognised user
                 return new ChoiceState(
@@ -543,21 +607,29 @@ function GoRtsZambia() {
                     ]
                 );
             } else {
-                // recognised user
                 if (im.config.performance_monitoring_active){ // Performance monitoring active
+                    // recognised user
+                    if (result.contact["extras-rts_district_official_district_id"] === undefined) {
+                        // Assumes if they don't have a district they are a head teacher
+                        choices = [
+                                new Choice("perf_teacher_ts_number", "Report on teacher performance."),
+                                new Choice("perf_learner_boys_total", "Report on learner performance."),
+                                new Choice("manage_change_emis", "Change my school."),
+                                new Choice("manage_update_school_data", "Update my school’s registration data.")
+                            ];
+                    } else {
+                        choices = [
+                                new Choice("add_emis_perf_teacher_ts_number", "Report on teacher performance."),
+                                new Choice("add_emis_perf_learner_boys_total", "Report on learner performance.")
+                            ];
+                    }
                     return new ChoiceState(
                         state_name,
                         function(choice) {
                             return choice.value;
                         },
                         "What would you like to do?",
-                        [
-                            new Choice("perf_teacher_ts_number", "Report on teacher performance."),
-                            new Choice("perf_learner_boys_total", "Report on learner performance."),
-                            new Choice("manage_change_emis", "Change my school."),
-                            new Choice("manage_update_school_data", "Update my school’s registration data.")
-
-                        ]
+                        choices
                     );
                 } else { // Performance monitoring disabled
                     return new EndState(
@@ -636,6 +708,36 @@ function GoRtsZambia() {
     );
 
 /********************************************************************************************/
+
+    self.add_state(new FreeText(
+        "add_emis_perf_teacher_ts_number",
+        "perf_teacher_ts_number",
+        "Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.",
+        function(content){
+            return self.check_valid_emis(content);
+        },
+        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351.",
+        {
+            on_exit: function(){
+                return self.add_emis_district_official_to_contacts("add_emis_perf_teacher_ts_number");
+            }
+        }
+    ));
+
+    self.add_state(new FreeText(
+        "add_emis_perf_learner_boys_total",
+        "perf_learner_boys_total",
+        "Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.",
+        function(content){
+            return self.check_valid_emis(content);
+        },
+        "The emis does not exist, please try again. This should have 4-6 digits e.g 4351.",
+        {
+            on_exit: function(){
+                return self.add_emis_district_official_to_contacts("add_emis_perf_learner_boys_total");
+            }
+        }
+    ));
 
     self.add_state(new FreeText(
         "reg_emis",

@@ -28,8 +28,11 @@ var test_fixtures_full = [
     'test/fixtures/post_registration_school_update.json',
     'test/fixtures/post_registration_school_manage_update_data.json',
     'test/fixtures/post_performance_teacher.json',
+    'test/fixtures/post_performance_teacher_by_district_official.json',
     'test/fixtures/post_performance_learner_boys.json',
     'test/fixtures/post_performance_learner_girls.json',
+    'test/fixtures/post_performance_learner_boys_by_district_official.json',
+    'test/fixtures/post_performance_learner_girls_by_district_official.json',
     'test/fixtures/get_headteacher_filter_emis.json',
     'test/fixtures/post_registration_district_admin.json'
 ];
@@ -3654,8 +3657,8 @@ describe("When using the USSD line as a recognised MSISDN to update the school d
     });
 });
 
+describe("When a district admin is using the USSD line as a recognised MSISDN to add teacher performance data", function() {
 
-describe("When using the USSD line as an unrecognised MSISDN - register as district admin", function() {
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
     var fixtures = test_fixtures_full;
@@ -3666,7 +3669,8 @@ describe("When using the USSD line as an unrecognised MSISDN - register as distr
                     sms_short_code: "1234",
                     cms_api_root: 'http://qa/api/v1/',
                     performance_monitoring_active: true,
-                    performance_monitoring_suspended_message: 'Sorry, no performance monitoring active. Please redial later.'
+                    performance_monitoring_suspended_message: ''
+                
                 });
 
                 var dummy_contact = {
@@ -3686,6 +3690,12 @@ describe("When using the USSD line as an unrecognised MSISDN - register as distr
                 };
 
                 api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 3,
+                    "rts_emis": 2525,
+                    "rts_district_official_id_number": 1,
+                    "rts_district_official_district_id": 1
+                });
 
                 fixtures.forEach(function (f) {
                     api.load_http_fixture(f);
@@ -3695,198 +3705,250 @@ describe("When using the USSD line as an unrecognised MSISDN - register as distr
         });
     });
 
-    it("selecting to register as district admin should ask for district name", function (done) {
+    it("first display navigation menu", function (done) {
+        var p = tester.check_state({
+            user: null,
+            content: null,
+            next_state: "initial_state",
+            response: "^What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on selecting to report on teacher perfomance should ask for for EMIS", function (done) {
+
         var user = {
             current_state: 'initial_state'
         };
+
         var p = tester.check_state({
             user: user,
-            content: "2",
-            next_state: "reg_district_official",
-            response: "^Please enter your district name\\.[^]" +
-                "1. Chembe[^]" +
-                "2. Chinsali[^]" +
-                "3. Chipata[^]" +
-                "4. Chipili[^]" +
-                "5. Isoka[^]" +
-                "6. Limulunga[^]" +
-                "7. Lundazi[^]" +
-                "8. Mansa[^]" +
-                "9. More$"
-
+            content: "1",
+            next_state: "add_emis_perf_teacher_ts_number",
+            response: "^Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.$"
         });
         p.then(done, done);
     });
 
-    it("choosing more a second time should show more districts", function (done) {
+    it("on adding correct emis should go on to ask about the teachers TS number", function (done) {
+
         var user = {
-            current_state: 'reg_district_official',
+            current_state: 'add_emis_perf_teacher_ts_number',
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_teacher_ts_number",
+            response: "^Please enter the teacher's TS number.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding wrong emis should go on to ask for the emis number again", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_teacher_ts_number',
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "7197871",
+            next_state: "add_emis_perf_teacher_ts_number",
+            response: "^The emis does not exist, please try again. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to go to exit should thank and close", function (done) {
+        var user = {
+            current_state: 'perf_teacher_reading_total',
             answers: {
-                initial_state: 'reg_district_official'
+                initial_state: 'add_emis_perf_teacher_ts_number',
+                perf_teacher_ts_number: '106',
+                perf_teacher_gender: 'female',
+                perf_teacher_age: '30',
+                perf_teacher_academic_level: '3',
+                perf_teacher_years_experience: '0-3',
+                perf_teacher_g2_pupils_present: '40',
+                perf_teacher_g2_pupils_registered: '50',
+                perf_teacher_classroom_environment_score: '10',
+                perf_teacher_t_l_materials: '5',
+                perf_teacher_pupils_books_number: '90',
+                perf_teacher_pupils_materials_score: '75',
+                perf_teacher_reading_lesson: '45',
+                perf_teacher_pupil_engagement_score: '22',
+                perf_teacher_attitudes_and_beliefs: '17',
+                perf_teacher_training_subtotal: '5',
+                perf_teacher_reading_assessment: '7'
             }
         };
         var p = tester.check_state({
             user: user,
             content: "9",
-            next_state: "reg_district_official",
-            response: "^Please enter your district name\\.[^]" +
-                "1. Mongu[^]" +
-                "2. Mporokoso[^]" +
-                "3. Mufumbwe[^]" +
-                "4. Mulobezi[^]" +
-                "5. Mungwi[^]" +
-                "6. Mwandi[^]" +
-                "7. Mwense[^]" +
-                "8. Sesheke[^]" +
-                "9. More[^]" +
-                "10. Back$"
-
-        });
-        p.then(done, done);
-    });
-
-    it("choosing more a third time should show more districts", function (done) {
-        var user = {
-            current_state: 'reg_district_official',
-            answers: {
-                initial_state: 'reg_district_official'
-            },
-            pages: {
-                    reg_district_official: 8
-                }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "9",
-            next_state: "reg_district_official",
-            response: "^Please enter your district name\\.[^]" +
-                "1. Shiwang'andu[^]" +
-                "2. Solwezi[^]" +
-                "3. Back$"
-
-        });
-        p.then(done, done);
-    });
-
-    it("choosing a district should go to enter first name state", function (done) {
-        var user = {
-            current_state: 'reg_district_official',
-            answers: {
-                initial_state: 'reg_district_official'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "2",
-            next_state: "reg_district_official_first_name",
-            response: "^Please enter your FIRST name\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("on entering your first name should ask for your surname", function (done) {
-        var user = {
-            current_state: 'reg_district_official_first_name',
-            answers: {
-                initial_state: 'reg_district_official',
-                reg_district_official: 15}
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "Sponge Bob",
-            next_state: "reg_district_official_surname",
-            response: "^Now please enter your SURNAME\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("on entering your surname should ask for the id number", function (done) {
-        var user = {
-            current_state: 'reg_district_official_surname',
-            answers: {
-                initial_state: 'reg_district_official',
-                reg_district_official: 15,
-                reg_district_official_first_name: "Sponge Bob"
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "Square Pants",
-            next_state: "reg_district_official_id_number",
-            response: "^Please enter your ID number\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("on entering the ID number should ask for date of  birth", function(done){
-        var user = {
-            current_state: 'reg_district_official_id_number',
-            answers: {
-                initial_state: 'reg_district_official',
-                reg_district_official: 15,
-                reg_district_official_first_name: "Sponge Bob",
-                reg_district_official_surname: "Square Pants"
-            }
-        };
-
-        var p = tester.check_state({
-            user: user,
-            content: "123454321",
-            next_state: "reg_district_official_dob",
-            response: "^Please enter your date of birth. Start with the day, followed by the month and year, e.g. 27111980\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("on entering the correct date of birth it should show the thank you message and register district admin", function(done){
-        var user = {
-            current_state: 'reg_district_official_dob',
-            answers: {
-                initial_state: 'reg_district_official_official',
-                reg_district_official: 15,
-                reg_district_official_first_name: "Sponge Bob",
-                reg_district_official_surname: "Square Pants",
-                reg_district_official_id_number: "123454321"
-            }
-        };
-
-        var p = tester.check_state({
-            user: user,
-            content: "27111985",
-            next_state: "reg_thanks_district_admin",
-            response: "^Congratulations! You are now registered as a user of" +
-                " the Gateway! Please dial in again when you are ready to" +
-                " start reporting on teacher and learner performance\\.$",
-            continue_session: false
-        });
-        p.then(done, done);
-    });
-
-    it("on entering the wrong date of birth it should show the thank you message and register district admin", function(done){
-        var user = {
-            current_state: 'reg_district_official_dob',
-            answers: {
-                initial_state: 'reg_district_official',
-                reg_district_official: 15,
-                reg_district_official_first_name: "Sponge Bob",
-                reg_district_official_surname: "Square Pants",
-                reg_district_official_id_number: "123454321"
-            }
-        };
-
-        var p = tester.check_state({
-            user: user,
-            content: "123456789",
-            next_state: "reg_district_official_dob",
-            response: "^Please enter your date of birth formatted DDMMYYYY$"
+            next_state: "perf_teacher_completed",
+            response: "^Congratulations, you have finished reporting on this teacher\\.[^]" +
+                "1. Add another teacher\\.[^]" +
+                "2. Go back to the main menu\\.[^]" +
+                "3. Exit\\.$"
         });
         p.then(done, done);
     });
 });
 
 
-describe("When using the USSD line as an recognised MSISDN to report on teachers when line suspended", function() {
+describe("When a district admin is using the USSD line as a recognised MSISDN to add learner performance data", function() {
 
+    // These are used to mock API reponses
+    // EXAMPLE: Response from google maps API
+    var fixtures = test_fixtures_full;
+    beforeEach(function() {
+        tester = new vumigo.test_utils.ImTester(app.api, {
+            custom_setup: function (api) {
+                api.config_store.config = JSON.stringify({
+                    sms_short_code: "1234",
+                    cms_api_root: 'http://qa/api/v1/',
+                    performance_monitoring_active: true,
+                    performance_monitoring_suspended_message: ''
+                
+                });
+
+                var dummy_contact = {
+                    key: "f953710a2472447591bd59e906dc2c26",
+                    surname: "Trotter",
+                    user_account: "test-0-user",
+                    bbm_pin: null,
+                    msisdn: "+1234567",
+                    created_at: "2013-04-24 14:01:41.803693",
+                    gtalk_id: null,
+                    dob: null,
+                    groups: null,
+                    facebook_id: null,
+                    twitter_handle: null,
+                    email_address: null,
+                    name: "Rodney"
+                };
+
+                api.add_contact(dummy_contact);
+                api.update_contact_extras(dummy_contact, {
+                    "rts_id": 3,
+                    "rts_emis": 2525,
+                    "rts_district_official_id_number": 1,
+                    "rts_district_official_district_id": 1
+                });
+
+                fixtures.forEach(function (f) {
+                    api.load_http_fixture(f);
+                });
+            },
+            async: true
+        });
+    });
+
+    it("first display navigation menu", function (done) {
+        var p = tester.check_state({
+            user: null,
+            content: null,
+            next_state: "initial_state",
+            response: "^What would you like to do\\?[^]" +
+                    "1. Report on teacher performance\\.[^]" +
+                    "2. Report on learner performance.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on selecting to report on learner perfomance should ask for for EMIS", function (done) {
+
+        var user = {
+            current_state: 'initial_state'
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "add_emis_perf_learner_boys_total",
+            response: "^Please enter the school's EMIS number that you would like to report on. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding correct emis should go on to ask about the teachers TS number", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_learner_boys_total',
+            answers : {
+                initial_state: "add_emis_perf_learner_boys_total"
+            }
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_learner_boys_total",
+            response: "^How many boys took part in the learner assessment\\?$"
+        });
+        p.then(done, done);
+    });
+
+    it("on adding wrong emis should go on to ask for the emis number again", function (done) {
+
+        var user = {
+            current_state: 'add_emis_perf_learner_boys_total',
+            answers : {
+                initial_state: "add_emis_perf_learner_boys_total"
+            }
+        };
+
+        var p = tester.check_state({
+            user: user,
+            content: "7197871",
+            next_state: "add_emis_perf_learner_boys_total",
+            response: "^The emis does not exist, please try again. This should have 4-6 digits e.g 4351.$"
+        });
+        p.then(done, done);
+    });
+
+    it("selecting to go to exit should thank and close", function (done) {
+        // Should go straight to the end state of the system
+        var user = {
+            current_state: 'perf_learner_completed',
+            answers: {
+                initial_state: 'add_emis_perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_boys_writing_diction: '37',
+                perf_learner_boys_outstanding_results: '39',
+                perf_learner_boys_desirable_results: '41',
+                perf_learner_boys_minimum_results: '43',
+                perf_learner_boys_below_minimum_results: '45',
+
+                perf_learner_girls_total: '42',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_girls_writing_diction: '38',
+                perf_learner_girls_outstanding_results: '40',
+                perf_learner_girls_desirable_results: '42',
+                perf_learner_girls_minimum_results: '44',
+                perf_learner_girls_below_minimum_results: '46'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "2",
+            next_state: "end_state",
+            response: "^Goodbye! Thank you for using the Gateway\\.$",
+            continue_session: false
+        });
+        p.then(done, done);
+    });
+});
+
+describe("When using the USSD line as an recognised MSISDN to report on teachers when line suspended", function() {
     // These are used to mock API reponses
     // EXAMPLE: Response from google maps API
     var fixtures = test_fixtures_full;
@@ -3917,7 +3979,6 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
                 };
 
                 api.add_contact(dummy_contact);
-
                 api.update_contact_extras(dummy_contact, {
                     "rts_id": 2,
                     "rts_emis": 1
@@ -3930,7 +3991,6 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
             async: true
         });
     });
-
     // first test should always start 'null, null' because we haven't
     // started interacting yet
     it("display end state with message", function (done) {
