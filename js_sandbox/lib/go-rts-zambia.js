@@ -1057,9 +1057,9 @@ function GoRtsZambia() {
         "Please enter the teacher's TS number.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 100000 && parseInt(content) <= 999999);
         },
-        "Please provide a number value for the teacher's TS number.",
+        "Please provide a valid number value for the teacher's TS number.",
         {
             on_enter: function(){
                 var p = self.clear_contact_extra("rts_last_save_performance_teacher");
@@ -1084,9 +1084,9 @@ function GoRtsZambia() {
         "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 20 && parseInt(content) <= 75);
         },
-        "Please provide a number value for the teacher's age."
+        "Please provide a valid number value for the teacher's age."
     ));
 
     self.add_state(new ChoiceState(
@@ -1148,9 +1148,9 @@ function GoRtsZambia() {
             "observation for Section 2 (Classroom Environment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 8);
         },
-        'Please provide a number value for the Classroom Environment subtotal.'
+        "Please provide a valid number value for the Classroom Environment subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1160,9 +1160,9 @@ function GoRtsZambia() {
             "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 7);
         },
-        'Please provide a number value for the Teaching and Learning Materials subtotal.'
+        'Please provide a valid number value for the Teaching and Learning Materials subtotal.'
     ));
 
     self.add_state(new FreeText(
@@ -1184,9 +1184,9 @@ function GoRtsZambia() {
             "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 6);
         },
-        "Please provide a number value for the Learner Materials subtotal."
+        "Please provide a valid number value for the Learner Materials subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1196,9 +1196,9 @@ function GoRtsZambia() {
             "for Section 5 (Time on Task and Reading Practice)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 14);
         },
-        "Please provide a number value for the Time on Task and Reading Practice subtotal."
+        "Please provide a valid number value for the Time on Task and Reading Practice subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1208,9 +1208,9 @@ function GoRtsZambia() {
             "for Section 6 (Learner Engagement)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 17);
         },
-        "Please provide a number value for the Learner Engagement subtotal."
+        "Please provide a valid number value for the Learner Engagement subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1220,9 +1220,9 @@ function GoRtsZambia() {
             "7.1. (Teacher Attitudes and Beliefs)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 16);
         },
-        "Please provide a number value for the Teacher Attitudes and Beliefs subtotal."
+        "Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1232,9 +1232,9 @@ function GoRtsZambia() {
             "7.2. (Teacher Training)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 3);
         },
-        "Please provide a number value for the Teacher Training interview subtotal."
+        "Please provide a valid number value for the Teacher Training interview subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1244,9 +1244,9 @@ function GoRtsZambia() {
             "on Section 7.3. (Reading Assessment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 10);
         },
-        "Please provide a number value for the Reading Assessment subtotal."
+        "Please provide a valid number value for the Reading Assessment subtotal."
     ));
 
     self.add_state(new FreeText(
@@ -1323,9 +1323,9 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving 4 out of 6" +
+        "Please provide a valid number value for total boys achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
     ));
 
@@ -1336,9 +1336,9 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving 4 out of 6" +
+        "Please provide a valid number value for total girls achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
     ));
 
@@ -1348,9 +1348,9 @@ function GoRtsZambia() {
         "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving 3 out of 6" +
+        "Please provide a valid number value for total boys achieving 3 out of 6" +
         " correct answers for Vocabulary."
     ));
 
@@ -1360,9 +1360,9 @@ function GoRtsZambia() {
         "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving 3 out of 6" +
+        "Please provide a valid number value for total girls achieving 3 out of 6" +
         " correct answers for Vocabulary."
     ));
 
@@ -1372,9 +1372,9 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving 2 out of 4" +
+        "Please provide a valid number value for total boys achieving 2 out of 4" +
         " correct answers for Comprehension."
     ));
 
@@ -1384,9 +1384,9 @@ function GoRtsZambia() {
         "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving 2 out of 4" +
+        "Please provide a valid number value for total girls achieving 2 out of 4" +
         " correct answers for Comprehension."
     ));
 
@@ -1396,9 +1396,9 @@ function GoRtsZambia() {
         "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving 2 out of 4" +
+        "Please provide a valid number value for total boys achieving 2 out of 4" +
         " correct answers for Writing."
     ));
 
@@ -1408,9 +1408,9 @@ function GoRtsZambia() {
         "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving 2 out of 4" +
+        "Please provide a valid number value for total girls achieving 2 out of 4" +
         " correct answers for Writing."
     ));
 
@@ -1420,9 +1420,9 @@ function GoRtsZambia() {
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving 16 out of 20 or more."
+        "Please provide a valid number value for total boys achieving 16 out of 20 or more."
     ));
 
     self.add_state(new FreeText(
@@ -1431,9 +1431,9 @@ function GoRtsZambia() {
         "In total, how many girls achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving 16 out of 20 or more."
+        "Please provide a valid number value for total girls achieving 16 out of 20 or more."
     ));
 
     self.add_state(new FreeText(
@@ -1442,9 +1442,9 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving between 12 and 15 out of 20."
+        "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1453,9 +1453,9 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving between 12 and 15 out of 20."
+        "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1464,9 +1464,9 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving between 8 and 11 out of 20."
+        "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1475,9 +1475,9 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving between 8 and 11 out of 20."
+        "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1486,9 +1486,9 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
         },
-        "Please provide a number value for total boys achieving between 0 and 7 out of 20."
+        "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
     ));
 
     self.add_state(new FreeText(
@@ -1497,9 +1497,9 @@ function GoRtsZambia() {
         "In total, how many girls achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
+            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
         },
-        "Please provide a number value for total girls achieving between 0 and 7 out of 20."
+        "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
     ));
 
     self.add_creator('perf_learner_completed', function(state_name, im) {
