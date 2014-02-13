@@ -615,7 +615,7 @@ function GoRtsZambia() {
                                 new Choice("perf_teacher_ts_number", "Report on teacher performance."),
                                 new Choice("perf_learner_boys_total", "Report on learner performance."),
                                 new Choice("manage_change_emis", "Change my school."),
-                                new Choice("manage_update_school_data", "Update my school’s registration data.")
+                                new Choice("manage_update_school_data", "Update my school's registration data.")
                             ];
                     } else {
                         choices = [

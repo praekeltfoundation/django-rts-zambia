@@ -1187,7 +1187,7 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
                     "3. Change my school\\.[^]" +
-                    "4. Update my school’s registration data\\.$"
+                    "4. Update my school's registration data\\.$"
         });
         p.then(done, done);
     });
@@ -2389,7 +2389,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
                     "3. Change my school\\.[^]" +
-                    "4. Update my school’s registration data\\.$"
+                    "4. Update my school's registration data\\.$"
         });
         p.then(done, done);
     });
@@ -2483,7 +2483,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
                     "3. Change my school\\.[^]" +
-                    "4. Update my school’s registration data\\.$"
+                    "4. Update my school's registration data\\.$"
         });
         p.then(done, done);
     });
@@ -3512,7 +3512,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
                     "1. Report on teacher performance\\.[^]" +
                     "2. Report on learner performance\\.[^]" +
                     "3. Change my school\\.[^]" +
-                    "4. Update my school’s registration data\\.$"
+                    "4. Update my school's registration data\\.$"
         });
         p.then(done, done);
     });
