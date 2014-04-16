@@ -186,7 +186,12 @@ class SchoolResourceCSVDownload(CSVModelResource):
         authentication = OverrideApiAuthentication()
 
     def dehydrate(self, bundle):
-        bundle.data['zone'] = bundle.obj.zone.id
+        bundle.data['zone_id'] = bundle.obj.display_zone().id
+        bundle.data['zone_name'] = bundle.obj.display_zone().name
+        bundle.data['district_id'] = bundle.obj.display_district().id
+        bundle.data['district_name'] = bundle.obj.display_district().name
+        bundle.data['province_id'] = bundle.obj.display_province().id
+        bundle.data['province_name'] = bundle.obj.display_province().name
         return bundle
 
 
