@@ -39,12 +39,20 @@ class TestHierarchyCSVAPI(TestCase):
         self.assertEqual(response.status_code, 200)
         response_list = self.parse_csv_response(response.content)
         db_objects = School.objects.all()
-        object_list = [sorted([unicode(obj.name),
+        object_list = [sorted(["/api/v1/zone/" + str(obj.display_zone().id) + "/",
+                              unicode(obj.display_zone().name),
+                              str(obj.display_district().id),
+                              unicode(obj.display_district().name),
+                              str(obj.display_province().id),
+                              unicode(obj.display_province().name),
+                              unicode(obj.name),
                               str(obj.emis),
                               str(obj.id),
                               str(obj.zone.id)]) for obj in db_objects]
 
-        object_list.insert(0, sorted(["id", "emis", "zone", "name"]))
+        object_list.insert(0, sorted(["zone_id", "zone", "district_id",
+                                      "name", "district_name", "zone_name",
+                                      "emis", "province_id", "id", "province_name"]))
         self.assertEqual(sorted(response_list), sorted(object_list))
 
     def test_school_csv_api_unauthorized(self):
