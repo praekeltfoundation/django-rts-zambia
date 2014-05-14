@@ -1157,11 +1157,7 @@ function GoRtsZambia() {
         "perf_teacher_ts_number",
         "perf_teacher_gender",
         "Please enter the teacher's TS number.",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 100000 && parseInt(content) <= 999999);
-        },
-        "Please provide a valid number value for the teacher's TS number.",
+        null, null,
         {
             on_enter: function(){
                 var p = self.clear_contact_extra("rts_last_save_performance_teacher");

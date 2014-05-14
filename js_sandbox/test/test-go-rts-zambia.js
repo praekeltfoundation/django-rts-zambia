@@ -1205,54 +1205,6 @@ describe("When using the USSD line as an recognised MSISDN to report on teachers
         p.then(done, done);
     });
 
-    it("entering teacher TS number incorrectly should ask for teacher TS number again", function (done) {
-        var user = {
-            current_state: 'perf_teacher_ts_number',
-            answers: {
-                initial_state: 'perf_teacher_ts_number'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "One Hundred and Six",
-            next_state: "perf_teacher_ts_number",
-            response: "^Please provide a valid number value for the teacher's TS number\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering teacher TS number too high should ask for teacher TS number again", function (done) {
-        var user = {
-            current_state: 'perf_teacher_ts_number',
-            answers: {
-                initial_state: 'perf_teacher_ts_number'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "1000000",
-            next_state: "perf_teacher_ts_number",
-            response: "^Please provide a valid number value for the teacher's TS number\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering teacher TS number too low should ask for teacher TS number again", function (done) {
-        var user = {
-            current_state: 'perf_teacher_ts_number',
-            answers: {
-                initial_state: 'perf_teacher_ts_number'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "10000",
-            next_state: "perf_teacher_ts_number",
-            response: "^Please provide a valid number value for the teacher's TS number\\.$"
-        });
-        p.then(done, done);
-    });
-
     it("entering teacher TS number should ask for gender", function (done) {
         var user = {
             current_state: 'perf_teacher_ts_number',
