@@ -109,7 +109,7 @@ class TestDistrictAdmin(ResourceTestCase):
                                     "pupil_engagement_score": 16,
                                     "attitudes_and_beliefs": 17,
                                     "training_subtotal": 18,
-                                    "ts_number": 19,
+                                    "ts_number": "19",
                                     "reading_assessment": 50,
                                     "reading_total": 70,
                                     "academic_level": achievement_uri,
@@ -132,7 +132,7 @@ class TestDistrictAdmin(ResourceTestCase):
         self.assertEqual(16, json_item["pupil_engagement_score"])
         self.assertEqual(17, json_item["attitudes_and_beliefs"])
         self.assertEqual(18, json_item["training_subtotal"])
-        self.assertEqual(19, json_item["ts_number"])
+        self.assertEqual("19", json_item["ts_number"])
         self.assertEqual(50, json_item["reading_assessment"])
         self.assertEqual(70, json_item["reading_total"])
         self.assertEqual(8, json_item["academic_level"]["id"])
@@ -156,7 +156,7 @@ class TestDistrictAdmin(ResourceTestCase):
         self.assertEqual(16, teacher.pupil_engagement_score)
         self.assertEqual(17, teacher.attitudes_and_beliefs)
         self.assertEqual(18, teacher.training_subtotal)
-        self.assertEqual(19, teacher.ts_number)
+        self.assertEqual("19", teacher.ts_number)
         self.assertEqual(50, teacher.reading_assessment)
         self.assertEqual(70, teacher.reading_total)
         self.assertEqual(8, teacher.academic_level.id)
@@ -536,7 +536,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
                                     "pupil_engagement_score": 16,
                                     "attitudes_and_beliefs": 17,
                                     "training_subtotal": 18,
-                                    "ts_number": 19,
+                                    "ts_number": "19",
                                     "reading_assessment": 50,
                                     "reading_total": 70,
                                     "academic_level": achievement_uri,
@@ -558,7 +558,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(16, json_item["pupil_engagement_score"])
         self.assertEqual(17, json_item["attitudes_and_beliefs"])
         self.assertEqual(18, json_item["training_subtotal"])
-        self.assertEqual(19, json_item["ts_number"])
+        self.assertEqual("19", json_item["ts_number"])
         self.assertEqual(50, json_item["reading_assessment"])
         self.assertEqual(70, json_item["reading_total"])
         self.assertEqual(8, json_item["academic_level"]["id"])
@@ -582,7 +582,7 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
         self.assertEqual(16, teacher.pupil_engagement_score)
         self.assertEqual(17, teacher.attitudes_and_beliefs)
         self.assertEqual(18, teacher.training_subtotal)
-        self.assertEqual(19, teacher.ts_number)
+        self.assertEqual("19", teacher.ts_number)
         self.assertEqual(50, teacher.reading_assessment)
         self.assertEqual(70, teacher.reading_total)
         self.assertEqual(8, teacher.academic_level.id)
