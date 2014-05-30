@@ -1,6 +1,7 @@
 from tastypie.resources import ModelResource, ALL_WITH_RELATIONS, ALL
 from tastypie.authorization import Authorization
 from tastypie import fields
+from tastypie.paginator import Paginator
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
                     LearnerPerformanceData, InboundSMS,
                     AcademicAchievementCode, DistrictAdminUser)
@@ -39,7 +40,7 @@ class DistrictAdminUserResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
-
+        paginator_class = Paginator
 
 class HeadTeacherResource(ModelResource):
     """
@@ -79,6 +80,7 @@ class HeadTeacherResource(ModelResource):
         filtering = {
             'emis': ALL_WITH_RELATIONS,
             'is_zonal_head': ALL}
+        paginator_class = Paginator
 
     def prepend_urls(self):
         return [
@@ -121,6 +123,7 @@ class SchoolDataResource(ModelResource):
         filtering = {
             'created_by': ALL_WITH_RELATIONS,
             'emis': ALL_WITH_RELATIONS}
+        paginator_class = Paginator
 
 
 class AcademicAchievementCodeResource(ModelResource):
@@ -137,6 +140,7 @@ class AcademicAchievementCodeResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
+        paginator_class = Paginator
 
 
 class TeacherPerformanceDataResource(ModelResource):
@@ -173,6 +177,7 @@ class TeacherPerformanceDataResource(ModelResource):
         filtering = {
             'created_by': ALL_WITH_RELATIONS,
             'emis': ALL_WITH_RELATIONS}
+        paginator_class = Paginator
 
 
 class LearnerPerformanceDataResource(ModelResource):
@@ -206,6 +211,7 @@ class LearnerPerformanceDataResource(ModelResource):
         filtering = {
             'created_by': ALL_WITH_RELATIONS,
             'emis': ALL_WITH_RELATIONS}
+        paginator_class = Paginator
 
 
 class InboundSMSResource(ModelResource):
@@ -236,6 +242,7 @@ class InboundSMSResource(ModelResource):
         always_return_data = True
         filtering = {
             'created_by': ALL_WITH_RELATIONS}
+        paginator_class = Paginator
 
 
 # =========================================================================
@@ -258,6 +265,7 @@ class HeadTeacherCSVDownloadResource(CSVModelResource):
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
 
     def dehydrate(self, bundle):
         bundle.data['emis'] = bundle.obj.emis.id
@@ -282,6 +290,7 @@ class SchoolDataCSVDownloadResource(CSVModelResource):
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
 
     def dehydrate(self, bundle):
         bundle.data['emis'] = bundle.obj.emis.id
@@ -305,6 +314,7 @@ class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
 
 
 class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
@@ -327,6 +337,7 @@ class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
 
     def dehydrate(self, bundle):
         bundle.data['emis'] = bundle.obj.emis.id
@@ -353,6 +364,7 @@ class LearnerPerformanceDataCSVDownloadResource(CSVModelResource):
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
 
     def dehydrate(self, bundle):
         bundle.data['emis'] = bundle.obj.emis.id
@@ -377,6 +389,7 @@ class InboundSMSCSVDownloadResource(CSVModelResource):
         include_resource_uri = False
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
 
     def dehydrate(self, bundle):
         bundle.data['created_by'] = bundle.obj.created_by.id
