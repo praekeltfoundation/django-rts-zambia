@@ -1387,9 +1387,10 @@ function GoRtsZambia() {
     // Start of Performance Management - Learners
     /////////////////////////////////////////////////////////////////
 
+// boys total
     self.add_state(new FreeText(
         "perf_learner_boys_total",
-        "perf_learner_girls_total",
+        "perf_learner_boys_outstanding_results",
         "How many boys took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1404,9 +1405,58 @@ function GoRtsZambia() {
         }
     ));
 
+// boys 16-20
+    self.add_state(new FreeText(
+        "perf_learner_boys_outstanding_results",
+        "perf_learner_boys_desirable_results",
+        "In total, how many boys achieved 16 out of 20 or more?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+        },
+        "Please provide a valid number value for total boys achieving 16 out of 20 or more."
+    ));
+
+// boys 12-15
+    self.add_state(new FreeText(
+        "perf_learner_boys_desirable_results",
+        "perf_learner_boys_minimum_results",
+        "In total, how many boys achieved between 12 and 15 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+        },
+        "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
+    ));
+
+// boys 8-11
+    self.add_state(new FreeText(
+        "perf_learner_boys_minimum_results",
+        "perf_learner_boys_below_minimum_results",
+        "In total, how many boys achieved between 8 and 11 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+        },
+        "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
+    ));
+
+// boys 0-7
+    self.add_state(new FreeText(
+        "perf_learner_boys_below_minimum_results",
+        "perf_learner_girls_total",
+        "In total, how many boys achieved between 0 and 7 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+        },
+        "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
+    ));
+
+// girls total
     self.add_state(new FreeText(
         "perf_learner_girls_total",
-        "perf_learner_boys_phonetic_awareness",
+        "perf_learner_girls_outstanding_results",
         "How many girls took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1415,9 +1465,57 @@ function GoRtsZambia() {
         "Please provide a number value for total girls assessed."
     ));
 
+// girls 16-20
+    self.add_state(new FreeText(
+        "perf_learner_girls_outstanding_results",
+        "perf_learner_girls_desirable_results",
+        "In total, how many girls achieved 16 out of 20 or more?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
+        },
+        "Please provide a valid number value for total girls achieving 16 out of 20 or more."
+    ));
+
+// girls 12-15
+    self.add_state(new FreeText(
+        "perf_learner_girls_desirable_results",
+        "perf_learner_girls_minimum_results",
+        "In total, how many girls achieved between 12 and 15 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
+        },
+        "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
+    ));
+
+// girls 8-11
+    self.add_state(new FreeText(
+        "perf_learner_girls_minimum_results",
+        "perf_learner_girls_below_minimum_results",
+        "In total, how many girls achieved between 8 and 11 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
+        },
+        "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
+    ));
 
 
+// girls 0-7
+    self.add_state(new FreeText(
+        "perf_learner_girls_below_minimum_results",
+        "perf_learner_boys_phonetic_awareness",
+        "In total, how many girls achieved between 0 and 7 out of 20?",
+        function(content) {
+            // check that the value provided is actually decimal-ish.
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
+        },
+        "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
+    ));
 
+
+// boys phonetic
     self.add_state(new FreeText(
         "perf_learner_boys_phonetic_awareness",
         "perf_learner_girls_phonetic_awareness",
@@ -1431,6 +1529,7 @@ function GoRtsZambia() {
         " correct answers for Phonics and Phonemic Awareness."
     ));
 
+// girls phonetic
     self.add_state(new FreeText(
         "perf_learner_girls_phonetic_awareness",
         "perf_learner_boys_vocabulary",
@@ -1444,6 +1543,7 @@ function GoRtsZambia() {
         " correct answers for Phonics and Phonemic Awareness."
     ));
 
+// boys vocab
     self.add_state(new FreeText(
         "perf_learner_boys_vocabulary",
         "perf_learner_girls_vocabulary",
@@ -1456,6 +1556,7 @@ function GoRtsZambia() {
         " correct answers for Vocabulary."
     ));
 
+// girls vocab
     self.add_state(new FreeText(
         "perf_learner_girls_vocabulary",
         "perf_learner_boys_reading_comprehension",
@@ -1468,6 +1569,7 @@ function GoRtsZambia() {
         " correct answers for Vocabulary."
     ));
 
+// boys reading comprehension
     self.add_state(new FreeText(
         "perf_learner_boys_reading_comprehension",
         "perf_learner_girls_reading_comprehension",
@@ -1480,6 +1582,7 @@ function GoRtsZambia() {
         " correct answers for Comprehension."
     ));
 
+// girls reading comprehension
     self.add_state(new FreeText(
         "perf_learner_girls_reading_comprehension",
         "perf_learner_boys_writing_diction",
@@ -1492,6 +1595,7 @@ function GoRtsZambia() {
         " correct answers for Comprehension."
     ));
 
+// boys writing
     self.add_state(new FreeText(
         "perf_learner_boys_writing_diction",
         "perf_learner_girls_writing_diction",
@@ -1504,9 +1608,10 @@ function GoRtsZambia() {
         " correct answers for Writing."
     ));
 
+// girls writing
     self.add_state(new FreeText(
         "perf_learner_girls_writing_diction",
-        "perf_learner_boys_outstanding_results",
+        "perf_learner_completed",
         "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1516,94 +1621,8 @@ function GoRtsZambia() {
         " correct answers for Writing."
     ));
 
-    self.add_state(new FreeText(
-        "perf_learner_boys_outstanding_results",
-        "perf_learner_girls_outstanding_results",
-        "In total, how many boys achieved 16 out of 20 or more?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
-        },
-        "Please provide a valid number value for total boys achieving 16 out of 20 or more."
-    ));
 
-    self.add_state(new FreeText(
-        "perf_learner_girls_outstanding_results",
-        "perf_learner_boys_desirable_results",
-        "In total, how many girls achieved 16 out of 20 or more?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving 16 out of 20 or more."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_boys_desirable_results",
-        "perf_learner_girls_desirable_results",
-        "In total, how many boys achieved between 12 and 15 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
-        },
-        "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_girls_desirable_results",
-        "perf_learner_boys_minimum_results",
-        "In total, how many girls achieved between 12 and 15 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_boys_minimum_results",
-        "perf_learner_girls_minimum_results",
-        "In total, how many boys achieved between 8 and 11 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
-        },
-        "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_girls_minimum_results",
-        "perf_learner_boys_below_minimum_results",
-        "In total, how many girls achieved between 8 and 11 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_boys_below_minimum_results",
-        "perf_learner_girls_below_minimum_results",
-        "In total, how many boys achieved between 0 and 7 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
-        },
-        "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_girls_below_minimum_results",
-        "perf_learner_completed",
-        "In total, how many girls achieved between 0 and 7 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
-    ));
-
+// completed
     self.add_creator('perf_learner_completed', function(state_name, im) {
         // Log the users data
         var p = self.cms_performance_learner(im);
