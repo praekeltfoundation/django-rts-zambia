@@ -330,6 +330,42 @@ function GoRtsZambia() {
         return p;
     };
 
+    self.calc_array_total = function(arr) {
+        var sum = 0;
+        for (var i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        return sum;
+    };
+
+    self.make_array_of_answers = function(content, state_name_arr) {
+        var value_arr = [];
+        for (var i = 0; i < state_name_arr.length; i++) {
+            value_arr[i] = parseInt(im.get_user_answer(state_name_arr[i]),10);
+        }
+        value_arr.push(parseInt(content,10));
+        return value_arr;
+    };
+
+    self.craft_error_msg = function(array_total, gender, array_of_answers, total) {
+        var l1 = "You've entered results for ";
+        var l2 = array_total.toString();
+        var l3 = " " + gender + " ";
+        var l4 = "(";
+        for (var i = 0; i < array_of_answers.length; i++) {
+            l4 += array_of_answers[i].toString();
+            if(i !== array_of_answers.length - 1) {
+                l4 += '+';
+            }
+        }
+        var l5 = "), but you initially indicated ";
+        var l6 = total.toString();
+        var l7 = " " + gender + " ";
+        var l8 = "participants. Please try again.";
+        return l1 + l2 + l3 + l4 + l5 + l6 + l7 + l8;
+    };
+
+
     // END Shared helpers
 
     // START CMS Interactions
@@ -585,7 +621,16 @@ function GoRtsZambia() {
         );
     };
 
-    // END Shared creators
+    self.make_totals_error_state = function(state_name, next_state, error_msg) {
+        return new ChoiceState(
+            state_name,
+            next_state,
+            error_msg,
+            [
+                new Choice("continue", "Continue.")
+            ]
+        );
+    };
 
     self.add_creator('initial_state', function(state_name, im) {
         var p = self.get_contact(im);
@@ -643,6 +688,8 @@ function GoRtsZambia() {
         });
         return p;
     });
+
+    // END Shared creators
 
 // District official
 /********************************************************************************************/
@@ -1405,14 +1452,31 @@ function GoRtsZambia() {
         }
     ));
 
-// boys 16-20
+// boys 16-20   
     self.add_state(new FreeText(
         "perf_learner_boys_outstanding_results",
-        "perf_learner_boys_desirable_results",
+        function(content) {
+            var boys_states_completed = [];
+            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+            var array_total = self.calc_array_total(array_of_answers);
+
+            if(array_total < boys_total) {
+                return "perf_learner_boys_desirable_results";
+            } else {
+                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+                // askmike: i'm having problems with re-using the state creator with the same state_name,
+                // think it will create a problem the way i've hacked it
+                self.add_state(self.make_totals_error_state("error_state_1", "perf_learner_boys_total", msg));
+                return "error_state_1";
+            }
+        },
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0);
+                // askmike: don't run check below for this first state, since if you made a mistake with the total boys above it might get confusing.
+                // && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
         },
         "Please provide a valid number value for total boys achieving 16 out of 20 or more."
     ));
@@ -1420,7 +1484,22 @@ function GoRtsZambia() {
 // boys 12-15
     self.add_state(new FreeText(
         "perf_learner_boys_desirable_results",
-        "perf_learner_boys_minimum_results",
+        function(content) {
+            var boys_states_completed = [
+                "perf_learner_boys_outstanding_results"
+            ];
+            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+            var array_total = self.calc_array_total(array_of_answers);
+
+            if(array_total < boys_total) {
+                return "perf_learner_boys_minimum_results";
+            } else {
+                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+                self.add_state(self.make_totals_error_state("error_state_2", "perf_learner_boys_total", msg));
+                return "error_state_2";
+            }
+        },
         "In total, how many boys achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1432,7 +1511,23 @@ function GoRtsZambia() {
 // boys 8-11
     self.add_state(new FreeText(
         "perf_learner_boys_minimum_results",
-        "perf_learner_boys_below_minimum_results",
+        function(content) {
+            var boys_states_completed = [
+                "perf_learner_boys_outstanding_results",
+                "perf_learner_boys_desirable_results"
+            ];
+            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+            var array_total = self.calc_array_total(array_of_answers);
+
+            if(array_total < boys_total) {
+                return "perf_learner_boys_below_minimum_results";
+            } else {
+                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+                self.add_state(self.make_totals_error_state("error_state_3", "perf_learner_boys_total", msg));
+                return "error_state_3";
+            }
+        },
         "In total, how many boys achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1444,7 +1539,24 @@ function GoRtsZambia() {
 // boys 0-7
     self.add_state(new FreeText(
         "perf_learner_boys_below_minimum_results",
-        "perf_learner_girls_total",
+        function(content) {
+            var boys_states_completed = [
+                "perf_learner_boys_outstanding_results",
+                "perf_learner_boys_desirable_results",
+                "perf_learner_boys_minimum_results",
+            ];
+            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+            var array_total = self.calc_array_total(array_of_answers);
+
+            if(array_total === boys_total) {
+                return "perf_learner_girls_total";
+            } else {
+                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+                self.add_state(self.make_totals_error_state("error_state_4", "perf_learner_boys_total", msg));
+                return "error_state_4";
+            }
+        },
         "In total, how many boys achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.

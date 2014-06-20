@@ -2498,7 +2498,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_outstanding_results',
             answers: {
-                initial_state: 'perf_learner_boys_outstanding_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
             }
         };
@@ -2516,7 +2516,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_outstanding_results',
             answers: {
-                initial_state: 'perf_learner_boys_outstanding_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
             }
         };
@@ -2529,6 +2529,24 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_outstanding_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "60",
+            next_state: "error_state_1",
+            response: "You've entered results for 60 boys \\(60\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
 
 
     // flow: boys 12-15 -> boys 8-11
@@ -2536,7 +2554,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_desirable_results',
             answers: {
-                initial_state: 'perf_learner_boys_desirable_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
             }
@@ -2555,7 +2573,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_desirable_results',
             answers: {
-                initial_state: 'perf_learner_boys_desirable_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
             }
@@ -2569,6 +2587,25 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "50",
+            next_state: "error_state_2",
+            response: "You've entered results for 60 boys \\(10\\+50\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
 
 
     // flow: boys 8-11 -> boys 0-7
@@ -2576,7 +2613,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2596,7 +2633,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2611,6 +2648,26 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "35",
+            next_state: "error_state_3",
+            response: "You've entered results for 60 boys \\(10\\+15\\+35\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
 
 
     // flow: boys 0-7 -> girls total
@@ -2618,7 +2675,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_below_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2639,7 +2696,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_below_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2655,7 +2712,27 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "10",
+            next_state: "error_state_4",
+            response: "You've entered results for 55 boys \\(10\\+15\\+20\\+10\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
 
 
 
@@ -2666,7 +2743,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_total',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2688,7 +2765,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_total',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2712,7 +2789,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_outstanding_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2735,7 +2812,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_outstanding_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2760,7 +2837,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_desirable_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2784,7 +2861,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_desirable_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2810,7 +2887,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2835,7 +2912,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2862,7 +2939,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2889,7 +2966,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2921,7 +2998,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2949,7 +3026,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -2976,7 +3053,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3005,7 +3082,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3034,7 +3111,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3062,7 +3139,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3092,7 +3169,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_vocabulary',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3122,7 +3199,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_vocabulary',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3153,7 +3230,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_vocabulary',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3184,7 +3261,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_vocabulary',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3216,7 +3293,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_reading_comprehension',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3248,7 +3325,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_reading_comprehension',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3281,7 +3358,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_reading_comprehension',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3314,7 +3391,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_reading_comprehension',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3348,7 +3425,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_writing_diction',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3382,7 +3459,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_boys_writing_diction',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3417,7 +3494,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_writing_diction',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
@@ -3453,7 +3530,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_writing_diction',
             answers: {
-                initial_state: 'perf_learner_boys_below_minimum_results',
+                initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
                 perf_learner_boys_outstanding_results: '10',
                 perf_learner_boys_desirable_results: '15',
