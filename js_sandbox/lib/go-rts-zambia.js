@@ -1474,9 +1474,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0);
-                // askmike: don't run check below for this first state, since if you made a mistake with the total boys above it might get confusing.
-                // && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            return self.check_valid_number(content);
         },
         "Please provide a valid number value for total boys achieving 16 out of 20 or more."
     ));
@@ -1503,7 +1501,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 12 and 15 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            return self.check_valid_number(content);
         },
         "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
     ));
@@ -1531,7 +1529,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 8 and 11 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            return self.check_valid_number(content);
         },
         "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
     ));
@@ -1560,7 +1558,7 @@ function GoRtsZambia() {
         "In total, how many boys achieved between 0 and 7 out of 20?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            return self.check_valid_number(content);
         },
         "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
     ));
