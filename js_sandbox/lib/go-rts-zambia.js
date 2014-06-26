@@ -347,6 +347,14 @@ function GoRtsZambia() {
         return value_arr;
     };
 
+    self.make_array_of_answers2 = function(state_name_arr) {
+        var value_arr = [];
+        for (var i = 0; i < state_name_arr.length; i++) {
+            value_arr[i] = parseInt(im.get_user_answer(state_name_arr[i]),10);
+        }
+        return value_arr;
+    };
+
     self.craft_error_msg = function(array_total, gender, array_of_answers, total) {
         var l1 = "You've entered results for ";
         var l2 = array_total.toString();
@@ -1452,25 +1460,50 @@ function GoRtsZambia() {
         }
     ));
 
-// boys 16-20   
+
+    // self.add_creator("perf_learner_boys_outstanding_results", function (state_name, im) {
+    //     var boys_states_completed = [];
+    //     var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+    //     var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+    //     var array_total = self.calc_array_total(array_of_answers);
+
+    //     if (boys_total > array_total) {
+    //         return new FreeText(
+    //             state_name,
+    //             "perf_learner_boys_minimum_results",
+    //             "In total, how many boys achieved 16 out of 20 or more?",
+    //             function(content) {
+    //                 // check that the value provided is actually decimal-ish.
+    //                 return self.check_valid_number(content);
+    //             },
+    //             "Please provide a valid number value for total boys achieving 16 out of 20 or more."
+    //         );
+    //     } else {
+    //         var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+    //         return make_totals_error_state("error_state", "perf_learner_boys_total", msg);
+    //     }
+    // });
+
+// boys 16-20
     self.add_state(new FreeText(
         "perf_learner_boys_outstanding_results",
-        function(content) {
-            var boys_states_completed = [];
-            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
-            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
-            var array_total = self.calc_array_total(array_of_answers);
+        "perf_learner_boys_desirable_results",
+        // function(content) {
+        //     var boys_states_completed = [];
+        //     var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+        //     var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+        //     var array_total = self.calc_array_total(array_of_answers);
 
-            if(array_total < boys_total) {
-                return "perf_learner_boys_desirable_results";
-            } else {
-                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
-                // askmike: i'm having problems with re-using the state creator with the same state_name,
-                // think it will create a problem the way i've hacked it
-                self.add_state(self.make_totals_error_state("error_state_1", "perf_learner_boys_total", msg));
-                return "error_state_1";
-            }
-        },
+        //     if(array_total < boys_total) {
+        //         return "perf_learner_boys_desirable_results";
+        //     } else {
+        //         var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+        //         // askmike: i'm having problems with re-using the state creator with the same state_name,
+        //         // think it will create a problem the way i've hacked it
+        //         self.add_state(self.make_totals_error_state("error_state_1", "perf_learner_boys_total", msg));
+        //         return "error_state_1";
+        //     }
+        // },
         "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1480,100 +1513,210 @@ function GoRtsZambia() {
     ));
 
 // boys 12-15
-    self.add_state(new FreeText(
-        "perf_learner_boys_desirable_results",
-        function(content) {
-            var boys_states_completed = [
-                "perf_learner_boys_outstanding_results"
+    self.add_creator("perf_learner_boys_desirable_results", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results"
             ];
-            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
-            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
-            var array_total = self.calc_array_total(array_of_answers);
+        var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+        var array_of_answers = self.make_array_of_answers2(boys_states_completed);
+        var array_total = self.calc_array_total(array_of_answers);
 
-            if(array_total < boys_total) {
-                return "perf_learner_boys_minimum_results";
-            } else {
-                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
-                self.add_state(self.make_totals_error_state("error_state_2", "perf_learner_boys_total", msg));
-                return "error_state_2";
-            }
-        },
-        "In total, how many boys achieved between 12 and 15 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
-        },
-        "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
-    ));
+        if (boys_total > array_total) {
+            return new FreeText(
+                state_name,
+                "perf_learner_boys_minimum_results",
+                "In total, how many boys achieved between 12 and 15 out of 20?",
+                function(content) {
+                    // check that the value provided is actually decimal-ish.
+                    return self.check_valid_number(content);
+                },
+                "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
+            );
+        } else {
+            var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+            return self.make_totals_error_state("error_state", "perf_learner_boys_total", msg);
+        }
+    });
 
 // boys 8-11
-    self.add_state(new FreeText(
-        "perf_learner_boys_minimum_results",
-        function(content) {
-            var boys_states_completed = [
-                "perf_learner_boys_outstanding_results",
-                "perf_learner_boys_desirable_results"
+    self.add_creator("perf_learner_boys_minimum_results", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results",
+            "perf_learner_boys_desirable_results"
             ];
-            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
-            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
-            var array_total = self.calc_array_total(array_of_answers);
+        var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+        var array_of_answers = self.make_array_of_answers2(boys_states_completed);
+        var array_total = self.calc_array_total(array_of_answers);
 
-            if(array_total < boys_total) {
-                return "perf_learner_boys_below_minimum_results";
-            } else {
-                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
-                self.add_state(self.make_totals_error_state("error_state_3", "perf_learner_boys_total", msg));
-                return "error_state_3";
-            }
-        },
-        "In total, how many boys achieved between 8 and 11 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
-        },
-        "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
-    ));
+        if (boys_total > array_total) {
+            return new FreeText(
+                state_name,
+                "perf_learner_boys_below_minimum_results",
+                "In total, how many boys achieved between 8 and 11 out of 20?",
+                function(content) {
+                    // check that the value provided is actually decimal-ish.
+                    return self.check_valid_number(content);
+                },
+                "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
+            );
+        } else {
+            var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+            return self.make_totals_error_state("error_state", "perf_learner_boys_total", msg);
+        }
+    });
 
 // boys 0-7
-    self.add_state(new FreeText(
-        "perf_learner_boys_below_minimum_results",
-        function(content) {
-            var boys_states_completed = [
-                "perf_learner_boys_outstanding_results",
-                "perf_learner_boys_desirable_results",
-                "perf_learner_boys_minimum_results",
+    self.add_creator("perf_learner_boys_below_minimum_results", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results",
+            "perf_learner_boys_desirable_results",
+            "perf_learner_boys_minimum_results",
             ];
-            var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
-            var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
-            var array_total = self.calc_array_total(array_of_answers);
+        var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+        var array_of_answers = self.make_array_of_answers2(boys_states_completed);
+        var array_total = self.calc_array_total(array_of_answers);
 
-            if(array_total === boys_total) {
-                return "perf_learner_girls_total";
-            } else {
-                var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
-                self.add_state(self.make_totals_error_state("error_state_4", "perf_learner_boys_total", msg));
-                return "error_state_4";
-            }
-        },
-        "In total, how many boys achieved between 0 and 7 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
-        },
-        "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
-    ));
+        if (boys_total > array_total) {
+            return new FreeText(
+                state_name,
+                "perf_learner_girls_total",
+                "In total, how many boys achieved between 0 and 7 out of 20?",
+                function(content) {
+                    // check that the value provided is actually decimal-ish.
+                    return self.check_valid_number(content);
+                },
+                "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
+            );
+        } else {
+            var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+            return self.make_totals_error_state("error_state", "perf_learner_boys_total", msg);
+        }
+    });
+
+// boys 12-15
+    // self.add_state(new FreeText(
+    //     "perf_learner_boys_desirable_results",
+    //     function(content) {
+    //         var boys_states_completed = [
+    //             "perf_learner_boys_outstanding_results"
+    //         ];
+    //         var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+    //         var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+    //         var array_total = self.calc_array_total(array_of_answers);
+
+    //         if(array_total < boys_total) {
+    //             return "perf_learner_boys_minimum_results";
+    //         } else {
+    //             var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+    //             self.add_state(self.make_totals_error_state("error_state_2", "perf_learner_boys_total", msg));
+    //             return "error_state_2";
+    //         }
+    //     },
+    //     "In total, how many boys achieved between 12 and 15 out of 20?",
+    //     function(content) {
+    //         // check that the value provided is actually decimal-ish.
+    //         return self.check_valid_number(content);
+    //     },
+    //     "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
+    // ));
+
+// boys 8-11
+    // self.add_state(new FreeText(
+    //     "perf_learner_boys_minimum_results",
+    //     function(content) {
+    //         var boys_states_completed = [
+    //             "perf_learner_boys_outstanding_results",
+    //             "perf_learner_boys_desirable_results"
+    //         ];
+    //         var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+    //         var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+    //         var array_total = self.calc_array_total(array_of_answers);
+
+    //         if(array_total < boys_total) {
+    //             return "perf_learner_boys_below_minimum_results";
+    //         } else {
+    //             var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+    //             self.add_state(self.make_totals_error_state("error_state_3", "perf_learner_boys_total", msg));
+    //             return "error_state_3";
+    //         }
+    //     },
+    //     "In total, how many boys achieved between 8 and 11 out of 20?",
+    //     function(content) {
+    //         // check that the value provided is actually decimal-ish.
+    //         return self.check_valid_number(content);
+    //     },
+    //     "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
+    // ));
+
+// boys 0-7
+    // self.add_state(new FreeText(
+    //     "perf_learner_boys_below_minimum_results",
+    //     function(content) {
+    //         var boys_states_completed = [
+    //             "perf_learner_boys_outstanding_results",
+    //             "perf_learner_boys_desirable_results",
+    //             "perf_learner_boys_minimum_results",
+    //         ];
+    //         var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+    //         var array_of_answers = self.make_array_of_answers(content, boys_states_completed);
+    //         var array_total = self.calc_array_total(array_of_answers);
+
+    //         if(array_total === boys_total) {
+    //             return "perf_learner_girls_total";
+    //         } else {
+    //             var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+    //             self.add_state(self.make_totals_error_state("error_state_4", "perf_learner_boys_total", msg));
+    //             return "error_state_4";
+    //         }
+    //     },
+    //     "In total, how many boys achieved between 0 and 7 out of 20?",
+    //     function(content) {
+    //         // check that the value provided is actually decimal-ish.
+    //         return self.check_valid_number(content);
+    //     },
+    //     "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
+    // ));
 
 // girls total
-    self.add_state(new FreeText(
-        "perf_learner_girls_total",
-        "perf_learner_girls_outstanding_results",
-        "How many girls took part in the learner assessment?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content);
-        },
-        "Please provide a number value for total girls assessed."
-    ));
+    self.add_creator("perf_learner_girls_total", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results",
+            "perf_learner_boys_desirable_results",
+            "perf_learner_boys_minimum_results",
+            "perf_learner_boys_below_minimum_results"
+            ];
+        var boys_total = parseInt(im.get_user_answer('perf_learner_boys_total'),10);
+        var array_of_answers = self.make_array_of_answers2(boys_states_completed);
+        var array_total = self.calc_array_total(array_of_answers);
+
+        if (boys_total === array_total) {
+            return new FreeText(
+                state_name,
+                "perf_learner_girls_outstanding_results",
+                "How many girls took part in the learner assessment?",
+                function(content) {
+                    // check that the value provided is actually decimal-ish.
+                    return self.check_valid_number(content);
+                },
+                "Please provide a number value for total girls assessed."
+            );
+        } else {
+            var msg = self.craft_error_msg(array_total, "boys", array_of_answers, boys_total);
+            return self.make_totals_error_state("error_state", "perf_learner_boys_total", msg);
+        }
+    });
+
+// girls total
+    // self.add_state(new FreeText(
+    //     "perf_learner_girls_total",
+    //     "perf_learner_girls_outstanding_results",
+    //     "How many girls took part in the learner assessment?",
+    //     function(content) {
+    //         // check that the value provided is actually decimal-ish.
+    //         return self.check_valid_number(content);
+    //     },
+    //     "Please provide a number value for total girls assessed."
+    // ));
 
 // girls 16-20
     self.add_state(new FreeText(

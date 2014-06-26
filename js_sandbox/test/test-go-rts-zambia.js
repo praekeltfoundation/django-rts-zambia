@@ -2541,7 +2541,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "60",
-            next_state: "error_state_1",
+            next_state: "error_state",
             response: "You've entered results for 60 boys \\(60\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2600,7 +2600,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "50",
-            next_state: "error_state_2",
+            next_state: "error_state",
             response: "You've entered results for 60 boys \\(10\\+50\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2662,7 +2662,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "35",
-            next_state: "error_state_3",
+            next_state: "error_state",
             response: "You've entered results for 60 boys \\(10\\+15\\+35\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2727,7 +2727,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "10",
-            next_state: "error_state_4",
+            next_state: "error_state",
             response: "You've entered results for 55 boys \\(10\\+15\\+20\\+10\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2735,26 +2735,26 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
     });
 
     // validation: boys resulting total < boys total
-    // it("entering boys outstanding + desirable + minimum + below_minimum less than total boys should return error state", function (done) {
-    //     var user = {
-    //         current_state: 'perf_learner_boys_below_minimum_results',
-    //         answers: {
-    //             initial_state: 'perf_learner_boys_total',
-    //             perf_learner_boys_total: '52',
-    //             perf_learner_boys_outstanding_results: '10',
-    //             perf_learner_boys_desirable_results: '15',
-    //             perf_learner_boys_minimum_results: '20',
-    //         }
-    //     };
-    //     var p = tester.check_state({
-    //         user: user,
-    //         content: "5",
-    //         next_state: "error_state_4",
-    //         response: "You've entered results for 50 boys \\(10\\+15\\+20\\+5\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
-    //                 "1. Continue\\.$"
-    //     });
-    //     p.then(done, done);
-    // });
+    it("entering boys outstanding + desirable + minimum + below_minimum less than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "5",
+            next_state: "error_state",
+            response: "You've entered results for 50 boys \\(10\\+15\\+20\\+5\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
 
 
     // flow: girls total -> girls 16-20
