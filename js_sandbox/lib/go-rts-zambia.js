@@ -660,35 +660,18 @@ function GoRtsZambia() {
         var total = parseInt(im.get_user_answer(total_state),10);
         var array_of_answers = self.make_array_of_answers(states_completed);
         var array_total = self.calc_array_total(array_of_answers);
-        var msg;
 
-        if (must_equal) {
-            if (total === array_total) {
-                return new FreeText(
-                    state_name,
-                    next_state,
-                    question,
-                    check_protocol,
-                    error_msg
-                );
-            } else {
-                msg = self.craft_error_msg(array_total, gender, array_of_answers, total);
-                return self.make_totals_error_state("error_state", total_state, msg);
-            }
-
+        if (must_equal && (total === array_total) || !must_equal && (total > array_total)) {
+            return new FreeText(
+                state_name,
+                next_state,
+                question,
+                check_protocol,
+                error_msg
+            );
         } else {
-            if (total > array_total) {
-                return new FreeText(
-                    state_name,
-                    next_state,
-                    question,
-                    check_protocol,
-                    error_msg
-                );
-            } else {
-                msg = self.craft_error_msg(array_total, gender, array_of_answers, total);
-                return self.make_totals_error_state("error_state", total_state, msg);
-            }
+            var msg = self.craft_error_msg(array_total, gender, array_of_answers, total);
+            return self.make_totals_error_state("error_state", total_state, msg);
         }
     };
 
