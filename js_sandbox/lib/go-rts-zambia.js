@@ -631,8 +631,20 @@ function GoRtsZambia() {
         );
     };
 
-    self.create_next_state = function(gender, states_completed, state_name, next_state, question, error_msg, must_equal) {
+    self.create_next_state = function(gender, states_completed, state_name, next_state, question, error_msg, must_equal, check_protocol) {
         var total_state;
+
+        if (must_equal === undefined) {
+            must_equal = false;
+        }
+
+        if (check_protocol === undefined) {
+            check_protocol = function(content) {
+                // check that content is decimal-ish
+                return self.check_valid_number(content);
+            };
+        }
+
         if (gender === 'boys') {
             total_state = "perf_learner_boys_total";
         } else {
@@ -650,10 +662,7 @@ function GoRtsZambia() {
                     state_name,
                     next_state,
                     question,
-                    function(content) {
-                        // check that the value provided is actually decimal-ish.
-                        return self.check_valid_number(content);
-                    },
+                    check_protocol,
                     error_msg
                 );
             } else {
@@ -667,10 +676,7 @@ function GoRtsZambia() {
                     state_name,
                     next_state,
                     question,
-                    function(content) {
-                        // check that the value provided is actually decimal-ish.
-                        return self.check_valid_number(content);
-                    },
+                    check_protocol,
                     error_msg
                 );
             } else {
@@ -1518,16 +1524,14 @@ function GoRtsZambia() {
         var boys_states_completed = [
             "perf_learner_boys_outstanding_results"
             ];
-        var must_equal = false;
-        
+
         return self.create_next_state(
             "boys",
             boys_states_completed,
             state_name,
             "perf_learner_boys_minimum_results",
             "In total, how many boys achieved between 12 and 15 out of 20?",
-            "Please provide a valid number value for total boys achieving between 12 and 15 out of 20.",
-            must_equal
+            "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
         );
     });
 
@@ -1537,7 +1541,6 @@ function GoRtsZambia() {
             "perf_learner_boys_outstanding_results",
             "perf_learner_boys_desirable_results"
             ];
-        var must_equal = false;
 
         return self.create_next_state(
             "boys",
@@ -1545,8 +1548,7 @@ function GoRtsZambia() {
             state_name,
             "perf_learner_boys_below_minimum_results",
             "In total, how many boys achieved between 8 and 11 out of 20?",
-            "Please provide a valid number value for total boys achieving between 8 and 11 out of 20.",
-            must_equal
+            "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
         );
     });
 
@@ -1557,7 +1559,6 @@ function GoRtsZambia() {
             "perf_learner_boys_desirable_results",
             "perf_learner_boys_minimum_results",
             ];
-        var must_equal = false;
 
         return self.create_next_state(
             "boys",
@@ -1565,8 +1566,7 @@ function GoRtsZambia() {
             state_name,
             "perf_learner_girls_total",
             "In total, how many boys achieved between 0 and 7 out of 20?",
-            "Please provide a valid number value for total boys achieving between 0 and 7 out of 20.",
-            must_equal
+            "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
         );
     });
 
@@ -1598,62 +1598,88 @@ function GoRtsZambia() {
         "In total, how many girls achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
+            return self.check_valid_number(content);
         },
         "Please provide a valid number value for total girls achieving 16 out of 20 or more."
     ));
 
 // girls 12-15
-    self.add_state(new FreeText(
-        "perf_learner_girls_desirable_results",
-        "perf_learner_girls_minimum_results",
-        "In total, how many girls achieved between 12 and 15 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
-    ));
+    self.add_creator("perf_learner_girls_desirable_results", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results"
+            ];
+
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_girls_minimum_results",
+            "In total, how many girls achieved between 12 and 15 out of 20?",
+            "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
+        );
+    });
+
 
 // girls 8-11
-    self.add_state(new FreeText(
-        "perf_learner_girls_minimum_results",
-        "perf_learner_girls_below_minimum_results",
-        "In total, how many girls achieved between 8 and 11 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
-    ));
+    self.add_creator("perf_learner_girls_minimum_results", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results",
+            "perf_learner_girls_desirable_results"
+            ];
 
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_girls_below_minimum_results",
+            "In total, how many girls achieved between 8 and 11 out of 20?",
+            "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
+            );
+    });
 
 // girls 0-7
-    self.add_state(new FreeText(
-        "perf_learner_girls_below_minimum_results",
-        "perf_learner_boys_phonetic_awareness",
-        "In total, how many girls achieved between 0 and 7 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
-        },
-        "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
-    ));
+    self.add_creator("perf_learner_girls_below_minimum_results", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results",
+            "perf_learner_girls_desirable_results",
+            "perf_learner_girls_minimum_results",
+            ];
 
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_boys_phonetic_awareness",
+            "In total, how many girls achieved between 0 and 7 out of 20?",
+            "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
+        );
+    });
 
 // boys phonetic
-    self.add_state(new FreeText(
-        "perf_learner_boys_phonetic_awareness",
-        "perf_learner_girls_phonetic_awareness",
-        "How many boys achieved at least 4 out of 6 correct answers for Section " +
-            "1 (Phonics and Phonemic Awareness)?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
-        },
-        "Please provide a valid number value for total boys achieving 4 out of 6" +
-        " correct answers for Phonics and Phonemic Awareness."
-    ));
+    self.add_creator("perf_learner_boys_phonetic_awareness", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results",
+            "perf_learner_girls_desirable_results",
+            "perf_learner_girls_minimum_results",
+            "perf_learner_girls_below_minimum_results"
+            ];
+        var must_equal = true;
+
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_girls_phonetic_awareness",
+            "How many boys achieved at least 4 out of 6 correct answers for Section " +
+                "1 (Phonics and Phonemic Awareness)?",
+            "Please provide a valid number value for total boys achieving 4 out of 6" +
+                " correct answers for Phonics and Phonemic Awareness.",
+            true,
+            function(content) {
+                return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            }
+        );
+    });
 
 // girls phonetic
     self.add_state(new FreeText(

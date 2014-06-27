@@ -2849,6 +2849,25 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_outstanding_results',
+            answers: {
+                initial_state: 'perf_learner_girls_total',
+                perf_learner_girls_total: '49',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "60",
+            next_state: "error_state",
+            response: "You've entered results for 60 girls \\(60\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
 
 
     // flow: girls 12-15 -> girls 8-11
@@ -2895,6 +2914,26 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             content: "fifteen",
             next_state: "perf_learner_girls_desirable_results",
             response: "^Please provide a valid number value for total girls achieving between 12 and 15 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding + desirable higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_girls_total',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "50",
+            next_state: "error_state",
+            response: "You've entered results for 60 girls \\(10\\+50\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
         });
         p.then(done, done);
     });
@@ -2947,6 +2986,27 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             content: "four",
             next_state: "perf_learner_girls_minimum_results",
             response: "^Please provide a valid number value for total girls achieving between 8 and 11 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding + desirable + minimum higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_girls_total',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "35",
+            next_state: "error_state",
+            response: "You've entered results for 60 girls \\(10\\+15\\+35\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
         });
         p.then(done, done);
     });
@@ -3006,6 +3066,49 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding + desirable + minimum + below_minimum higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_girls_total',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "10",
+            next_state: "error_state",
+            response: "You've entered results for 55 girls \\(10\\+15\\+20\\+10\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls resulting total < girls total
+    it("entering girls outstanding + desirable + minimum + below_minimum less than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_girls_total',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "error_state",
+            response: "You've entered results for 46 girls \\(10\\+15\\+20\\+1\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
 
 
 
