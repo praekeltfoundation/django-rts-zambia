@@ -639,6 +639,7 @@ function GoRtsZambia() {
 
     self.create_next_state = function(gender, states_completed, state_name, next_state, question, error_msg, must_equal, check_protocol) {
         var total_state;
+        var error_state;
 
         if (must_equal === undefined) {
             must_equal = false;
@@ -653,8 +654,10 @@ function GoRtsZambia() {
 
         if (gender === 'boys') {
             total_state = "perf_learner_boys_total";
+            error_state = "boys_error_state";
         } else {
             total_state = "perf_learner_girls_total";
+            error_state = "girls_error_state";
         }
 
         var total = parseInt(im.get_user_answer(total_state),10);
@@ -671,7 +674,7 @@ function GoRtsZambia() {
             );
         } else {
             var msg = self.craft_error_msg(array_total, gender, array_of_answers, total);
-            return self.make_totals_error_state("error_state", total_state, msg);
+            return self.make_totals_error_state(error_state, total_state, msg);
         }
     };
 

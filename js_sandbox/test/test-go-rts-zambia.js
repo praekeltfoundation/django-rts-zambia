@@ -2541,7 +2541,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "60",
-            next_state: "error_state",
+            next_state: "boys_error_state",
             response: "You've entered results for 60 boys \\(60\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2600,7 +2600,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "50",
-            next_state: "error_state",
+            next_state: "boys_error_state",
             response: "You've entered results for 60 boys \\(10\\+50\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2662,7 +2662,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "35",
-            next_state: "error_state",
+            next_state: "boys_error_state",
             response: "You've entered results for 60 boys \\(10\\+15\\+35\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2727,7 +2727,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "10",
-            next_state: "error_state",
+            next_state: "boys_error_state",
             response: "You've entered results for 55 boys \\(10\\+15\\+20\\+10\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2749,7 +2749,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "5",
-            next_state: "error_state",
+            next_state: "boys_error_state",
             response: "You've entered results for 50 boys \\(10\\+15\\+20\\+5\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2866,7 +2866,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "60",
-            next_state: "error_state",
+            next_state: "girls_error_state",
             response: "You've entered results for 60 girls \\(60\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -2941,7 +2941,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "50",
-            next_state: "error_state",
+            next_state: "girls_error_state",
             response: "You've entered results for 60 girls \\(10\\+50\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -3019,7 +3019,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "35",
-            next_state: "error_state",
+            next_state: "girls_error_state",
             response: "You've entered results for 60 girls \\(10\\+15\\+35\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -3101,7 +3101,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "10",
-            next_state: "error_state",
+            next_state: "girls_error_state",
             response: "You've entered results for 55 girls \\(10\\+15\\+20\\+10\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -3128,7 +3128,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var p = tester.check_state({
             user: user,
             content: "1",
-            next_state: "error_state",
+            next_state: "girls_error_state",
             response: "You've entered results for 46 girls \\(10\\+15\\+20\\+1\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
                     "1. Continue\\.$"
         });
@@ -3141,7 +3141,32 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
     // complete_me
 
     // flow: error_state -> girls_total
-    // complete_me
+    it("after reaching error_state from girls results should go to girls_total", function (done) {
+        // console.log(app.api.im.state_creator.state_creators);
+        // app.api.im.state_creator.make_totals_error_state("girls_error_state", "perf_learner_girls_total", "test_error");
+        var user = {
+            current_state: 'girls_error_state',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '50',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_learner_girls_total",
+            response: "^How many girls took part in the learner assessment\\?$"
+        });
+        p.then(done, done);
+    });
 
 
 
