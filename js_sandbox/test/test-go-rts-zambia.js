@@ -2854,7 +2854,12 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_outstanding_results',
             answers: {
-                initial_state: 'perf_learner_girls_total',
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
                 perf_learner_girls_total: '49',
             }
         };
@@ -2923,7 +2928,12 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_desirable_results',
             answers: {
-                initial_state: 'perf_learner_girls_total',
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
                 perf_learner_girls_total: '49',
                 perf_learner_girls_outstanding_results: '10',
             }
@@ -2995,7 +3005,12 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_minimum_results',
             answers: {
-                initial_state: 'perf_learner_girls_total',
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
                 perf_learner_girls_total: '49',
                 perf_learner_girls_outstanding_results: '10',
                 perf_learner_girls_desirable_results: '15',
@@ -3071,7 +3086,12 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
-                initial_state: 'perf_learner_girls_total',
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
                 perf_learner_girls_total: '49',
                 perf_learner_girls_outstanding_results: '10',
                 perf_learner_girls_desirable_results: '15',
@@ -3093,7 +3113,12 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         var user = {
             current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
-                initial_state: 'perf_learner_girls_total',
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
                 perf_learner_girls_total: '49',
                 perf_learner_girls_outstanding_results: '10',
                 perf_learner_girls_desirable_results: '15',
@@ -3112,6 +3137,11 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
 
 
 
+    // flow: error_state -> boys_total
+    // complete_me
+
+    // flow: error_state -> girls_total
+    // complete_me
 
 
 
