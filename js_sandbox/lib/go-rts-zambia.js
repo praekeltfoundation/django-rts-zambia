@@ -347,21 +347,27 @@ function GoRtsZambia() {
     };
 
     self.craft_error_msg = function(array_total, gender, array_of_answers, total) {
-        var l1 = "You've entered results for ";
-        var l2 = array_total.toString();
-        var l3 = " " + gender + " ";
-        var l4 = "(";
+        var shown_calculation = "";
         for (var i = 0; i < array_of_answers.length; i++) {
-            l4 += array_of_answers[i].toString();
-            if(i !== array_of_answers.length - 1) {
-                l4 += '+';
+                shown_calculation += array_of_answers[i].toString();
+                if(i !== array_of_answers.length - 1) {
+                    shown_calculation += '+';
+                }
             }
-        }
-        var l5 = "), but you initially indicated ";
-        var l6 = total.toString();
-        var l7 = " " + gender + " ";
-        var l8 = "participants. Please try again.";
-        return l1 + l2 + l3 + l4 + l5 + l6 + l7 + l8;
+
+        var error_msg = [
+            "You've entered results for ",
+            array_total.toString(),
+            " " + gender + " ",
+            "(",
+            shown_calculation,
+            "), but you initially indicated ",
+            total.toString(),
+            " " + gender + " ",
+            "participants. Please try again.",
+        ].join('');
+
+        return error_msg;
     };
 
 
