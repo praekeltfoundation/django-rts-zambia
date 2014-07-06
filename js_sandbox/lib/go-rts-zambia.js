@@ -134,7 +134,7 @@ function GoRtsZambia() {
         // returns false if fails to find
         var numbers_only = new RegExp('^\\d+$');
         if (numbers_only.test(emis)){
-            return im.config.array_emis.indexOf(parseInt(emis)) != -1;
+            return im.config.array_emis.indexOf(parseInt(emis,10)) != -1;
         } else {
             return false;
         }
@@ -181,14 +181,14 @@ function GoRtsZambia() {
     self.registration_data_school_collect = function(){
         var school_data = {
             "name": im.get_user_answer('reg_school_name'),
-            "classrooms": parseInt(im.get_user_answer('reg_school_classrooms')),
-            "teachers": parseInt(im.get_user_answer('reg_school_teachers')),
-            "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1')),
-            "teachers_g2": parseInt(im.get_user_answer('reg_school_teachers_g2')),
-            "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys')),
-            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls')),
-            "boys": parseInt(im.get_user_answer('reg_school_boys')),
-            "girls": parseInt(im.get_user_answer('reg_school_girls'))
+            "classrooms": parseInt(im.get_user_answer('reg_school_classrooms'),10),
+            "teachers": parseInt(im.get_user_answer('reg_school_teachers'),10),
+            "teachers_g1": parseInt(im.get_user_answer('reg_school_teachers_g1'),10),
+            "teachers_g2": parseInt(im.get_user_answer('reg_school_teachers_g2'),10),
+            "boys_g2": parseInt(im.get_user_answer('reg_school_students_g2_boys'),10),
+            "girls_g2": parseInt(im.get_user_answer('reg_school_students_g2_girls'),10),
+            "boys": parseInt(im.get_user_answer('reg_school_boys'),10),
+            "girls": parseInt(im.get_user_answer('reg_school_girls'),10)
         };
 
         return school_data;
@@ -201,7 +201,7 @@ function GoRtsZambia() {
             "msisdn": im.user_addr,
             "date_of_birth": self.check_and_parse_date(im.get_user_answer('reg_date_of_birth')).yyyymmdd(),
             "gender": im.get_user_answer('reg_gender'),
-            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis_validator')) + "/"
+            "emis": "/api/v1/school/emis/" + parseInt(im.get_user_answer('reg_emis_validator'),10) + "/"
         };
         if (im.get_user_answer('reg_zonal_head') == "reg_zonal_head_name") {
             headteacher_data['zonal_head_name'] = im.get_user_answer('reg_zonal_head_name');
@@ -330,6 +330,47 @@ function GoRtsZambia() {
         return p;
     };
 
+    self.calc_array_total = function(arr) {
+        var sum = 0;
+        for (var i = 0; i < arr.length; i++) {
+            sum += arr[i];
+        }
+        return sum;
+    };
+
+    self.make_array_of_answers = function(state_name_arr) {
+        var value_arr = [];
+        for (var i = 0; i < state_name_arr.length; i++) {
+            value_arr[i] = parseInt(im.get_user_answer(state_name_arr[i]),10);
+        }
+        return value_arr;
+    };
+
+    self.craft_error_msg = function(array_total, gender, array_of_answers, total) {
+        var shown_calculation = "";
+        for (var i = 0; i < array_of_answers.length; i++) {
+                shown_calculation += array_of_answers[i].toString();
+                if(i !== array_of_answers.length - 1) {
+                    shown_calculation += '+';
+                }
+            }
+
+        var error_msg = [
+            "You've entered results for ",
+            array_total.toString(),
+            " " + gender + " ",
+            "(",
+            shown_calculation,
+            "), but you initially indicated ",
+            total.toString(),
+            " " + gender + " ",
+            "participants. Please try again.",
+        ].join('');
+
+        return error_msg;
+    };
+
+
     // END Shared helpers
 
     // START CMS Interactions
@@ -347,7 +388,7 @@ function GoRtsZambia() {
                 // Update current headteacher EMIS only
                 headteacher_id = contact['extras-rts_id'];
                 headteacher_data = {
-                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator')) + "/"
+                    emis: "/api/v1/school/emis/" + parseInt(im.get_user_answer('manage_change_emis_validator'),10) + "/"
                 };
                 p_ht = self.cms_put("data/headteacher/" + headteacher_id + "/", headteacher_data);
 
@@ -444,7 +485,7 @@ function GoRtsZambia() {
     };
 
     self.cms_registration_update_msisdn = function(im) {
-        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis'));
+        var emis = parseInt(im.get_user_answer('manage_change_msisdn_emis'),10);
         var p = self.cms_get("data/headteacher/?emis__emis=" + emis);
         p.add_callback(function(result){
             var headteacher_id = result.id;
@@ -459,7 +500,7 @@ function GoRtsZambia() {
     self.cms_hierarchy_load = function() {
         var p = self.cms_get("hierarchy/");
         p.add_callback(function(result){
-            var array_emis = []
+            var array_emis = [];
             for (var i=0;i<result.objects.length;i++){
                 array_emis.push(result.objects[i].emis);
             }
@@ -484,11 +525,11 @@ function GoRtsZambia() {
         var p = self.get_contact(im);
         var data;
         p.add_callback(function(result) {
-            var emis = parseInt(result.contact["extras-rts_emis"]);
-            var id = parseInt(result.contact["extras-rts_id"]);
+            var emis = parseInt(result.contact["extras-rts_emis"],10);
+            var id = parseInt(result.contact["extras-rts_id"],10);
             // Need to ensure no double save
             var contact_key = result.contact.key;
-            if (parseInt(result.contact["extras-rts_last_save_performance_teacher"]) != parseInt(im.get_user_answer('perf_teacher_ts_number'))) {
+            if (parseInt(result.contact["extras-rts_last_save_performance_teacher"],10) != parseInt(im.get_user_answer('perf_teacher_ts_number'),10)) {
 
                 if (im.get_user_answer('initial_state') == 'add_emis_perf_teacher_ts_number') {
                     data = self.performance_data_teacher_collect_by_district_official(emis, id);
@@ -516,11 +557,12 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             var emis = result.contact["extras-rts_emis"];
             var id = result.contact["extras-rts_id"];
+            var data;
 
             if (im.get_user_answer('initial_state') == 'add_emis_perf_learner_boys_total') {
-                var data = self.performance_data_learner_collect_by_district_official(emis, id);
+                data = self.performance_data_learner_collect_by_district_official(emis, id);
             } else {
-                var data = self.performance_data_learner_collect_by_head(emis, id);
+                data = self.performance_data_learner_collect_by_head(emis, id);
             }
             var data_boys = data.boys;
             var data_girls = data.girls;
@@ -584,7 +626,55 @@ function GoRtsZambia() {
         );
     };
 
-    // END Shared creators
+    self.make_totals_error_state = function(state_name, next_state, error_msg) {
+        return new ChoiceState(
+            state_name,
+            next_state,
+            error_msg,
+            [
+                new Choice("continue", "Continue.")
+            ]
+        );
+    };
+
+    self.create_next_state = function(gender, states_completed, state_name, next_state, question, error_msg, must_equal, check_protocol) {
+        var total_state;
+
+        if (must_equal === undefined) {
+            must_equal = false;
+        }
+
+        if (check_protocol === undefined) {
+            check_protocol = function(content) {
+                // check that content is decimal-ish
+                return self.check_valid_number(content);
+            };
+        }
+
+        if (gender === 'boys') {
+            total_state = "perf_learner_boys_total";
+        } else {
+            total_state = "perf_learner_girls_total";
+        }
+
+        var total = parseInt(im.get_user_answer(total_state),10);
+        var array_of_answers = self.make_array_of_answers(states_completed);
+        var array_total = self.calc_array_total(array_of_answers);
+
+        if (must_equal && (total === array_total) || !must_equal && (total > array_total)) {
+            return new FreeText(
+                state_name,
+                next_state,
+                question,
+                check_protocol,
+                error_msg
+            );
+        } else {
+            var msg = self.craft_error_msg(array_total, gender, array_of_answers, total);
+            return self.make_totals_error_state(state_name, total_state, msg);
+        }
+    };
+
 
     self.add_creator('initial_state', function(state_name, im) {
         var p = self.get_contact(im);
@@ -642,6 +732,8 @@ function GoRtsZambia() {
         });
         return p;
     });
+
+    // END Shared creators
 
 // District official
 /********************************************************************************************/
@@ -1182,7 +1274,7 @@ function GoRtsZambia() {
         "Please enter the teacher's age in years e.g. 26.",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 20 && parseInt(content) <= 75);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 20 && parseInt(content,10) <= 75);
         },
         "Please provide a valid number value for the teacher's age."
     ));
@@ -1246,7 +1338,7 @@ function GoRtsZambia() {
             "observation for Section 2 (Classroom Environment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 8);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 8);
         },
         "Please provide a valid number value for the Classroom Environment subtotal."
     ));
@@ -1258,7 +1350,7 @@ function GoRtsZambia() {
             "observation for Section 3 (Teaching and Learning Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 7);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 7);
         },
         'Please provide a valid number value for the Teaching and Learning Materials subtotal.'
     ));
@@ -1282,7 +1374,7 @@ function GoRtsZambia() {
             "for Section 4 (Learner Materials).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 6);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 6);
         },
         "Please provide a valid number value for the Learner Materials subtotal."
     ));
@@ -1294,7 +1386,7 @@ function GoRtsZambia() {
             "for Section 5 (Time on Task and Reading Practice)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 14);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 14);
         },
         "Please provide a valid number value for the Time on Task and Reading Practice subtotal."
     ));
@@ -1306,7 +1398,7 @@ function GoRtsZambia() {
             "for Section 6 (Learner Engagement)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 17);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 17);
         },
         "Please provide a valid number value for the Learner Engagement subtotal."
     ));
@@ -1318,7 +1410,7 @@ function GoRtsZambia() {
             "7.1. (Teacher Attitudes and Beliefs)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 16);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 16);
         },
         "Please provide a valid number value for the Teacher Attitudes and Beliefs subtotal."
     ));
@@ -1330,7 +1422,7 @@ function GoRtsZambia() {
             "7.2. (Teacher Training)",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 3);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 3);
         },
         "Please provide a valid number value for the Teacher Training interview subtotal."
     ));
@@ -1342,7 +1434,7 @@ function GoRtsZambia() {
             "on Section 7.3. (Reading Assessment).",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= 10);
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= 10);
         },
         "Please provide a valid number value for the Reading Assessment subtotal."
     ));
@@ -1386,9 +1478,10 @@ function GoRtsZambia() {
     // Start of Performance Management - Learners
     /////////////////////////////////////////////////////////////////
 
+// boys total
     self.add_state(new FreeText(
         "perf_learner_boys_total",
-        "perf_learner_girls_total",
+        "perf_learner_boys_outstanding_results",
         "How many boys took part in the learner assessment?",
         function(content) {
             // check that the value provided is actually decimal-ish.
@@ -1403,30 +1496,181 @@ function GoRtsZambia() {
         }
     ));
 
+// boys 16-20
     self.add_state(new FreeText(
-        "perf_learner_girls_total",
-        "perf_learner_boys_phonetic_awareness",
-        "How many girls took part in the learner assessment?",
+        "perf_learner_boys_outstanding_results",
+        "perf_learner_boys_desirable_results",
+        "In total, how many boys achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content);
         },
-        "Please provide a number value for total girls assessed."
+        "Please provide a valid number value for total boys achieving 16 out of 20 or more."
     ));
 
+// boys 12-15
+    self.add_creator("perf_learner_boys_desirable_results", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results"
+            ];
+
+        return self.create_next_state(
+            "boys",
+            boys_states_completed,
+            state_name,
+            "perf_learner_boys_minimum_results",
+            "In total, how many boys achieved between 12 and 15 out of 20?",
+            "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
+        );
+    });
+
+// boys 8-11
+    self.add_creator("perf_learner_boys_minimum_results", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results",
+            "perf_learner_boys_desirable_results"
+            ];
+
+        return self.create_next_state(
+            "boys",
+            boys_states_completed,
+            state_name,
+            "perf_learner_boys_below_minimum_results",
+            "In total, how many boys achieved between 8 and 11 out of 20?",
+            "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
+        );
+    });
+
+// boys 0-7
+    self.add_creator("perf_learner_boys_below_minimum_results", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results",
+            "perf_learner_boys_desirable_results",
+            "perf_learner_boys_minimum_results",
+            ];
+
+        return self.create_next_state(
+            "boys",
+            boys_states_completed,
+            state_name,
+            "perf_learner_girls_total",
+            "In total, how many boys achieved between 0 and 7 out of 20?",
+            "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
+        );
+    });
+
+// girls total
+    self.add_creator("perf_learner_girls_total", function (state_name, im) {
+        var boys_states_completed = [
+            "perf_learner_boys_outstanding_results",
+            "perf_learner_boys_desirable_results",
+            "perf_learner_boys_minimum_results",
+            "perf_learner_boys_below_minimum_results"
+            ];
+        var must_equal = true;
+
+        return self.create_next_state(
+            "boys",
+            boys_states_completed,
+            state_name,
+            "perf_learner_girls_outstanding_results",
+            "How many girls took part in the learner assessment?",
+            "Please provide a number value for total girls assessed.",
+            must_equal
+        );
+    });
+
+// girls 16-20
     self.add_state(new FreeText(
-        "perf_learner_boys_phonetic_awareness",
-        "perf_learner_girls_phonetic_awareness",
-        "How many boys achieved at least 4 out of 6 correct answers for Section " +
-            "1 (Phonics and Phonemic Awareness)?",
+        "perf_learner_girls_outstanding_results",
+        "perf_learner_girls_desirable_results",
+        "In total, how many girls achieved 16 out of 20 or more?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
+            return self.check_valid_number(content);
         },
-        "Please provide a valid number value for total boys achieving 4 out of 6" +
-        " correct answers for Phonics and Phonemic Awareness."
+        "Please provide a valid number value for total girls achieving 16 out of 20 or more."
     ));
 
+// girls 12-15
+    self.add_creator("perf_learner_girls_desirable_results", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results"
+            ];
+
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_girls_minimum_results",
+            "In total, how many girls achieved between 12 and 15 out of 20?",
+            "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
+        );
+    });
+
+
+// girls 8-11
+    self.add_creator("perf_learner_girls_minimum_results", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results",
+            "perf_learner_girls_desirable_results"
+            ];
+
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_girls_below_minimum_results",
+            "In total, how many girls achieved between 8 and 11 out of 20?",
+            "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
+            );
+    });
+
+// girls 0-7
+    self.add_creator("perf_learner_girls_below_minimum_results", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results",
+            "perf_learner_girls_desirable_results",
+            "perf_learner_girls_minimum_results",
+            ];
+
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_boys_phonetic_awareness",
+            "In total, how many girls achieved between 0 and 7 out of 20?",
+            "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
+        );
+    });
+
+// boys phonetic
+    self.add_creator("perf_learner_boys_phonetic_awareness", function (state_name, im) {
+        var girls_states_completed = [
+            "perf_learner_girls_outstanding_results",
+            "perf_learner_girls_desirable_results",
+            "perf_learner_girls_minimum_results",
+            "perf_learner_girls_below_minimum_results"
+            ];
+        var must_equal = true;
+
+        return self.create_next_state(
+            "girls",
+            girls_states_completed,
+            state_name,
+            "perf_learner_girls_phonetic_awareness",
+            "How many boys achieved at least 4 out of 6 correct answers for Section " +
+                "1 (Phonics and Phonemic Awareness)?",
+            "Please provide a valid number value for total boys achieving 4 out of 6" +
+                " correct answers for Phonics and Phonemic Awareness.",
+            true,
+            function(content) {
+                return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
+            }
+        );
+    });
+
+// girls phonetic
     self.add_state(new FreeText(
         "perf_learner_girls_phonetic_awareness",
         "perf_learner_boys_vocabulary",
@@ -1434,172 +1678,92 @@ function GoRtsZambia() {
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
         "Please provide a valid number value for total girls achieving 4 out of 6" +
         " correct answers for Phonics and Phonemic Awareness."
     ));
 
+// boys vocab
     self.add_state(new FreeText(
         "perf_learner_boys_vocabulary",
         "perf_learner_girls_vocabulary",
         "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
         },
         "Please provide a valid number value for total boys achieving 3 out of 6" +
         " correct answers for Vocabulary."
     ));
 
+// girls vocab
     self.add_state(new FreeText(
         "perf_learner_girls_vocabulary",
         "perf_learner_boys_reading_comprehension",
         "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
         "Please provide a valid number value for total girls achieving 3 out of 6" +
         " correct answers for Vocabulary."
     ));
 
+// boys reading comprehension
     self.add_state(new FreeText(
         "perf_learner_boys_reading_comprehension",
         "perf_learner_girls_reading_comprehension",
         "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
         },
         "Please provide a valid number value for total boys achieving 2 out of 4" +
         " correct answers for Comprehension."
     ));
 
+// girls reading comprehension
     self.add_state(new FreeText(
         "perf_learner_girls_reading_comprehension",
         "perf_learner_boys_writing_diction",
         "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
         "Please provide a valid number value for total girls achieving 2 out of 4" +
         " correct answers for Comprehension."
     ));
 
+// boys writing
     self.add_state(new FreeText(
         "perf_learner_boys_writing_diction",
         "perf_learner_girls_writing_diction",
         "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
         },
         "Please provide a valid number value for total boys achieving 2 out of 4" +
         " correct answers for Writing."
     ));
 
+// girls writing
     self.add_state(new FreeText(
         "perf_learner_girls_writing_diction",
-        "perf_learner_boys_outstanding_results",
+        "perf_learner_completed",
         "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
+            return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
         "Please provide a valid number value for total girls achieving 2 out of 4" +
         " correct answers for Writing."
     ));
 
-    self.add_state(new FreeText(
-        "perf_learner_boys_outstanding_results",
-        "perf_learner_girls_outstanding_results",
-        "In total, how many boys achieved 16 out of 20 or more?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
-        },
-        "Please provide a valid number value for total boys achieving 16 out of 20 or more."
-    ));
 
-    self.add_state(new FreeText(
-        "perf_learner_girls_outstanding_results",
-        "perf_learner_boys_desirable_results",
-        "In total, how many girls achieved 16 out of 20 or more?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
-        },
-        "Please provide a valid number value for total girls achieving 16 out of 20 or more."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_boys_desirable_results",
-        "perf_learner_girls_desirable_results",
-        "In total, how many boys achieved between 12 and 15 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
-        },
-        "Please provide a valid number value for total boys achieving between 12 and 15 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_girls_desirable_results",
-        "perf_learner_boys_minimum_results",
-        "In total, how many girls achieved between 12 and 15 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
-        },
-        "Please provide a valid number value for total girls achieving between 12 and 15 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_boys_minimum_results",
-        "perf_learner_girls_minimum_results",
-        "In total, how many boys achieved between 8 and 11 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
-        },
-        "Please provide a valid number value for total boys achieving between 8 and 11 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_girls_minimum_results",
-        "perf_learner_boys_below_minimum_results",
-        "In total, how many girls achieved between 8 and 11 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (content >= 0 && content <= parseInt(im.get_user_answer('perf_learner_girls_total')));
-        },
-        "Please provide a valid number value for total girls achieving between 8 and 11 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_boys_below_minimum_results",
-        "perf_learner_girls_below_minimum_results",
-        "In total, how many boys achieved between 0 and 7 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_boys_total')));
-        },
-        "Please provide a valid number value for total boys achieving between 0 and 7 out of 20."
-    ));
-
-    self.add_state(new FreeText(
-        "perf_learner_girls_below_minimum_results",
-        "perf_learner_completed",
-        "In total, how many girls achieved between 0 and 7 out of 20?",
-        function(content) {
-            // check that the value provided is actually decimal-ish.
-            return self.check_valid_number(content) && (parseInt(content) >= 0 && parseInt(content) <= parseInt(im.get_user_answer('perf_learner_girls_total')));
-        },
-        "Please provide a valid number value for total girls achieving between 0 and 7 out of 20."
-    ));
-
+// completed
     self.add_creator('perf_learner_completed', function(state_name, im) {
         // Log the users data
         var p = self.cms_performance_learner(im);

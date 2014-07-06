@@ -2379,6 +2379,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
 
 });
 
+
 describe("When using the USSD line as an recognised MSISDN to report on learners", function() {
 
     // These are used to mock API reponses
@@ -2440,6 +2441,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+    // flow: initial state -> boys total
     it("selecting to report on learner performance should ask for total boys", function (done) {
         var user = {
             current_state: 'initial_state'
@@ -2453,6 +2455,26 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
+
+
+    // flow: boys total -> boys 16-20
+    it("entering total boys should ask for boys outstanding results", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_total',
+            answers: {
+                initial_state: 'perf_learner_boys_total'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "52",
+            next_state: "perf_learner_boys_outstanding_results",
+            response: "^In total, how many boys achieved 16 out of 20 or more\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys total input
     it("entering total boys incorrectly should ask for total boys again", function (done) {
         var user = {
             current_state: 'perf_learner_boys_total',
@@ -2469,50 +2491,563 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total boys should ask for total girls", function (done) {
+
+
+    // flow: boys 16-20 -> boys 12-15
+    it("entering boys outstanding results should ask for desirable results", function (done) {
         var user = {
-            current_state: 'perf_learner_boys_total',
+            current_state: 'perf_learner_boys_outstanding_results',
             answers: {
-                initial_state: 'perf_learner_boys_total'
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "52",
+            content: "10",
+            next_state: "perf_learner_boys_desirable_results",
+            response: "^In total, how many boys achieved between 12 and 15 out of 20\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys outstanding input
+    it("entering boys outstanding incorrectly should ask for boys again", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_outstanding_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "Ten",
+            next_state: "perf_learner_boys_outstanding_results",
+            response: "^Please provide a valid number value for total boys achieving 16 out of 20 or more\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding higher than total boys should return error message", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_outstanding_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "60",
+            next_state: "perf_learner_boys_desirable_results",
+            response: "You've entered results for 60 boys \\(60\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+    // flow: boys 12-15 -> boys 8-11
+    it("entering boys desirable results should ask for minimum results", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "15",
+            next_state: "perf_learner_boys_minimum_results",
+            response: "^In total, how many boys achieved between 8 and 11 out of 20\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys desirable input
+    it("entering boys desirable incorrectly should ask for boys desirable again", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "fifteen",
+            next_state: "perf_learner_boys_desirable_results",
+            response: "^Please provide a valid number value for total boys achieving between 12 and 15 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding + desirable higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "50",
+            next_state: "perf_learner_boys_minimum_results",
+            response: "You've entered results for 60 boys \\(10\\+50\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+    // flow: boys 8-11 -> boys 0-7
+    it("entering boys minimum results should ask for below minimum results", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "20",
+            next_state: "perf_learner_boys_below_minimum_results",
+            response: "^In total, how many boys achieved between 0 and 7 out of 20\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys minimum input
+    it("entering boys minimum incorrectly should ask for boys minimum again", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "twenty",
+            next_state: "perf_learner_boys_minimum_results",
+            response: "^Please provide a valid number value for total boys achieving between 8 and 11 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding + desirable + minimum higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "35",
+            next_state: "perf_learner_boys_below_minimum_results",
+            response: "You've entered results for 60 boys \\(10\\+15\\+35\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+    // flow: boys 0-7 -> girls total
+    it("entering boys below minimum results should ask for girls total", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "7",
             next_state: "perf_learner_girls_total",
             response: "^How many girls took part in the learner assessment\\?$"
         });
         p.then(done, done);
     });
 
+    // validation: boys below minimum input
+    it("entering boys below minimum incorrectly should ask for boys below minimum again", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "seven",
+            next_state: "perf_learner_boys_below_minimum_results",
+            response: "^Please provide a valid number value for total boys achieving between 0 and 7 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys resulting total > boys total
+    it("entering boys outstanding + desirable + minimum + below_minimum higher than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "10",
+            next_state: "perf_learner_girls_total",
+            response: "You've entered results for 55 boys \\(10\\+15\\+20\\+10\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: boys resulting total < boys total
+    it("entering boys outstanding + desirable + minimum + below_minimum less than total boys should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "5",
+            next_state: "perf_learner_girls_total",
+            response: "You've entered results for 50 boys \\(10\\+15\\+20\\+5\\), but you initially indicated 52 boys participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+    // flow: girls total -> girls 16-20
+    it("entering total girls should ask for girls outstanding results", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_total',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "49",
+            next_state: "perf_learner_girls_outstanding_results",
+            response: "^In total, how many girls achieved 16 out of 20 or more\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls total input
     it("entering total girls incorrectly should ask for total girls again", function (done) {
         var user = {
             current_state: 'perf_learner_girls_total',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52'
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "forty two",
+            content: "Forty nine",
             next_state: "perf_learner_girls_total",
             response: "^Please provide a number value for total girls assessed\\.$"
         });
         p.then(done, done);
     });
 
-    it("entering total girls should ask for boys phonics", function (done) {
+
+
+    // flow: girls 16-20 -> girls 12-15
+    it("entering girls outstanding results should ask for desirable results", function (done) {
         var user = {
-            current_state: 'perf_learner_girls_total',
+            current_state: 'perf_learner_girls_outstanding_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: "52"
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "42",
+            content: "10",
+            next_state: "perf_learner_girls_desirable_results",
+            response: "^In total, how many girls achieved between 12 and 15 out of 20\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls outstanding input
+    it("entering girls outstanding incorrectly should ask for girls again", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_outstanding_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "Ten",
+            next_state: "perf_learner_girls_outstanding_results",
+            response: "^Please provide a valid number value for total girls achieving 16 out of 20 or more\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_outstanding_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "60",
+            next_state: "perf_learner_girls_desirable_results",
+            response: "You've entered results for 60 girls \\(60\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+
+    // flow: girls 12-15 -> girls 8-11
+    it("entering girls desirable results should ask for minimum results", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "15",
+            next_state: "perf_learner_girls_minimum_results",
+            response: "^In total, how many girls achieved between 8 and 11 out of 20\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls desirable input
+    it("entering girls desirable incorrectly should ask for girls desirable again", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "fifteen",
+            next_state: "perf_learner_girls_desirable_results",
+            response: "^Please provide a valid number value for total girls achieving between 12 and 15 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding + desirable higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_desirable_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "50",
+            next_state: "perf_learner_girls_minimum_results",
+            response: "You've entered results for 60 girls \\(10\\+50\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+
+    // flow: girls 8-11 -> girls 0-7
+    it("entering girls minimum results should ask for below minimum results", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "20",
+            next_state: "perf_learner_girls_below_minimum_results",
+            response: "^In total, how many girls achieved between 0 and 7 out of 20\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls minimum input
+    it("entering girls minimum incorrectly should ask for girls minimum again", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "four",
+            next_state: "perf_learner_girls_minimum_results",
+            response: "^Please provide a valid number value for total girls achieving between 8 and 11 out of 20\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding + desirable + minimum higher than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "35",
+            next_state: "perf_learner_girls_below_minimum_results",
+            response: "You've entered results for 60 girls \\(10\\+15\\+35\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+
+    // flow: girls 0-7 -> boys phonics
+    it("entering girls below minimum results should ask for boys phonics", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "4",
             next_state: "perf_learner_boys_phonetic_awareness",
             response: "^How many boys achieved at least 4 out of 6 correct answers " +
                 "for Section 1 \\(Phonics and Phonemic Awareness\\)\\?$"
@@ -2520,49 +3055,153 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering boys phonics incorrectly should ask for total boys phonics again", function (done) {
+    // validation: girls below minimum input
+    it("entering girls below minimum incorrectly should ask for girls below minimum again", function (done) {
         var user = {
-            current_state: 'perf_learner_boys_phonetic_awareness',
+            current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42'
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "lots",
-            next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            content: "four",
+            next_state: "perf_learner_girls_below_minimum_results",
+            response: "^Please provide a valid number value for total girls achieving between 0 and 7 out of 20\\.$"
         });
         p.then(done, done);
     });
 
-    it("entering boys phonics too high should ask for total boys phonics again", function (done) {
+    // validation: girls resulting total > girls total
+    it("entering girls outstanding + desirable + minimum + below_minimum higher than total girls should return error state", function (done) {
         var user = {
-            current_state: 'perf_learner_boys_phonetic_awareness',
+            current_state: 'perf_learner_girls_below_minimum_results',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42'
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "53",
+            content: "10",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "You've entered results for 55 girls \\(10\\+15\\+20\\+10\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
         });
         p.then(done, done);
     });
 
+    // validation: girls resulting total < girls total
+    it("entering girls outstanding + desirable + minimum + below_minimum less than total girls should return error state", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_learner_boys_phonetic_awareness",
+            response: "You've entered results for 46 girls \\(10\\+15\\+20\\+1\\), but you initially indicated 49 girls participants. Please try again\\.[^]" +
+                    "1. Continue\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+
+    // flow: error_state -> boys_total
+    it("after reaching error state from boys results should go to boys_total", function (done) {
+        var user = {
+            current_state: 'perf_learner_boys_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '100',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_learner_boys_total",
+            response: "^How many boys took part in the learner assessment\\?$"
+        });
+        p.then(done, done);
+    });
+
+    // flow: error_state -> girls_total
+    it("after reaching error state from girls results should go to girls_total", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_below_minimum_results',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '50',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "1",
+            next_state: "perf_learner_girls_total",
+            response: "^How many girls took part in the learner assessment\\?$"
+        });
+        p.then(done, done);
+    });
+
+
+
+    // flow: boys phonics -> girls phonics
     it("entering boys phonics should ask for total girls phonics", function (done) {
         var user = {
             current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42'
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
             }
         };
         var p = tester.check_state({
@@ -2575,52 +3214,79 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering girls phonics incorrectly should ask for total girls phonics again", function (done) {
+    // validation: boys phonics 1
+    it("entering boys phonics incorrectly should ask for total boys phonics again", function (done) {
         var user = {
-            current_state: 'perf_learner_girls_phonetic_awareness',
+            current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31'
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "loads",
-            next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            content: "lots",
+            next_state: "perf_learner_boys_phonetic_awareness",
+            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
 
-    it("entering girls phonics too high should ask for total girls phonics again", function (done) {
+    // validation: boys phonics 2
+    it("entering boys phonics too high should ask for total boys phonics again", function (done) {
         var user = {
-            current_state: 'perf_learner_girls_phonetic_awareness',
+            current_state: 'perf_learner_boys_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31'
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "43",
-            next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            content: "53",
+            next_state: "perf_learner_boys_phonetic_awareness",
+            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
 
+
+
+    // flow: girls phonics -> boys vocab
     it("entering girls phonics should ask for total boys vocabulary", function (done) {
         var user = {
             current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31'
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
+                perf_learner_boys_phonetic_awareness: '31',
             }
         };
         var p = tester.check_state({
@@ -2632,36 +3298,83 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         });
         p.then(done, done);
     });
-
-    it("entering total boys vocabulary incorrectly should ask for total boys vocabulary again", function (done) {
+    
+    // validation: girls phonics 1
+    it("entering girls phonics incorrectly should ask for total girls phonics again", function (done) {
         var user = {
-            current_state: 'perf_learner_boys_vocabulary',
+            current_state: 'perf_learner_girls_phonetic_awareness',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "less",
-            next_state: "perf_learner_boys_vocabulary",
-            response: "^Please provide a valid number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
+            content: "loads",
+            next_state: "perf_learner_girls_phonetic_awareness",
+            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
 
+    // validation: girls phonics 2
+    it("entering girls phonics too high should ask for total girls phonics again", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_phonetic_awareness',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
+                perf_learner_boys_phonetic_awareness: '31',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "50",
+            next_state: "perf_learner_girls_phonetic_awareness",
+            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+    
+    // flow: boys vocab -> girls vocab
     it("entering total boys vocabulary should ask for total girls vocabulary", function (done) {
         var user = {
             current_state: 'perf_learner_boys_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32'
+                perf_learner_girls_phonetic_awareness: '32',
             }
         };
         var p = tester.check_state({
@@ -2674,37 +3387,56 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total girls vocabulary incorrectly should ask for total girls vocabulary again", function (done) {
+    // validation: boys vocab
+    it("entering total boys vocabulary incorrectly should ask for total boys vocabulary again", function (done) {
         var user = {
-            current_state: 'perf_learner_girls_vocabulary',
+            current_state: 'perf_learner_boys_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "lesser",
-            next_state: "perf_learner_girls_vocabulary",
-            response: "^Please provide a valid number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
+            content: "less",
+            next_state: "perf_learner_boys_vocabulary",
+            response: "^Please provide a valid number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
 
+
+
+    // flow: girls vocab -> boys comprehension
     it("entering girls vocabulary should ask for total boys comprehension", function (done) {
         var user = {
             current_state: 'perf_learner_girls_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33'
+                perf_learner_boys_vocabulary: '33',
             }
         };
         var p = tester.check_state({
@@ -2717,39 +3449,58 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total boys comprehension incorrectly should ask for total boys comprehension again", function (done) {
+    // validation: girls vocab
+    it("entering total girls vocabulary incorrectly should ask for total girls vocabulary again", function (done) {
         var user = {
-            current_state: 'perf_learner_boys_reading_comprehension',
+            current_state: 'perf_learner_girls_vocabulary',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "lessly",
-            next_state: "perf_learner_boys_reading_comprehension",
-            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
+            content: "lesser",
+            next_state: "perf_learner_girls_vocabulary",
+            response: "^Please provide a valid number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
         });
         p.then(done, done);
     });
 
+
+
+    // flow: boys comprehension -> girls comprehension
     it("entering total boys comprehension should ask for total girls comprehension", function (done) {
         var user = {
             current_state: 'perf_learner_boys_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34'
+                perf_learner_girls_vocabulary: '34',
             }
         };
         var p = tester.check_state({
@@ -2762,41 +3513,60 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total girls comprehension incorrectly should ask for total girls comprehension again", function (done) {
+    // validation: boys comprehension
+    it("entering total boys comprehension incorrectly should ask for total boys comprehension again", function (done) {
         var user = {
-            current_state: 'perf_learner_girls_reading_comprehension',
+            current_state: 'perf_learner_boys_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
                 perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "lesser",
-            next_state: "perf_learner_girls_reading_comprehension",
-            response: "^Please provide a valid number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
+            content: "lessly",
+            next_state: "perf_learner_boys_reading_comprehension",
+            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
 
+
+
+    // flow: girls comprehension -> boys writing
     it("entering total girls comprehension should ask for total boys writing", function (done) {
         var user = {
             current_state: 'perf_learner_girls_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
                 perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35'
+                perf_learner_boys_reading_comprehension: '35',
             }
         };
         var p = tester.check_state({
@@ -2809,43 +3579,62 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total boys writing incorrectly should ask for total boys writing again", function (done) {
+    // validation: girls comprehension
+    it("entering total girls comprehension incorrectly should ask for total girls comprehension again", function (done) {
         var user = {
-            current_state: 'perf_learner_boys_writing_diction',
+            current_state: 'perf_learner_girls_reading_comprehension',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
                 perf_learner_girls_vocabulary: '34',
                 perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36'
             }
         };
         var p = tester.check_state({
             user: user,
-            content: "greater",
-            next_state: "perf_learner_boys_writing_diction",
-            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Writing\\.$"
+            content: "lesser",
+            next_state: "perf_learner_girls_reading_comprehension",
+            response: "^Please provide a valid number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
         });
         p.then(done, done);
     });
 
+
+
+    // flow: boys writing -> girls writing
     it("entering total boys writing should ask for total girls writing", function (done) {
         var user = {
             current_state: 'perf_learner_boys_writing_diction',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
                 perf_learner_girls_vocabulary: '34',
                 perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36'
+                perf_learner_girls_reading_comprehension: '36',
             }
         };
         var p = tester.check_state({
@@ -2858,20 +3647,100 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total girls writing incorrectly should ask for total girls writing again", function (done) {
+    // validation: boys writing
+    it("entering total boys writing incorrectly should ask for total boys writing again", function (done) {
         var user = {
-            current_state: 'perf_learner_girls_writing_diction',
+            current_state: 'perf_learner_boys_writing_diction',
             answers: {
                 initial_state: 'perf_learner_boys_total',
                 perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
                 perf_learner_boys_phonetic_awareness: '31',
                 perf_learner_girls_phonetic_awareness: '32',
                 perf_learner_boys_vocabulary: '33',
                 perf_learner_girls_vocabulary: '34',
                 perf_learner_boys_reading_comprehension: '35',
                 perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37'
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "greater",
+            next_state: "perf_learner_boys_writing_diction",
+            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Writing\\.$"
+        });
+        p.then(done, done);
+    });
+
+
+
+    // flow: girls writing -> completed
+    it("entering girls writing should show success and options", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_writing_diction',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_boys_writing_diction: '37',
+            }
+        };
+        var p = tester.check_state({
+            user: user,
+            content: "38",
+            next_state: "perf_learner_completed",
+            response: "^Congratulations. You have finished reporting on the learner assessment.[^]" +
+                "1. Go back to the main menu\\.[^]" +
+                "2. Exit\\.$"
+        });
+        p.then(done, done);
+    });
+
+    // validation: girls writing
+    it("entering total girls writing incorrectly should ask for total girls writing again", function (done) {
+        var user = {
+            current_state: 'perf_learner_girls_writing_diction',
+            answers: {
+                initial_state: 'perf_learner_boys_total',
+                perf_learner_boys_total: '52',
+                perf_learner_boys_outstanding_results: '10',
+                perf_learner_boys_desirable_results: '15',
+                perf_learner_boys_minimum_results: '20',
+                perf_learner_boys_below_minimum_results: '7',
+                perf_learner_girls_total: '49',
+                perf_learner_girls_outstanding_results: '10',
+                perf_learner_girls_desirable_results: '15',
+                perf_learner_girls_minimum_results: '20',
+                perf_learner_girls_below_minimum_results: '4',
+                perf_learner_boys_phonetic_awareness: '31',
+                perf_learner_girls_phonetic_awareness: '32',
+                perf_learner_boys_vocabulary: '33',
+                perf_learner_girls_vocabulary: '34',
+                perf_learner_boys_reading_comprehension: '35',
+                perf_learner_girls_reading_comprehension: '36',
+                perf_learner_boys_writing_diction: '37',
             }
         };
         var p = tester.check_state({
@@ -2883,506 +3752,8 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
         p.then(done, done);
     });
 
-    it("entering total girls comprehension should ask for total boys outstanding results", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_writing_diction',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "38",
-            next_state: "perf_learner_boys_outstanding_results",
-            response: "^In total, how many boys achieved 16 out of 20 or more\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys outstanding results incorrectly should ask for total boys outstanding results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_outstanding_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greater",
-            next_state: "perf_learner_boys_outstanding_results",
-            response: "^Please provide a valid number value for total boys achieving 16 out of 20 or more\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys outstanding results should ask for total girls outstanding results", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_outstanding_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "39",
-            next_state: "perf_learner_girls_outstanding_results",
-            response: "^In total, how many girls achieved 16 out of 20 or more\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls outstanding results incorrectly should ask for total girls outstanding results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_outstanding_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greatest",
-            next_state: "perf_learner_girls_outstanding_results",
-            response: "^Please provide a valid number value for total girls achieving 16 out of 20 or more\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls outstanding results should ask for total boys desirable results", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_outstanding_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "40",
-            next_state: "perf_learner_boys_desirable_results",
-            response: "^In total, how many boys achieved between 12 and 15 out of 20\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys desirable results incorrectly should ask for total boys desirable results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_desirable_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greater",
-            next_state: "perf_learner_boys_desirable_results",
-            response: "^Please provide a valid number value for total boys achieving between 12 and 15 out of 20\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys desirable results should ask for total girls desirable results", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_desirable_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "41",
-            next_state: "perf_learner_girls_desirable_results",
-            response: "^In total, how many girls achieved between 12 and 15 out of 20\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls desirable results incorrectly should ask for total girls desirable results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_desirable_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greatest",
-            next_state: "perf_learner_girls_desirable_results",
-            response: "^Please provide a valid number value for total girls achieving between 12 and 15 out of 20\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls desirable results should ask for total boys minimum results", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_desirable_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "42",
-            next_state: "perf_learner_boys_minimum_results",
-            response: "^In total, how many boys achieved between 8 and 11 out of 20\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys minimum results incorrectly should ask for total boys minimum results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42'
-
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greater",
-            next_state: "perf_learner_boys_minimum_results",
-            response: "^Please provide a valid number value for total boys achieving between 8 and 11 out of 20\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys desirable results should ask for total girls desirable results", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "43",
-            next_state: "perf_learner_girls_minimum_results",
-            response: "^In total, how many girls achieved between 8 and 11 out of 20\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls minimum results incorrectly should ask for total girls minimum results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
-                perf_learner_boys_minimum_results: '43'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greatest",
-            next_state: "perf_learner_girls_minimum_results",
-            response: "^Please provide a valid number value for total girls achieving between 8 and 11 out of 20\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls minimum results should ask for total boys below minimum results", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
-                perf_learner_boys_minimum_results: '43'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "42",
-            next_state: "perf_learner_boys_below_minimum_results",
-            response: "^In total, how many boys achieved between 0 and 7 out of 20\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys below minimum results incorrectly should ask for total boys below minimum results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_below_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
-                perf_learner_boys_minimum_results: '43',
-                perf_learner_girls_minimum_results: '44'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greatering",
-            next_state: "perf_learner_boys_below_minimum_results",
-            response: "^Please provide a valid number value for total boys achieving between 0 and 7 out of 20\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total boys below minimum results should ask for total girls below minimum results", function (done) {
-        var user = {
-            current_state: 'perf_learner_boys_below_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
-                perf_learner_boys_minimum_results: '43',
-                perf_learner_girls_minimum_results: '44'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "45",
-            next_state: "perf_learner_girls_below_minimum_results",
-            response: "^In total, how many girls achieved between 0 and 7 out of 20\\?$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering total girls below minimum results incorrectly should ask for total girls below minimum results again", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_below_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
-                perf_learner_boys_minimum_results: '43',
-                perf_learner_girls_minimum_results: '44',
-                perf_learner_boys_below_minimum_results: '45'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "greating",
-            next_state: "perf_learner_girls_below_minimum_results",
-            response: "^Please provide a valid number value for total girls achieving between 0 and 7 out of 20\\.$"
-        });
-        p.then(done, done);
-    });
-
-    it("entering teacher training subtotal should ask show success and options", function (done) {
-        var user = {
-            current_state: 'perf_learner_girls_below_minimum_results',
-            answers: {
-                initial_state: 'perf_learner_boys_total',
-                perf_learner_boys_total: '52',
-                perf_learner_girls_total: '42',
-                perf_learner_boys_phonetic_awareness: '31',
-                perf_learner_girls_phonetic_awareness: '32',
-                perf_learner_boys_vocabulary: '33',
-                perf_learner_girls_vocabulary: '34',
-                perf_learner_boys_reading_comprehension: '35',
-                perf_learner_girls_reading_comprehension: '36',
-                perf_learner_boys_writing_diction: '37',
-                perf_learner_girls_writing_diction: '38',
-                perf_learner_boys_outstanding_results: '39',
-                perf_learner_girls_outstanding_results: '40',
-                perf_learner_boys_desirable_results: '41',
-                perf_learner_girls_desirable_results: '42',
-                perf_learner_boys_minimum_results: '43',
-                perf_learner_girls_minimum_results: '44',
-                perf_learner_boys_below_minimum_results: '45'
-            }
-        };
-        var p = tester.check_state({
-            user: user,
-            content: "42",
-            next_state: "perf_learner_completed",
-            response: "^Congratulations. You have finished reporting on the learner assessment.[^]" +
-                "1. Go back to the main menu\\.[^]" +
-                "2. Exit\\.$"
-        });
-        p.then(done, done);
-    });
 });
+
 
 describe("When using the USSD line as an recognised MSISDN - completed Learner review", function() {
 
