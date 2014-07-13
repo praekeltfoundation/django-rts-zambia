@@ -58,23 +58,7 @@ class HeadTeacherAdmin(ManagePermissions):
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
-class TeacherPerformanceDataForm(forms.ModelForm):
-    gender_choices = [('male', 'Male'),
-                    ('female', 'Female')]
-    experience_choices = [("0-3", '0 - 3 years'),
-                        ("4-8", '4 - 8 years'),
-                        ("9-12", "9 - 12 years"),
-                        ("13+", "13 years or more")]
-
-    gender = forms.ChoiceField(choices=gender_choices)
-    years_experience = forms.ChoiceField(choices=experience_choices)
-
-    class Meta:
-        model = TeacherPerformanceData
-
-
 class TeacherPerformanceDataAdmin(ManagePermissions):
-    form = TeacherPerformanceDataForm
     list_display = ["emis", "gender", "age", "years_experience", "g2_pupils_present", "g2_pupils_registered",
                     "classroom_environment_score", "t_l_materials", "pupils_materials_score",
                     "pupils_books_number", "reading_lesson", "pupil_engagement_score", "attitudes_and_beliefs",
@@ -115,18 +99,7 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
-class LearnerPerformanceDataForm(forms.ModelForm):
-    gender_choices = [('boys', 'Boys'),
-                    ('girls', 'Girls')]
-
-    gender = forms.ChoiceField(choices=gender_choices)
-
-    class Meta:
-        model = LearnerPerformanceData
-
-
 class LearnerPerformanceDataAdmin(ManagePermissions):
-    form = LearnerPerformanceDataForm
     list_display = ["emis", "gender", "total_number_pupils", "phonetic_awareness", "vocabulary",
                     "reading_comprehension", "writing_diction", "below_minimum_results", "minimum_results",
                     "desirable_results", "outstanding_results", "created_by", "created_at"]

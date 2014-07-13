@@ -121,9 +121,21 @@ class AcademicAchievementCode(models.Model):
 
 
 class TeacherPerformanceData(models.Model):
-    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    GENDER_CHOICES = (
+        ('male', 'Male'),
+        ('female', 'Female')
+    )
+    EXPERIENCE_CHOICES = (
+        ("0-3", '0 - 3 years'),
+        ("4-8", '4 - 8 years'),
+        ("9-12", "9 - 12 years"),
+        ("13+", "13 years or more")
+    )
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES,
+                                verbose_name=u'Gender')
     age = models.IntegerField()
-    years_experience = models.CharField(max_length=5)
+    years_experience = models.CharField(max_length=5,
+                                        choices=EXPERIENCE_CHOICES)
     g2_pupils_present = models.IntegerField()
     g2_pupils_registered = models.IntegerField()
     classroom_environment_score = models.IntegerField()
@@ -156,7 +168,12 @@ class TeacherPerformanceData(models.Model):
 
 
 class LearnerPerformanceData(models.Model):
-    gender = models.CharField(max_length=6, verbose_name=u'Gender')
+    GENDER_CHOICES = (
+        ('boys', 'Boys'),
+        ('girls', 'Girls')
+    )
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES,
+                                verbose_name=u'Gender')
     total_number_pupils = models.IntegerField()
     phonetic_awareness = models.IntegerField()
     vocabulary = models.IntegerField()
