@@ -141,7 +141,7 @@ function GoRtsZambia() {
     };
 
     self.check_valid_number = function(input){
-        // an attempt to solve the insanity or JavaScript numbers
+        // an attempt to solve the insanity of JavaScript numbers
         var numbers_only = new RegExp('^\\d+$');
         if (input !== '' && numbers_only.test(input) && !Number.isNaN(Number(input))){
             return true;
@@ -1249,6 +1249,11 @@ function GoRtsZambia() {
         "perf_teacher_ts_number",
         "perf_teacher_gender",
         "Please enter the teacher's TS number.",
+        function(content) {
+            // check that the value provided is a number
+            return self.check_valid_number(content);
+        },
+        "Please provide a valid number value for the teacher's TS number.",
         null, null,
         {
             on_enter: function(){
