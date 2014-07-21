@@ -22,6 +22,7 @@ class ZoneAdmin(ManagePermissions):
 class SchoolAdmin(ManagePermissions):
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["emis", "name", "zone", "display_district", "display_province"]
+    search_fields = ["emis"]
 
 
     def queryset(self, request):
