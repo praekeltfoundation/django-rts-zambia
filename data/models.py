@@ -156,10 +156,12 @@ class TeacherPerformanceData(models.Model):
                              verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
                                    verbose_name=u'Head Teacher',
-                                   null=True)
+                                   null=True,
+                                   blank=True)
     created_by_da = models.ForeignKey(DistrictAdminUser,
                                       verbose_name=u'District Admin User',
-                                      null=True)
+                                      null=True,
+                                      blank=True)
     def __unicode__(self):
         return "%s" % self.emis
 
@@ -188,10 +190,12 @@ class LearnerPerformanceData(models.Model):
                              verbose_name=u'EMIS')
     created_by = models.ForeignKey(HeadTeacher,
                                    null=True,
+                                   blank=True,
                                    verbose_name=u'Head Teacher')
     created_by_da = models.ForeignKey(DistrictAdminUser,
                                       verbose_name=u'District Admin User',
-                                      null=True)
+                                      null=True,
+                                      blank=True)
     def __unicode__(self):
         return "%s" % self.emis
 
