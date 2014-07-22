@@ -31,6 +31,13 @@ class SchoolDataAdmin(ManagePermissions):
                header=True
               )]
 
+    def queryset(self, request):
+        """
+        Limits queries for pages that belong to district admin
+        """
+        qs = super(SchoolDataAdmin, self).queryset(request)
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
+
 
 class HeadTeacherAdmin(ManagePermissions):
     list_display = ["emis", "first_name", "last_name", "msisdn", "gender", "date_of_birth", "is_zonal_head", "zonal_head_name","created_at"]
