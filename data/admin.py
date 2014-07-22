@@ -65,6 +65,7 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
                     "training_subtotal", "ts_number", "reading_assessment", "reading_total", "academic_level",
                     "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
+    raw_id_fields = ("created_by",)
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("emis", "EMIS"),
