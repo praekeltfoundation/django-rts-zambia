@@ -3,7 +3,7 @@ from django import forms
 
 
 class ChooseDistrictsForm(forms.Form):
-    sms = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 20}))
+    sms = forms.CharField(widget=forms.Textarea(attrs={'cols': 80, 'rows': 3, 'maxlength': 160}))
     send_to_all = forms.BooleanField(label=_("All"), required=False)
 
     def __init__(self, *args, **kwargs):
