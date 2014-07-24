@@ -552,26 +552,15 @@ function GoRtsZambia() {
             } else {
                 data = self.performance_data_learner_collect_by_head(emis, id);
             }
+            
             var data_boys = data.boys;
             var data_girls = data.girls;
-            // Need to ensure no double save
-            // var contact_key = result.contact.key;
-            // if (result.contact["extras-rts_last_save_performance_learner"] != 'true') {
-                var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
-                p_lp_boys.add_callback(function(){
-                    var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
-                    // p_lp_girls.add_callback(function() {
-                    //     return im.api_request('contacts.update_extras', {
-                    //         key: contact_key,
-                    //         fields: {
-                    //             "rts_last_save_performance_learner": 'true'
-                    //         }
-                    //     });
-                    // });
-                    return p_lp_girls;
-                });
-                return p_lp_boys;
-            // }
+            var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
+            p_lp_boys.add_callback(function(){
+                var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
+                return p_lp_girls;
+            });
+            return p_lp_boys;
         });
         return p;
     };
@@ -1479,13 +1468,7 @@ function GoRtsZambia() {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content);
         },
-        "Please provide a number value for total boys assessed.",
-        {
-            on_enter: function(){
-                var p = self.clear_contact_extra("rts_last_save_performance_learner");
-                return p;
-            }
-        }
+        "Please provide a number value for total boys assessed."
     ));
 
 // boys 16-20
