@@ -552,7 +552,7 @@ function GoRtsZambia() {
             } else {
                 data = self.performance_data_learner_collect_by_head(emis, id);
             }
-            
+
             var data_boys = data.boys;
             var data_girls = data.girls;
             var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
@@ -1232,12 +1232,6 @@ function GoRtsZambia() {
         },
         "Please provide a valid number value for the teacher's TS number.",
         null, null
-        // {
-        //     on_enter: function(){
-        //         var p = self.clear_contact_extra("rts_last_save_performance_teacher");
-        //         return p;
-        //     }
-        // }
     ));
 
     self.add_state(new ChoiceState(
