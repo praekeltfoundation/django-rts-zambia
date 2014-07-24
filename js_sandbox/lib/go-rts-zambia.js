@@ -528,26 +528,26 @@ function GoRtsZambia() {
             var emis = parseInt(result.contact["extras-rts_emis"],10);
             var id = parseInt(result.contact["extras-rts_id"],10);
             // Need to ensure no double save
-            var contact_key = result.contact.key;
-            if (parseInt(result.contact["extras-rts_last_save_performance_teacher"],10) != parseInt(im.get_user_answer('perf_teacher_ts_number'),10)) {
+            // var contact_key = result.contact.key;
+            // if (parseInt(result.contact["extras-rts_last_save_performance_teacher"],10) != parseInt(im.get_user_answer('perf_teacher_ts_number'),10)) {
 
-                if (im.get_user_answer('initial_state') == 'add_emis_perf_teacher_ts_number') {
-                    data = self.performance_data_teacher_collect_by_district_official(emis, id);
-                } else {
-                    data = self.performance_data_teacher_collect_by_head(emis, id);
-                }
-                var p_tp = self.cms_post("data/teacherperformance/", data);
-
-                p_tp.add_callback(function(contact_key) {
-                    return im.api_request('contacts.update_extras', {
-                        key: result.contact.key,
-                        fields: {
-                            "rts_last_save_performance_teacher": JSON.stringify(im.get_user_answer('perf_teacher_ts_number'))
-                        }
-                    });
-                });
-                return p_tp;
+            if (im.get_user_answer('initial_state') == 'add_emis_perf_teacher_ts_number') {
+                data = self.performance_data_teacher_collect_by_district_official(emis, id);
+            } else {
+                data = self.performance_data_teacher_collect_by_head(emis, id);
             }
+            var p_tp = self.cms_post("data/teacherperformance/", data);
+
+                // p_tp.add_callback(function(contact_key) {
+                //     return im.api_request('contacts.update_extras', {
+                //         key: result.contact.key,
+                //         fields: {
+                //             "rts_last_save_performance_teacher": JSON.stringify(im.get_user_answer('perf_teacher_ts_number'))
+                //         }
+                //     });
+                // });
+                return p_tp;
+            // }
         });
         return p;
     };
@@ -1254,13 +1254,13 @@ function GoRtsZambia() {
             return self.check_valid_number(content);
         },
         "Please provide a valid number value for the teacher's TS number.",
-        null, null,
-        {
-            on_enter: function(){
-                var p = self.clear_contact_extra("rts_last_save_performance_teacher");
-                return p;
-            }
-        }
+        null, null
+        // {
+        //     on_enter: function(){
+        //         var p = self.clear_contact_extra("rts_last_save_performance_teacher");
+        //         return p;
+        //     }
+        // }
     ));
 
     self.add_state(new ChoiceState(
@@ -1476,26 +1476,6 @@ function GoRtsZambia() {
         ]
     ));
 
-    // self.add_creator('perf_teacher_completed', function(state_name, im) {
-    //     // Log the users data
-    //     var p = self.cms_performance_teacher(im);
-    //     // Generate the EndState
-    //     p.add_callback(function(result) {
-    //         return new ChoiceState(
-    //             state_name,
-    //             function(choice) {
-    //                     return choice.value;
-    //                 },
-    //             "Congratulations, you have finished reporting on this teacher.",
-    //             [
-    //                 new Choice("perf_teacher_ts_number", "Add another teacher."),
-    //                 new Choice("initial_state", "Go back to the main menu."),
-    //                 new Choice("end_state", "Exit.")
-    //             ]
-    //         );
-    //     });
-    //     return p;
-    // });
 
 
     /////////////////////////////////////////////////////////////////
