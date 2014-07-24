@@ -1454,29 +1454,48 @@ function GoRtsZambia() {
             return self.check_valid_number(content);
         },
         "Please provide a number value for the pupils in the class that have broken " +
-            "through/can read."
+            "through/can read.",
+        {
+            on_exit: function() {
+                var p = self.cms_performance_teacher(im);
+                return p;
+            }
+        }
     ));
 
-    self.add_creator('perf_teacher_completed', function(state_name, im) {
-        // Log the users data
-        var p = self.cms_performance_teacher(im);
-        // Generate the EndState
-        p.add_callback(function(result) {
-            return new ChoiceState(
-                state_name,
-                function(choice) {
-                        return choice.value;
-                    },
-                "Congratulations, you have finished reporting on this teacher.",
-                [
-                    new Choice("perf_teacher_ts_number", "Add another teacher."),
-                    new Choice("initial_state", "Go back to the main menu."),
-                    new Choice("end_state", "Exit.")
-                ]
-            );
-        });
-        return p;
-    });
+    self.add_state(new ChoiceState(
+        "perf_teacher_completed",
+        function(choice) {
+            return choice.value;
+        },
+        "Congratulations, you have finished reporting on this teacher.",
+        [
+            new Choice("perf_teacher_ts_number", "Add another teacher."),
+            new Choice("initial_state", "Go back to the main menu."),
+            new Choice("end_state", "Exit.")
+        ]
+    ));
+
+    // self.add_creator('perf_teacher_completed', function(state_name, im) {
+    //     // Log the users data
+    //     var p = self.cms_performance_teacher(im);
+    //     // Generate the EndState
+    //     p.add_callback(function(result) {
+    //         return new ChoiceState(
+    //             state_name,
+    //             function(choice) {
+    //                     return choice.value;
+    //                 },
+    //             "Congratulations, you have finished reporting on this teacher.",
+    //             [
+    //                 new Choice("perf_teacher_ts_number", "Add another teacher."),
+    //                 new Choice("initial_state", "Go back to the main menu."),
+    //                 new Choice("end_state", "Exit.")
+    //             ]
+    //         );
+    //     });
+    //     return p;
+    // });
 
 
     /////////////////////////////////////////////////////////////////
