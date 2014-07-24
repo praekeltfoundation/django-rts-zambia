@@ -2286,8 +2286,7 @@ describe("When using the USSD line as an recognised MSISDN - completed Teacher r
                 api.add_contact(dummy_contact);
                 api.update_contact_extras(dummy_contact, {
                     "rts_id": 2,
-                    "rts_emis": 1,
-                    "rts_last_save_performance_teacher": "106"
+                    "rts_emis": 1
                 });
 
                 fixtures.forEach(function (f) {
@@ -3806,7 +3805,6 @@ describe("When using the USSD line as an recognised MSISDN - completed Learner r
                 api.update_contact_extras(dummy_contact, {
                     "rts_id": 2,
                     "rts_emis": 1,
-                    "rts_last_save_performance_teacher": "106",
                     "rts_last_save_performance_learner": "true"
                 });
 

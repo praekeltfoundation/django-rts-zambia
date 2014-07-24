@@ -527,27 +527,15 @@ function GoRtsZambia() {
         p.add_callback(function(result) {
             var emis = parseInt(result.contact["extras-rts_emis"],10);
             var id = parseInt(result.contact["extras-rts_id"],10);
-            // Need to ensure no double save
-            // var contact_key = result.contact.key;
-            // if (parseInt(result.contact["extras-rts_last_save_performance_teacher"],10) != parseInt(im.get_user_answer('perf_teacher_ts_number'),10)) {
 
             if (im.get_user_answer('initial_state') == 'add_emis_perf_teacher_ts_number') {
                 data = self.performance_data_teacher_collect_by_district_official(emis, id);
             } else {
                 data = self.performance_data_teacher_collect_by_head(emis, id);
             }
-            var p_tp = self.cms_post("data/teacherperformance/", data);
 
-                // p_tp.add_callback(function(contact_key) {
-                //     return im.api_request('contacts.update_extras', {
-                //         key: result.contact.key,
-                //         fields: {
-                //             "rts_last_save_performance_teacher": JSON.stringify(im.get_user_answer('perf_teacher_ts_number'))
-                //         }
-                //     });
-                // });
-                return p_tp;
-            // }
+            var p_tp = self.cms_post("data/teacherperformance/", data);
+            return p_tp;
         });
         return p;
     };
@@ -567,23 +555,23 @@ function GoRtsZambia() {
             var data_boys = data.boys;
             var data_girls = data.girls;
             // Need to ensure no double save
-            var contact_key = result.contact.key;
-            if (result.contact["extras-rts_last_save_performance_learner"] != 'true') {
+            // var contact_key = result.contact.key;
+            // if (result.contact["extras-rts_last_save_performance_learner"] != 'true') {
                 var p_lp_boys = self.cms_post("data/learnerperformance/", data_boys);
                 p_lp_boys.add_callback(function(){
                     var p_lp_girls = self.cms_post("data/learnerperformance/", data_girls);
-                    p_lp_girls.add_callback(function() {
-                        return im.api_request('contacts.update_extras', {
-                            key: contact_key,
-                            fields: {
-                                "rts_last_save_performance_learner": 'true'
-                            }
-                        });
-                    });
+                    // p_lp_girls.add_callback(function() {
+                    //     return im.api_request('contacts.update_extras', {
+                    //         key: contact_key,
+                    //         fields: {
+                    //             "rts_last_save_performance_learner": 'true'
+                    //         }
+                    //     });
+                    // });
                     return p_lp_girls;
                 });
                 return p_lp_boys;
-            }
+            // }
         });
         return p;
     };
@@ -1763,30 +1751,30 @@ function GoRtsZambia() {
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
         "Please provide a valid number value for total girls achieving 2 out of 4" +
-        " correct answers for Writing."
+        " correct answers for Writing.",
+        // Log the users data
+        {
+            on_exit: function() {
+                var p = self.cms_performance_learner(im);
+                return p;
+            }
+        }
     ));
 
 
 // completed
-    self.add_creator('perf_learner_completed', function(state_name, im) {
-        // Log the users data
-        var p = self.cms_performance_learner(im);
-        // Generate the EndState
-        p.add_callback(function(result) {
-            return new ChoiceState(
-                state_name,
-                function(choice) {
-                        return choice.value;
-                    },
-                "Congratulations. You have finished reporting on the learner assessment.",
-                [
-                    new Choice("initial_state", "Go back to the main menu."),
-                    new Choice("end_state", "Exit.")
-                ]
-            );
-        });
-        return p;
-    });
+    self.add_state(new ChoiceState(
+        "perf_learner_completed",
+        function(choice) {
+            return choice.value;
+        },
+        "Congratulations. You have finished reporting on the learner assessment.",
+        [
+            new Choice("initial_state", "Go back to the main menu."),
+            new Choice("end_state", "Exit.")
+        ]
+    ));
+
 
 
     /////////////////////////////////////////////////////////////////
