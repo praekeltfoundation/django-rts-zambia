@@ -1428,8 +1428,7 @@ function GoRtsZambia() {
             "through/can read.",
         {
             on_exit: function() {
-                var p = self.cms_performance_teacher(im);
-                return p;
+                return self.cms_performance_teacher(im);
             }
         }
     ));
@@ -1732,8 +1731,7 @@ function GoRtsZambia() {
         // Log the users data
         {
             on_exit: function() {
-                var p = self.cms_performance_learner(im);
-                return p;
+                return self.cms_performance_learner(im);
             }
         }
     ));
