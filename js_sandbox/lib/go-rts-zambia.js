@@ -1627,10 +1627,10 @@ function GoRtsZambia() {
             girls_states_completed,
             state_name,
             "perf_learner_girls_phonetic_awareness",
-            "How many boys achieved at least 4 out of 6 correct answers for Section " +
+            "How many boys scored 4 or more correctly out of 6 for Section " +
                 "1 (Phonics and Phonemic Awareness)?",
-            "Please provide a valid number value for total boys achieving 4 out of 6" +
-                " correct answers for Phonics and Phonemic Awareness.",
+            "Please provide a valid number value for total boys scoring 4 or more" +
+                " correctly out of 6 for Phonics and Phonemic Awareness.",
             true,
             function(content) {
                 return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
@@ -1642,73 +1642,73 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_learner_girls_phonetic_awareness",
         "perf_learner_boys_vocabulary",
-        "How many girls achieved at least 4 out of 6 correct answers for Section " +
+        "How many girls scored 4 or more correctly out of 6 for Section " +
             "1 (Phonics and Phonemic Awareness)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
-        "Please provide a valid number value for total girls achieving 4 out of 6" +
-        " correct answers for Phonics and Phonemic Awareness."
+        "Please provide a valid number value for total girls scoring 4 or more" +
+        " correctly out of 6 for Phonics and Phonemic Awareness."
     ));
 
 // boys vocab
     self.add_state(new FreeText(
         "perf_learner_boys_vocabulary",
         "perf_learner_girls_vocabulary",
-        "How many boys achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
+        "How many boys scored 3 or more correctly out of 6 for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
         },
-        "Please provide a valid number value for total boys achieving 3 out of 6" +
-        " correct answers for Vocabulary."
+        "Please provide a valid number value for boys scoring 3 or more correctly out of 6" +
+        " for Vocabulary."
     ));
 
 // girls vocab
     self.add_state(new FreeText(
         "perf_learner_girls_vocabulary",
         "perf_learner_boys_reading_comprehension",
-        "How many girls achieved at least 3 out of 6 correct answers for Section 2 (Vocabulary)?",
+        "How many girls scored 3 or more correctly out of 6 for Section 2 (Vocabulary)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
-        "Please provide a valid number value for total girls achieving 3 out of 6" +
-        " correct answers for Vocabulary."
+        "Please provide a valid number value for girls scoring 3 or more correctly out of 6" +
+        " for Vocabulary."
     ));
 
 // boys reading comprehension
     self.add_state(new FreeText(
         "perf_learner_boys_reading_comprehension",
         "perf_learner_girls_reading_comprehension",
-        "How many boys achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
+        "How many boys scored 2 or more correctly out of 4 for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
         },
-        "Please provide a valid number value for total boys achieving 2 out of 4" +
-        " correct answers for Comprehension."
+        "Please provide a valid number value for boys scoring 2 or more correctly out of 4" +
+        " for Comprehension."
     ));
 
 // girls reading comprehension
     self.add_state(new FreeText(
         "perf_learner_girls_reading_comprehension",
         "perf_learner_boys_writing_diction",
-        "How many girls achieved at least 2 out of 4 correct answers for Section 3 (Comprehension)?",
+        "How many girls scored 2 or more correctly out of 4 for Section 3 (Comprehension)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
         },
-        "Please provide a valid number value for total girls achieving 2 out of 4" +
-        " correct answers for Comprehension."
+        "Please provide a valid number value for girls scoring 2 or more correctly out of 4" +
+        " for Comprehension."
     ));
 
 // boys writing
     self.add_state(new FreeText(
         "perf_learner_boys_writing_diction",
         "perf_learner_girls_writing_diction",
-        "How many boys achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
+        "How many boys scored 2 or more correctly out of 4 for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_boys_total'),10));
@@ -1721,7 +1721,7 @@ function GoRtsZambia() {
     self.add_state(new FreeText(
         "perf_learner_girls_writing_diction",
         "perf_learner_completed",
-        "How many girls achieved at least 2 out of 4 correct answers for Section 4 (Writing)?",
+        "How many girls scored 2 or more correctly out of 4 for Section 4 (Writing)?",
         function(content) {
             // check that the value provided is actually decimal-ish.
             return self.check_valid_number(content) && (parseInt(content,10) >= 0 && parseInt(content,10) <= parseInt(im.get_user_answer('perf_learner_girls_total'),10));
