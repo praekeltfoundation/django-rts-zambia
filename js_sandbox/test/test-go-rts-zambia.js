@@ -3064,7 +3064,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "4",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^How many boys achieved at least 4 out of 6 correct answers " +
+            response: "^How many boys scored 4 or more correctly out of 6 " +
                 "for Section 1 \\(Phonics and Phonemic Awareness\\)\\?$"
         });
         p.then(done, done);
@@ -3223,7 +3223,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "31",
             next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^How many girls achieved at least 4 out of 6 correct answers " +
+            response: "^How many girls scored 4 or more correctly out of 6 " +
                 "for Section 1 \\(Phonics and Phonemic Awareness\\)\\?$"
         });
         p.then(done, done);
@@ -3251,7 +3251,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lots",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total boys scoring 4 or more correctly out of 6 for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -3278,7 +3278,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "53",
             next_state: "perf_learner_boys_phonetic_awareness",
-            response: "^Please provide a valid number value for total boys achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total boys scoring 4 or more correctly out of 6 for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -3308,8 +3308,8 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "32",
             next_state: "perf_learner_boys_vocabulary",
-            response: "^How many boys achieved at least 3 out of 6 correct " +
-                "answers for Section 2 \\(Vocabulary\\)\\?$"
+            response: "^How many boys scored 3 or more correctly out of 6 " +
+                "for Section 2 \\(Vocabulary\\)\\?$"
         });
         p.then(done, done);
     });
@@ -3337,7 +3337,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "loads",
             next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total girls scoring 4 or more correctly out of 6 for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -3365,7 +3365,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "50",
             next_state: "perf_learner_girls_phonetic_awareness",
-            response: "^Please provide a valid number value for total girls achieving 4 out of 6 correct answers for Phonics and Phonemic Awareness\\.$"
+            response: "^Please provide a valid number value for total girls scoring 4 or more correctly out of 6 for Phonics and Phonemic Awareness\\.$"
         });
         p.then(done, done);
     });
@@ -3396,8 +3396,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "33",
             next_state: "perf_learner_girls_vocabulary",
-            response: "^How many girls achieved at least 3 out of 6 correct " +
-                "answers for Section 2 \\(Vocabulary\\)\\?$"
+            response: "^How many girls scored 3 or more correctly out of 6 for Section 2 \\(Vocabulary\\)\\?$"
         });
         p.then(done, done);
     });
@@ -3426,7 +3425,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "less",
             next_state: "perf_learner_boys_vocabulary",
-            response: "^Please provide a valid number value for total boys achieving 3 out of 6 correct answers for Vocabulary\\.$"
+            response: "^Please provide a valid number value for boys scoring 3 or more correctly out of 6 for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -3458,7 +3457,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "34",
             next_state: "perf_learner_boys_reading_comprehension",
-            response: "^How many boys achieved at least 2 out of 4 correct answers " +
+            response: "^How many boys scored 2 or more correctly out of 4 " +
                 "for Section 3 \\(Comprehension\\)\\?$"
         });
         p.then(done, done);
@@ -3489,7 +3488,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_vocabulary",
-            response: "^Please provide a valid number value for total girls achieving 3 out of 6 correct answers for Vocabulary\\.$"
+            response: "^Please provide a valid number value for girls scoring 3 or more correctly out of 6 for Vocabulary\\.$"
         });
         p.then(done, done);
     });
@@ -3522,7 +3521,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "35",
             next_state: "perf_learner_girls_reading_comprehension",
-            response: "^How many girls achieved at least 2 out of 4 correct answers " +
+            response: "^How many girls scored 2 or more correctly out of 4 " +
                 "for Section 3 \\(Comprehension\\)\\?$"
         });
         p.then(done, done);
@@ -3554,7 +3553,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lessly",
             next_state: "perf_learner_boys_reading_comprehension",
-            response: "^Please provide a valid number value for total boys achieving 2 out of 4 correct answers for Comprehension\\.$"
+            response: "^Please provide a valid number value for boys scoring 2 or more correctly out of 4 for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -3588,7 +3587,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "36",
             next_state: "perf_learner_boys_writing_diction",
-            response: "^How many boys achieved at least 2 out of 4 correct answers " +
+            response: "^How many boys scored 2 or more correctly out of 4 " +
                 "for Section 4 \\(Writing\\)\\?$"
         });
         p.then(done, done);
@@ -3621,7 +3620,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "lesser",
             next_state: "perf_learner_girls_reading_comprehension",
-            response: "^Please provide a valid number value for total girls achieving 2 out of 4 correct answers for Comprehension\\.$"
+            response: "^Please provide a valid number value for girls scoring 2 or more correctly out of 4 for Comprehension\\.$"
         });
         p.then(done, done);
     });
@@ -3656,7 +3655,7 @@ describe("When using the USSD line as an recognised MSISDN to report on learners
             user: user,
             content: "37",
             next_state: "perf_learner_girls_writing_diction",
-            response: "^How many girls achieved at least 2 out of 4 correct answers " +
+            response: "^How many girls scored 2 or more correctly out of 4 " +
                 "for Section 4 \\(Writing\\)\\?$"
         });
         p.then(done, done);
