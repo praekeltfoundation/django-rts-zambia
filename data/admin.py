@@ -1,5 +1,6 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, AcademicAchievementCode,
+                    SchoolMonitoringData,
                     TeacherPerformanceData, LearnerPerformanceData,
                     HeadTeacherDuplicateStore, SchoolDataDuplicateStore)
 
@@ -62,6 +63,40 @@ class HeadTeacherAdmin(ManagePermissions):
         Limits queries for pages that belong to district admin
         """
         qs = super(HeadTeacherAdmin, self).queryset(request)
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
+
+
+class SchoolMonitoringDataAdmin(ManagePermissions):
+    list_display = ["emis", "school_improvement_plan", "teaching", "learner_assessment", "learning_materials",
+                    "learner_attendance", "instructional_time", "struggling_learners", "support_ovcs",
+                    "classroom_observation_ht", "learner_performance_ht", "summary_worksheet", "created_by",
+                    "created_at"]
+    search_fields = ["emis__emis", "emis__name"]
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file",
+                fields= [
+                 ("emis", "EMIS"),
+                 ("created_at", "Created At"),
+                 ("created_by", "Created By"),
+                 ("school_improvement_plan", "School Learner Performance Improvement Plan"),
+                 ("teaching", "Activity for Improving Teaching"),
+                 ("learner_assessment", "Activity for Improving Learner Assessment"),
+                 ("learning_materials", "Acquiring Learning Materials"),
+                 ("learner_attendance", "Activity for Improving Learner Attendance"),
+                 ("instructional_time", "Activity for Improving Instructional Time"),
+                 ("struggling_learners", "Extra Support for Struggling Learners"),
+                 ("support_ovcs", "Activity to Support OVCs"),
+                 ("classroom_observation_ht", "ClassRoom Observation Results by Head Teacher"),
+                 ("learner_performance_ht", "Learner Performance Assessments by Head Teacher"),
+                 ("summary_worksheet", "Summary Worksheet Accurate by Head Teacher"),
+                ],
+                header= True
+               )]
+
+    def queryset(self, request):
+        """
+        Limits queries for pages that belong to district admin
+        """
+        qs = super(SchoolMonitoringDataAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
@@ -161,6 +196,7 @@ class HeadTeacherDuplicateStoreAdmin(ManagePermissions):
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
+admin.site.register(SchoolMonitoringData, SchoolMonitoringDataAdmin)
 admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
 admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
 admin.site.register(AcademicAchievementCode, AcademicAchievementCodeAdmin)
