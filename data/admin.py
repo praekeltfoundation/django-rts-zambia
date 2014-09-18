@@ -67,10 +67,11 @@ class HeadTeacherAdmin(ManagePermissions):
 
 
 class SchoolMonitoringDataAdmin(ManagePermissions):
-    list_display = ["emis", "school_improvement_plan", "teaching", "learner_assessment", "learning_materials",
-                    "learner_attendance", "instructional_time", "struggling_learners", "support_ovcs",
-                    "classroom_observation_ht", "learner_performance_ht", "summary_worksheet", "created_by",
-                    "created_at"]
+    list_display = ["emis", "school_improvement_plan", "no_improvement_plan", "teaching",
+                    "learner_assessment", "learning_materials", "learner_attendance",
+                    "instructional_time", "struggling_learners", "support_ovcs",
+                    "classroom_observation_ht", "learner_performance_ht", "summary_worksheet",
+                    "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                 fields= [
@@ -78,6 +79,7 @@ class SchoolMonitoringDataAdmin(ManagePermissions):
                  ("created_at", "Created At"),
                  ("created_by", "Created By"),
                  ("school_improvement_plan", "School Learner Performance Improvement Plan"),
+                 ("no_improvement_plan", "Reason for not seeing Improvement Plan"),
                  ("teaching", "Activity for Improving Teaching"),
                  ("learner_assessment", "Activity for Improving Learner Assessment"),
                  ("learning_materials", "Acquiring Learning Materials"),

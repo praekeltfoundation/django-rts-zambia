@@ -131,8 +131,18 @@ class SchoolMonitoringData(models.Model):
         ('no', 'No')
     )
     school_improvement_plan = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
+        max_length=18, choices=YES_NO_CHOICES,
         verbose_name=u'School Learner Performance Improvement Plan')
+
+    no_improvement_plan = models.CharField(
+        max_length=29, 
+        choices= (
+            ('no_plan', 'The school did not have one'),
+            ('plan_incomplete', 'It was incomplete'),
+            ('visit_incomplete', 'The visit is not yet complete')
+        ),
+        verbose_name=u'Reason for not seeing Improvement Plan',
+        null=True, blank=True)
 
     teaching = models.CharField(
         max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
