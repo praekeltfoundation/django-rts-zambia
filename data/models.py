@@ -121,71 +121,84 @@ class AcademicAchievementCode(models.Model):
 
 
 class SchoolMonitoringData(models.Model):
-    YES_NO_INCOMPLETE_CHOICES = (
-        ('yes', 'Yes'),
-        ('no', 'No'),
-        ('incomplete', 'Yes but incomplete')
+    YES_PROGRESS_NO_CHOICES = (
+        ('yes', 'YES - completed'),
+        ('yes_incomplete', 'YES - in progress'),
+        ('no', 'NO')
     )
     YES_NO_CHOICES = (
-        ('yes', 'Yes'),
-        ('no', 'No')
+        ('yes', 'YES'),
+        ('no', 'NO')
     )
-    school_improvement_plan = models.CharField(
-        max_length=18, choices=YES_NO_CHOICES,
-        verbose_name=u'School Learner Performance Improvement Plan')
+    SUBMITTED_CHOICES = (
+        ('yes_cellphone', 'YES submitted by cell phone'),
+        ('yes_paper', 'YES submitted paper form to DEBS office'),
+        ('no', 'NO')
+    )
+    YES_UPDATED_NO_CHOICES = (
+        ('yes', 'YES'),
+        ('yes_not_updated', 'YES but not updated'),
+        ('no', 'NO')
+    )
 
-    no_improvement_plan = models.CharField(
-        max_length=29, 
-        choices= (
-            ('no_plan', 'The school did not have one'),
-            ('plan_incomplete', 'It was incomplete'),
-            ('visit_incomplete', 'The visit is not yet complete')
-        ),
-        verbose_name=u'Reason for not seeing Improvement Plan',
-        null=True, blank=True)
-
+    see_lpip = models.CharField(
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
+        verbose_name=u'Saw School Learner Performance Improvement Plan')
     teaching = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
         verbose_name=u'Activity for Improving Teaching',
         null=True, blank=True)
     learner_assessment = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
         verbose_name=u'Activity for Improving Learner Assessment',
         null=True, blank=True)
     learning_materials = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
         verbose_name=u'Acquiring Learning Materials',
         null=True, blank=True)
     learner_attendance = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
         verbose_name=u'Activity for Improving Learner Attendance',
         null=True, blank=True)
-    instructional_time = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
-        verbose_name=u'Activity for Improving Instructional Time',
+    reading_time = models.CharField(
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
+        verbose_name=u'Activity for Improving Reading Time',
         null=True, blank=True)
     struggling_learners = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
         verbose_name=u'Extra Support for Struggling Learners',
         null=True, blank=True)
-    support_ovcs = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
-        verbose_name=u'Activity to Support OVCs',
-        null=True, blank=True)
-    classroom_observation_ht = models.CharField(
-        max_length=18, choices=YES_NO_INCOMPLETE_CHOICES,
-        verbose_name=u'ClassRoom Observation Results by Head Teacher',
-        null=True, blank=True)
-
-    learner_performance_ht = models.CharField(
+    g2_observation_results = models.CharField(
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
+        verbose_name=u'Saw Grade 2 Reading Lesson Observation Results')
+    ht_feedback = models.CharField(
         max_length=3, choices=YES_NO_CHOICES,
-        verbose_name=u'Learner Performance Assessments by Head Teacher',
+        verbose_name=u'Head Teacher Feedback',
         null=True, blank=True)
+    submitted_classroom = models.CharField(
+        max_length=39, choices=SUBMITTED_CHOICES,
+        verbose_name=u'Submitted Classroom Observation Results',
+        null=True, blank=True)
+    gala_sheets = models.CharField(
+        max_length=17, choices=YES_PROGRESS_NO_CHOICES,
+        verbose_name=u'Saw GALA stimulus sheets')
     summary_worksheet = models.CharField(
         max_length=3, choices=YES_NO_CHOICES,
-        verbose_name=u'Summary Worksheet Accurate by Head Teacher',
+        verbose_name=u'Summary Worksheet Accurately Completed',
         null=True, blank=True)
-    
+    ht_feedback_literacy = models.CharField(
+        max_length=3, choices=YES_NO_CHOICES,
+        verbose_name=u'Head Teacher Feedback - Literacy Assessment',
+        null=True, blank=True)
+    submitted_gala = models.CharField(
+        max_length=39, choices=SUBMITTED_CHOICES,
+        verbose_name=u'Submitted GALA results',
+        null=True, blank=True)
+    talking_wall = models.CharField(
+        max_length=19, choices=YES_UPDATED_NO_CHOICES,
+        verbose_name=u'Talking Wall on Display and updated',
+        null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     emis = models.ForeignKey('hierarchy.School',
                              verbose_name=u'EMIS')
