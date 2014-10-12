@@ -154,7 +154,7 @@ class SchoolMonitoringData(models.Model):
         null=True, blank=True)
     learning_materials = models.CharField(
         max_length=17, choices=YES_PROGRESS_NO_CHOICES,
-        verbose_name=u'Acquiring Learning Materials',
+        verbose_name=u'Activity for Acquiring Learning Materials',
         null=True, blank=True)
     learner_attendance = models.CharField(
         max_length=17, choices=YES_PROGRESS_NO_CHOICES,
