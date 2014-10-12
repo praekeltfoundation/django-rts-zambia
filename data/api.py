@@ -3,7 +3,7 @@ from tastypie.authorization import Authorization
 from tastypie import fields
 from tastypie.paginator import Paginator
 from models import (HeadTeacher, SchoolData, TeacherPerformanceData,
-                    LearnerPerformanceData, InboundSMS,
+                    LearnerPerformanceData, SchoolMonitoringData, InboundSMS,
                     AcademicAchievementCode, DistrictAdminUser)
 from django.conf.urls import url
 
@@ -140,6 +140,40 @@ class AcademicAchievementCodeResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = True
         always_return_data = True
+        paginator_class = Paginator
+
+
+class SchoolMonitoringDataResource(ModelResource):
+    """
+    POSTING DATA
+
+    "url": "<base_url>/api/v1/data/school_monitoring/",
+    "body": {
+                "data": "data",
+                "created_by": "/api/v1/data/headteacher/emis/4813/",
+                "emis": "/api/v1/school/emis/4813/"
+            }
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis', full=True)
+    created_by = fields.ForeignKey(HeadTeacherResource,
+                                   'created_by',
+                                   null=True,
+                                   full=True)
+    created_by_da = fields.ForeignKey(DistrictAdminUserResource,
+                                      'created_by_da',
+                                       null=True,
+                                       full=True)
+
+    class Meta:
+        queryset = SchoolMonitoringData.objects.all()
+        resource_name = "data/school_monitoring"
+        list_allowed_methods = ['post', 'get']
+        authorization = Authorization()
+        include_resource_uri = True
+        always_return_data = True
+        filtering = {
+            'created_by': ALL_WITH_RELATIONS,
+            'emis': ALL_WITH_RELATIONS}
         paginator_class = Paginator
 
 
@@ -315,6 +349,32 @@ class AcademicAchievementCodeCSVDownloadResource(CSVModelResource):
         serializer = CSVSerializer()  # Using custom serializer
         authentication = OverrideApiAuthentication()
         paginator_class = Paginator
+
+
+class SchoolMonitoringDataCSVDownloadResource(CSVModelResource):
+    """
+    GET School Monitoring Data CSV
+    ::
+
+    "url": "<base_url>/api/v1/csv/data/school_monitoring/?username=name&api_key=key,
+    "method": "GET",
+    """
+    emis = fields.ForeignKey("hierarchy.api.SchoolResource", 'emis')
+    created_by = fields.ForeignKey(HeadTeacherResource, 'created_by')
+
+    class Meta:
+        queryset = SchoolMonitoringData.objects.all()
+        resource_name = "csv/data/school_monitoring"
+        list_allowed_methods = ['get']
+        include_resource_uri = False
+        serializer = CSVSerializer()  # Using custom serializer
+        authentication = OverrideApiAuthentication()
+        paginator_class = Paginator
+
+    def dehydrate(self, bundle):
+        bundle.data['emis'] = bundle.obj.emis.id
+        bundle.data['created_by'] = bundle.obj.created_by.id
+        return bundle
 
 
 class TeacherPerformanceDataCSVDownloadResource(CSVModelResource):
