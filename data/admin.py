@@ -86,14 +86,14 @@ class SchoolMonitoringDataAdmin(ManagePermissions):
                  ("learner_attendance", "Activity for Improving Learner Attendance"),
                  ("reading_time", "Activity for Improving Reading Time"),
                  ("struggling_learners", "Extra Support for Struggling Learners"),
-                 ("g2_observation_results", u'Saw Grade 2 Reading Lesson Observation Results'),
-                 ("ht_feedback", u'Head Teacher Feedback'),
-                 ("submitted_classroom", u'Submitted Classroom Observation Results'),
-                 ("gala_sheets", u'Saw GALA stimulus sheets'),
-                 ("summary_worksheet", u'Summary Worksheet Accurately Completed'),
-                 ("ht_feedback_literacy", u'Head Teacher Feedback - Literacy Assessment'),
-                 ("submitted_gala", u'Submitted GALA results'),
-                 ("talking_wall", u'Talking Wall on Display and updated')
+                 ("g2_observation_results", "Saw Grade 2 Reading Lesson Observation Results"),
+                 ("ht_feedback", "Head Teacher Feedback"),
+                 ("submitted_classroom", "Submitted Classroom Observation Results"),
+                 ("gala_sheets", "Saw GALA stimulus sheets"),
+                 ("summary_worksheet", "Summary Worksheet Accurately Completed"),
+                 ("ht_feedback_literacy", "Head Teacher Feedback - Literacy Assessment"),
+                 ("submitted_gala", "Submitted GALA results"),
+                 ("talking_wall", "Talking Wall on Display and update")
                 ],
                 header= True
                )]
