@@ -12,6 +12,7 @@ from tastypie.models import ApiKey
 
 # Project
 from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
+                         SchoolMonitoringData,
                          LearnerPerformanceData, InboundSMS, AcademicAchievementCode)
 from data.tests import utils
 
@@ -139,6 +140,75 @@ class TestDataCSVAPI(TestCase):
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, 'Sorry you are not authorized!')
 
+
+    def test_school_monitoring_csv_api(self):
+        """
+            Testing basic school monitoring API functionality.
+        """
+        utils.create_school_monitoring_data()
+        utils.create_school_monitoring_data()
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'csv/data/school_monitoring',
+                      'api_name': 'v1'})
+        response = self.client.get("%s?api_key=%s&username=%s" % (url, self.api_key.key, self.user.username))
+        self.assertEqual("text/csv; charset=utf-8", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+
+        response_list = self.parse_csv_response(response.content)
+        db_objects = SchoolMonitoringData.objects.all()
+
+        object_list = [sorted([unicode(obj.see_lpip),
+                              unicode(obj.teaching),
+                              unicode(obj.learner_assessment),
+                              unicode(obj.learning_materials),
+                              unicode(obj.learner_attendance),
+                              unicode(obj.reading_time),
+                              unicode(obj.struggling_learners),
+                              unicode(obj.g2_observation_results),
+                              unicode(obj.ht_feedback),
+                              unicode(obj.submitted_classroom),
+                              unicode(obj.gala_sheets),
+                              unicode(obj.ht_feedback_literacy),
+                              unicode(obj.summary_worksheet),
+                              unicode(obj.submitted_gala),
+                              unicode(obj.talking_wall),
+                              self.convert_date_time_to_tastypie(obj.created_at),
+                              unicode(obj.created_by.id),
+                              unicode(obj.emis.id),
+                              unicode(obj.id)]) for obj in db_objects]
+
+        object_list.insert(0, sorted(["see_lpip",
+                                      "teaching",
+                                      "learner_assessment",
+                                      "learning_materials",
+                                      "learner_attendance",
+                                      "reading_time",
+                                      "struggling_learners",
+                                      "g2_observation_results",
+                                      "ht_feedback",
+                                      "submitted_classroom",
+                                      "gala_sheets",
+                                      "ht_feedback_literacy",
+                                      "summary_worksheet",
+                                      "submitted_gala",
+                                      "talking_wall",
+                                      "created_at",
+                                      "created_by",
+                                      "emis",
+                                      "id"]))
+        self.assertEqual(sorted(response_list), sorted(object_list))
+
+    def test_school_monitoring_csv_api_unauthorized(self):
+        # This tests that the response from the API corresponds with the model
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'csv/data/school_monitoring',
+                      'api_name': 'v1'})
+        response = self.client.get(url)
+
+        self.assertEqual("text/plain; charset=utf-8", response["Content-Type"])
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, 'Sorry you are not authorized!')
 
     def test_teacher_perfomance_csv_api(self):
         """
