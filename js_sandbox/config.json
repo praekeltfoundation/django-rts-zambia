@@ -1,7 +1,0 @@
-{
-    "user_store": "rts_ussd_production",
-    "sms_short_code": "7233",
-    "cms_api_root": "http://www.zambiaschoolgateway.com/api/v1/",
-    "performance_monitoring_active": true,
-    "performance_monitoring_suspended_message": ""
-}
