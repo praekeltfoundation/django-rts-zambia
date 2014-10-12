@@ -67,10 +67,11 @@ class HeadTeacherAdmin(ManagePermissions):
 
 
 class SchoolMonitoringDataAdmin(ManagePermissions):
-    list_display = ["emis", "school_improvement_plan", "no_improvement_plan", "teaching",
+    list_display = ["emis", "see_lpip", "teaching",
                     "learner_assessment", "learning_materials", "learner_attendance",
-                    "instructional_time", "struggling_learners", "support_ovcs",
-                    "classroom_observation_ht", "learner_performance_ht", "summary_worksheet",
+                    "reading_time", "struggling_learners", "g2_observation_results",
+                    "ht_feedback", "submitted_classroom", "gala_sheets", "summary_worksheet",
+                    "ht_feedback_literacy", "submitted_gala", "talking_wall",
                     "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
@@ -78,18 +79,21 @@ class SchoolMonitoringDataAdmin(ManagePermissions):
                  ("emis", "EMIS"),
                  ("created_at", "Created At"),
                  ("created_by", "Created By"),
-                 ("school_improvement_plan", "School Learner Performance Improvement Plan"),
-                 ("no_improvement_plan", "Reason for not seeing Improvement Plan"),
+                 ("school_improvement_plan", "Saw School Learner Performance Improvement Plan"),
                  ("teaching", "Activity for Improving Teaching"),
                  ("learner_assessment", "Activity for Improving Learner Assessment"),
-                 ("learning_materials", "Acquiring Learning Materials"),
+                 ("learning_materials", "Activity for Acquiring Learning Materials"),
                  ("learner_attendance", "Activity for Improving Learner Attendance"),
-                 ("instructional_time", "Activity for Improving Instructional Time"),
+                 ("reading_time", "Activity for Improving Reading Time"),
                  ("struggling_learners", "Extra Support for Struggling Learners"),
-                 ("support_ovcs", "Activity to Support OVCs"),
-                 ("classroom_observation_ht", "ClassRoom Observation Results by Head Teacher"),
-                 ("learner_performance_ht", "Learner Performance Assessments by Head Teacher"),
-                 ("summary_worksheet", "Summary Worksheet Accurate by Head Teacher"),
+                 ("g2_observation_results", u'Saw Grade 2 Reading Lesson Observation Results'),
+                 ("ht_feedback", u'Head Teacher Feedback'),
+                 ("submitted_classroom", u'Submitted Classroom Observation Results'),
+                 ("gala_sheets", u'Saw GALA stimulus sheets'),
+                 ("summary_worksheet", u'Summary Worksheet Accurately Completed'),
+                 ("ht_feedback_literacy", u'Head Teacher Feedback - Literacy Assessment'),
+                 ("submitted_gala", u'Submitted GALA results'),
+                 ("talking_wall", u'Talking Wall on Display and updated')
                 ],
                 header= True
                )]
