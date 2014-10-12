@@ -519,12 +519,12 @@ class TestSchoolMonitoringDataAPI(ResourceTestCase):
                                 data={
                                     "see_lpip": "yes",
                                     "teaching": "no",
-                                    "learner_assessment": "yes_incomplete",
+                                    "learner_assessment": "yes_in_progress",
                                     "learning_materials": "yes",
                                     "learner_attendance": "no",
-                                    "reading_time": "yes_incomplete",
+                                    "reading_time": "yes_in_progress",
                                     "struggling_learners": "yes",
-                                    "g2_observation_results": "yes_incomplete",
+                                    "g2_observation_results": "yes_in_progress",
                                     "ht_feedback": "yes",
                                     "submitted_classroom": "yes_paper",
                                     "gala_sheets": "yes",
@@ -538,12 +538,12 @@ class TestSchoolMonitoringDataAPI(ResourceTestCase):
         json_item = json.loads(response.content)
         self.assertEqual("yes", json_item["see_lpip"])
         self.assertEqual("no", json_item["teaching"])
-        self.assertEqual("yes_incomplete", json_item["learner_assessment"])
+        self.assertEqual("yes_in_progress", json_item["learner_assessment"])
         self.assertEqual("yes", json_item["learning_materials"])
         self.assertEqual("no", json_item["learner_attendance"])
-        self.assertEqual("yes_incomplete", json_item["reading_time"])
+        self.assertEqual("yes_in_progress", json_item["reading_time"])
         self.assertEqual("yes", json_item["struggling_learners"])
-        self.assertEqual("yes_incomplete", json_item["g2_observation_results"])
+        self.assertEqual("yes_in_progress", json_item["g2_observation_results"])
         self.assertEqual("yes", json_item["ht_feedback"])
         self.assertEqual("yes_paper", json_item["submitted_classroom"])
         self.assertEqual("yes", json_item["gala_sheets"])
@@ -559,12 +559,12 @@ class TestSchoolMonitoringDataAPI(ResourceTestCase):
         schoolmonitoring = SchoolMonitoringData.objects.all()[0]
         self.assertEqual("yes", schoolmonitoring.see_lpip)
         self.assertEqual("no", schoolmonitoring.teaching)
-        self.assertEqual("yes_incomplete", schoolmonitoring.learner_assessment)
+        self.assertEqual("yes_in_progress", schoolmonitoring.learner_assessment)
         self.assertEqual("yes", schoolmonitoring.learning_materials)
         self.assertEqual("no", schoolmonitoring.learner_attendance)
-        self.assertEqual("yes_incomplete", schoolmonitoring.reading_time)
+        self.assertEqual("yes_in_progress", schoolmonitoring.reading_time)
         self.assertEqual("yes", schoolmonitoring.struggling_learners)
-        self.assertEqual("yes_incomplete", schoolmonitoring.g2_observation_results)
+        self.assertEqual("yes_in_progress", schoolmonitoring.g2_observation_results)
         self.assertEqual("yes", schoolmonitoring.ht_feedback)
         self.assertEqual("yes_paper", schoolmonitoring.submitted_classroom)
         self.assertEqual("yes", schoolmonitoring.gala_sheets)

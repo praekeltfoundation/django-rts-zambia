@@ -123,7 +123,7 @@ class AcademicAchievementCode(models.Model):
 class SchoolMonitoringData(models.Model):
     YES_PROGRESS_NO_CHOICES = (
         ('yes', 'YES - completed'),
-        ('yes_incomplete', 'YES - in progress'),
+        ('yes_in_progress', 'YES - in progress'),
         ('no', 'NO')
     )
     YES_NO_CHOICES = (
