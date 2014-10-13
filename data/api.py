@@ -148,8 +148,25 @@ class SchoolMonitoringDataResource(ModelResource):
     POSTING DATA
 
     "url": "<base_url>/api/v1/data/school_monitoring/",
+    "method": "POST",
+    "headers": {
+        'Content-Type': ['application/json']
+    },
     "body": {
-                "data": "data",
+                "see_lpip": "yes",
+                "teaching": "no",
+                "learner_assessment": "yes_in_progress",
+                "learning_materials": "yes",
+                "learner_attendance": "no",
+                "reading_time": "yes_in_progress",
+                "struggling_learners": "yes",
+                "g2_observation_results": "yes_in_progress",
+                "ht_feedback": "yes",
+                "submitted_classroom": "yes_paper",
+                "gala_sheets": "yes",
+                "summary_worksheet": "no",
+                "submitted_gala": "no",
+                "talking_wall": "yes_not_updated",
                 "created_by": "/api/v1/data/headteacher/emis/4813/",
                 "emis": "/api/v1/school/emis/4813/"
             }
