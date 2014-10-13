@@ -10,6 +10,7 @@ from tastypie.test import ResourceTestCase
 
 # Project
 from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
+                         SchoolMonitoringData,
                          LearnerPerformanceData, InboundSMS, DistrictAdminUser)
 from data.tests import utils
 
@@ -479,6 +480,102 @@ class TestSchoolDataAPI(ResourceTestCase):
                                     })
         json_item = json.loads(response.content)
         self.assertIn("error", json_item)
+
+
+class TestSchoolMonitoringDataAPI(ResourceTestCase):
+    fixtures = ['data.json', 'hierarchy.json']
+
+    def test_basic_api_functionality(self):
+        """
+            Testing basic school monitoring API functionality.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/school_monitoring',
+                      'api_name': 'v1'})
+        response = self.client.get(url)
+        self.assertEqual("application/json", response["Content-Type"])
+        self.assertEqual(response.status_code, 200)
+        json_item = json.loads(response.content)
+        self.assertIn("meta", json_item)
+        self.assertIn("objects", json_item)
+
+    def test_good_post_school_monitoring_json_data(self):
+        """
+            Testing good post school monitoring data.
+        """
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/headteacher',
+                      'api_name': 'v1'})
+        response = self.api_client.get("%s?emis__emis=4813" % (url))
+        json_item = json.loads(response.content)
+        headteacher_uri = json_item['objects'][0]['resource_uri']
+        headteacher_id = json_item['objects'][0]['id']
+
+        url = reverse('api_dispatch_list',
+                      kwargs={'resource_name': 'data/school_monitoring',
+                      'api_name': 'v1'})
+        response = self.api_client.post(url,
+                                format="json",
+                                data={
+                                    "see_lpip": "yes",
+                                    "teaching": "no",
+                                    "learner_assessment": "yes_in_progress",
+                                    "learning_materials": "yes",
+                                    "learner_attendance": "no",
+                                    "reading_time": "yes_in_progress",
+                                    "struggling_learners": "yes",
+                                    "g2_observation_results": "yes_in_progress",
+                                    "ht_feedback": "yes",
+                                    "submitted_classroom": "yes_paper",
+                                    "gala_sheets": "yes",
+                                    "summary_worksheet": "no",
+                                    "submitted_gala": "no",
+                                    "talking_wall": "yes_not_updated",
+                                    "created_by": headteacher_uri,
+                                    "emis": "/api/v1/school/emis/4813/"
+                                })
+
+        json_item = json.loads(response.content)
+        self.assertEqual("yes", json_item["see_lpip"])
+        self.assertEqual("no", json_item["teaching"])
+        self.assertEqual("yes_in_progress", json_item["learner_assessment"])
+        self.assertEqual("yes", json_item["learning_materials"])
+        self.assertEqual("no", json_item["learner_attendance"])
+        self.assertEqual("yes_in_progress", json_item["reading_time"])
+        self.assertEqual("yes", json_item["struggling_learners"])
+        self.assertEqual("yes_in_progress", json_item["g2_observation_results"])
+        self.assertEqual("yes", json_item["ht_feedback"])
+        self.assertEqual("yes_paper", json_item["submitted_classroom"])
+        self.assertEqual("yes", json_item["gala_sheets"])
+        self.assertEqual("no", json_item["summary_worksheet"])
+        self.assertEqual("no", json_item["submitted_gala"])
+        self.assertEqual("yes_not_updated", json_item["talking_wall"])
+        self.assertEqual(4813, json_item["emis"]["emis"])
+        self.assertEqual("Musungu", json_item["emis"]["name"])
+        self.assertFalse(json_item["created_by_da"])
+        self.assertEqual(headteacher_uri, json_item["created_by"]["resource_uri"])
+        self.assertEqual(headteacher_id, json_item["created_by"]["id"])
+
+        schoolmonitoring = SchoolMonitoringData.objects.all()[0]
+        self.assertEqual("yes", schoolmonitoring.see_lpip)
+        self.assertEqual("no", schoolmonitoring.teaching)
+        self.assertEqual("yes_in_progress", schoolmonitoring.learner_assessment)
+        self.assertEqual("yes", schoolmonitoring.learning_materials)
+        self.assertEqual("no", schoolmonitoring.learner_attendance)
+        self.assertEqual("yes_in_progress", schoolmonitoring.reading_time)
+        self.assertEqual("yes", schoolmonitoring.struggling_learners)
+        self.assertEqual("yes_in_progress", schoolmonitoring.g2_observation_results)
+        self.assertEqual("yes", schoolmonitoring.ht_feedback)
+        self.assertEqual("yes_paper", schoolmonitoring.submitted_classroom)
+        self.assertEqual("yes", schoolmonitoring.gala_sheets)
+        self.assertEqual("no", schoolmonitoring.summary_worksheet)
+        self.assertEqual("no", schoolmonitoring.submitted_gala)
+        self.assertEqual("yes_not_updated", schoolmonitoring.talking_wall)
+        self.assertIsNotNone(schoolmonitoring.created_at)
+        self.assertEqual("Musungu", schoolmonitoring.emis.name)
+        self.assertEqual(4813, schoolmonitoring.emis.emis)
+        self.assertEqual(4813, schoolmonitoring.created_by.emis.emis)
+        self.assertEqual(headteacher_id, schoolmonitoring.created_by.id)
 
 
 class TestTeacherPerformanceDataAPI(ResourceTestCase):

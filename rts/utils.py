@@ -27,6 +27,7 @@ class DistrictIdFilter:
             return self.qs
         elif UserDistrict.objects.filter(user_id=self.request.user.id).exists():
             emis_zone = ["SchoolDataAdmin", "HeadTeacherAdmin",
+                         "SchoolMonitoringDataAdmin",
                          "TeacherPerformanceDataAdmin", "LearnerPerformanceDataAdmin"]
             created_by_emis = ["InboundSMSAdmin"]
             if self.parent.__class__.__name__ in emis_zone:

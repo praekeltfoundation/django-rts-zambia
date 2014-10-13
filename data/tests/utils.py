@@ -5,6 +5,7 @@ import random
 # Project
 from hierarchy.models import (Province, District, Zone, School)
 from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
+                         SchoolMonitoringData,
                          LearnerPerformanceData, InboundSMS,
                          AcademicAchievementCode, DistrictAdminUser)
 
@@ -182,6 +183,52 @@ def create_school_data(emis=None,
 
     schooldata, _ = SchoolData.objects.get_or_create(**data)
     return schooldata
+
+
+def create_school_monitoring_data(see_lpip=random.choice(["yes", "yes_in_progress", "no"]),
+                                   teaching=random.choice(["yes", "yes_in_progress", "no"]),
+                                   learner_assessment=random.choice(["yes", "yes_in_progress", "no"]),
+                                   learning_materials=random.choice(["yes", "yes_in_progress", "no"]),
+                                   learner_attendance=random.choice(["yes", "yes_in_progress", "no"]),
+                                   reading_time=random.choice(["yes", "yes_in_progress", "no"]),
+                                   struggling_learners=random.choice(["yes", "yes_in_progress", "no"]),
+                                   g2_observation_results=random.choice(["yes", "yes_in_progress", "no"]),
+                                   ht_feedback=random.choice(["yes", "no"]),
+                                   submitted_classroom=random.choice(["yes_cellphone", "yes_paper", "no"]),
+                                   gala_sheets=random.choice(["yes", "yes_in_progress", "no"]),
+                                   summary_worksheet=random.choice(["yes", "no"]),
+                                   ht_feedback_literacy=random.choice(["yes", "no"]),
+                                   submitted_gala=random.choice(["yes_cellphone", "yes_paper", "no"]),
+                                   talking_wall=random.choice(["yes", "yes_not_updated", "no"]),
+                                   emis=None,
+                                   created_by=None):
+
+    if not emis:
+        emis = create_school()
+
+    if not created_by:
+        created_by = create_headteacher()
+
+    data = {"see_lpip": see_lpip,
+            "teaching": teaching,
+            "learner_assessment": learner_assessment,
+            "learning_materials": learning_materials,
+            "learner_attendance": learner_attendance,
+            "reading_time": reading_time,
+            "struggling_learners": struggling_learners,
+            "g2_observation_results": g2_observation_results,
+            "ht_feedback": ht_feedback,
+            "submitted_classroom": submitted_classroom,
+            "gala_sheets": gala_sheets,
+            "summary_worksheet": summary_worksheet,
+            "ht_feedback_literacy": ht_feedback_literacy,
+            "submitted_gala": submitted_gala,
+            "talking_wall": talking_wall,
+            "emis": emis,
+            "created_by": created_by}
+
+    school_mon, _ = SchoolMonitoringData.objects.get_or_create(**data)
+    return school_mon
 
 
 def create_teacher_perfomance_data(gender=random.choice(["male", "female"]),
