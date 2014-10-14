@@ -74,6 +74,7 @@ class SchoolMonitoringDataAdmin(ManagePermissions):
                     "ht_feedback_literacy", "submitted_gala", "talking_wall",
                     "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
+    raw_id_fields = ("created_by",)
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                 fields= [
                  ("emis", "EMIS"),
@@ -153,6 +154,7 @@ class LearnerPerformanceDataAdmin(ManagePermissions):
                     "reading_comprehension", "writing_diction", "below_minimum_results", "minimum_results",
                     "desirable_results", "outstanding_results", "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
+    raw_id_fields = ("created_by",)
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("emis", "EMIS"),
