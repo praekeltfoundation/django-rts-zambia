@@ -7,4 +7,4 @@ install:
 before_script:
   - psql -c 'create database rts;' -U postgres
 script:
-    - ./run-tests.sh
+    - ./manage.py test
