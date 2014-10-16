@@ -4,6 +4,10 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 from rts.actions import export_select_fields_csv_action
 
 
+class MyDistrictAdminForm(forms.ModelForm):
+
+
+
 class ProvinceAdmin(ManagePermissions):
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name"]
