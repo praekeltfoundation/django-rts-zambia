@@ -1,6 +1,6 @@
 from django.contrib import admin
 from models import (SchoolData, HeadTeacher, AcademicAchievementCode,
-                    SchoolMonitoringData,
+                    SchoolMonitoringData, DistrictAdminUser,
                     TeacherPerformanceData, LearnerPerformanceData,
                     HeadTeacherDuplicateStore, SchoolDataDuplicateStore)
 
@@ -63,6 +63,29 @@ class HeadTeacherAdmin(ManagePermissions):
         Limits queries for pages that belong to district admin
         """
         qs = super(HeadTeacherAdmin, self).queryset(request)
+        return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
+
+
+class DistrictAdminUserAdmin(ManagePermissions):
+    list_display = ["first_name", "last_name", "date_of_birth", "district", "id_number", "created_at"]
+    search_fields = ["first_name", "last_name"]
+    actions = [export_select_fields_csv_action("Export selected objects as CSV file",
+               fields= [
+                ("created_at", "Created At"),
+                ("first_name", "First Name"),
+                ("last_name", "Last Name"),
+                ("district", "District"),
+                ("id_number", "ID Number"),
+                ("date_of_birth", "Date of Birth"),
+               ],
+               header=True
+              )]
+
+    def queryset(self, request):
+        """
+        Limits queries for pages that belong to district admin
+        """
+        qs = super(DistrictAdminUserAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
 
@@ -204,6 +227,7 @@ class HeadTeacherDuplicateStoreAdmin(ManagePermissions):
 
 admin.site.register(SchoolData, SchoolDataAdmin)
 admin.site.register(HeadTeacher, HeadTeacherAdmin)
+admin.site.register(DistrictAdminUser, DistrictAdminUserAdmin)
 admin.site.register(SchoolMonitoringData, SchoolMonitoringDataAdmin)
 admin.site.register(TeacherPerformanceData, TeacherPerformanceDataAdmin)
 admin.site.register(LearnerPerformanceData, LearnerPerformanceDataAdmin)
