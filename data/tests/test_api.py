@@ -22,9 +22,14 @@ class TestDistrictAdmin(ResourceTestCase):
     def setUp(self):
         # Need to do super() for the tastypie setUp funcs
         super(TestDistrictAdmin, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
         self.dist_admin_url = reverse('api_dispatch_list',
                                       kwargs={'resource_name': 'district_admin',
                                       'api_name': 'v1'})
+
+    def tearDown(self):
+        self._post_save_helper.restore()
 
     def test_basic_api_functionality(self):
         # Checks if there is actually and endpoint
@@ -234,6 +239,16 @@ class TestDistrictAdmin(ResourceTestCase):
 class TestHeadteacherAPI(ResourceTestCase):
     fixtures = ['hierarchy.json']
 
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestHeadteacherAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+
+    def tearDown(self):
+        self._post_save_helper.restore()
+
     def test_basic_api_functionality(self):
         """
             Testing basic API functionality.
@@ -327,6 +342,15 @@ class TestHeadteacherAPI(ResourceTestCase):
 class TestHeadTeacherData(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
 
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestHeadTeacherData, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
+
     def test_is_zonal_head_true(self):
         """
             Testing basic API functionality.
@@ -362,6 +386,15 @@ class TestHeadTeacherData(ResourceTestCase):
 
 class TestSchoolDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
+
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestSchoolDataAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
 
     def test_basic_api_functionality(self):
         """
@@ -485,6 +518,15 @@ class TestSchoolDataAPI(ResourceTestCase):
 class TestSchoolMonitoringDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
 
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestSchoolMonitoringDataAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
+
     def test_basic_api_functionality(self):
         """
             Testing basic school monitoring API functionality.
@@ -580,6 +622,15 @@ class TestSchoolMonitoringDataAPI(ResourceTestCase):
 
 class TestTeacherPerformanceDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json', 'academic_achievement_code.json']
+
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestTeacherPerformanceDataAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
 
     def test_basic_api_functionality(self):
         """
@@ -694,6 +745,15 @@ class TestTeacherPerformanceDataAPI(ResourceTestCase):
 class TestLearnerPerformanceDataAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
 
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestLearnerPerformanceDataAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
+
     def test_basic_api_functionality(self):
         """
             Testing basic learner performance API functionality.
@@ -773,6 +833,15 @@ class TestLearnerPerformanceDataAPI(ResourceTestCase):
 
 class TestInboudSMSAPI(ResourceTestCase):
     fixtures = ['data.json', 'hierarchy.json']
+
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestInboudSMSAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
 
     def test_basic_api_functionality(self):
         """
