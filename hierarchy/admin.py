@@ -18,6 +18,7 @@ class DistrictAdmin(ManagePermissions):
 class ZoneAdmin(ManagePermissions):
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name", "district"]
+    search_fields = ["name"]
 
 
 class SchoolAdmin(ManagePermissions):
