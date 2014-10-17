@@ -1,6 +1,7 @@
 from django.db import models
 import mockups
 from mockups.generators import ChoiceGenerator, IntegerGenerator
+from tasks import vumi_fire_metric
 
 
 class DistrictAdminUser(models.Model):
@@ -361,3 +362,32 @@ class LearnerPerformanceDataMockup(mockups.Mockup):
 
 
 mockups.register(LearnerPerformanceData, LearnerPerformanceDataMockup)
+
+# Make sure new entries are sent to Vumi Metric via Celery
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=HeadTeacher)
+def fire_ht_metric_if_new(sender, instance, created, **kwargs):
+    if created:
+        vumi_fire_metric.delay(metric="sum.head_teachers_registrations.django", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.head_teachers_registrations.total", value=1, agg="incr")
+
+@receiver(post_save, sender=LearnerPerformanceData)
+def fire_lp_metric_if_new(sender, instance, created, **kwargs):
+    if created:
+        vumi_fire_metric.delay(metric="sum.learner_performanace_reports.django", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.learner_performanace_reports.total", value=1, agg="incr")
+
+@receiver(post_save, sender=TeacherPerformanceData)
+def fire_tp_metric_if_new(sender, instance, created, **kwargs):
+    if created:
+        vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.django", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.total", value=1, agg="incr")
+
+@receiver(post_save, sender=SchoolMonitoringData)
+def fire_sm_metric_if_new(sender, instance, created, **kwargs):
+    if created:
+        vumi_fire_metric.delay(metric="sum.school_monitoring_reports.django", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.school_monitoring_reports.total", value=1, agg="incr")
+

@@ -2,12 +2,18 @@
 from datetime import datetime
 import random
 
+# Django
+from django.db.models.signals import post_save
+
 # Project
 from hierarchy.models import (Province, District, Zone, School)
 from data.models import (HeadTeacher, SchoolData, TeacherPerformanceData,
                          SchoolMonitoringData,
                          LearnerPerformanceData, InboundSMS,
-                         AcademicAchievementCode, DistrictAdminUser)
+                         AcademicAchievementCode, DistrictAdminUser,
+                         fire_ht_metric_if_new, fire_lp_metric_if_new,
+                         fire_tp_metric_if_new, fire_sm_metric_if_new
+                         )
 
 
 NAMES = ['Aaliyah', 'Abayomi', 'Abebe', 'Abebi', 'Abena', 'Abeo', 'Ada']
@@ -329,3 +335,77 @@ def create_inbound_sms(message=random_message(),
             "created_by": created_by}
     inbound_sms, _ = InboundSMS.objects.get_or_create(**data)
     return inbound_sms
+
+""" Helpers for data app tests. """
+
+
+
+
+class PostSaveHelper(object):
+    """ Helper for managing post save hooks during tests. """
+
+    def replace(self):
+        """ Unhook post save hooks. """
+        has_listeners = lambda: post_save.has_listeners(HeadTeacher)
+        assert has_listeners(), (
+            "HeadTeacher model has no post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+        post_save.disconnect(fire_ht_metric_if_new, sender=HeadTeacher)
+        assert not has_listeners(), (
+            "HeadTeacher model still has post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+
+        has_listeners = lambda: post_save.has_listeners(TeacherPerformanceData)
+        assert has_listeners(), (
+            "TeacherPerformanceData model has no post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+        post_save.disconnect(fire_tp_metric_if_new, sender=TeacherPerformanceData)
+        assert not has_listeners(), (
+            "TeacherPerformanceData model still has post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+
+        has_listeners = lambda: post_save.has_listeners(LearnerPerformanceData)
+        assert has_listeners(), (
+            "LearnerPerformanceData model has no post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+        post_save.disconnect(fire_lp_metric_if_new, sender=LearnerPerformanceData)
+        assert not has_listeners(), (
+            "LearnerPerformanceData model still has post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+
+        has_listeners = lambda: post_save.has_listeners(SchoolMonitoringData)
+        assert has_listeners(), (
+            "SchoolMonitoringData model has no post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+        post_save.disconnect(fire_sm_metric_if_new, sender=SchoolMonitoringData)
+        assert not has_listeners(), (
+            "SchoolMonitoringData model still has post_save listeners. Make sure"
+            " helpers cleaned up properly in earlier tests.")
+
+    def restore(self):
+        """ Restore post save hooks. """
+        has_listeners = lambda: post_save.has_listeners(HeadTeacher)
+        assert not has_listeners(), (
+            "HeadTeacher model still has post_save listeners. Make sure"
+            " helpers removed them properly in earlier tests.")
+        post_save.connect(fire_ht_metric_if_new, sender=HeadTeacher)
+
+        has_listeners = lambda: post_save.has_listeners(TeacherPerformanceData)
+        assert not has_listeners(), (
+            "TeacherPerformanceData model still has post_save listeners. Make sure"
+            " helpers removed them properly in earlier tests.")
+        post_save.connect(fire_tp_metric_if_new, sender=TeacherPerformanceData)
+
+        has_listeners = lambda: post_save.has_listeners(LearnerPerformanceData)
+        assert not has_listeners(), (
+            "LearnerPerformanceData model still has post_save listeners. Make sure"
+            " helpers removed them properly in earlier tests.")
+        post_save.connect(fire_lp_metric_if_new, sender=LearnerPerformanceData)
+
+        has_listeners = lambda: post_save.has_listeners(SchoolMonitoringData)
+        assert not has_listeners(), (
+            "SchoolMonitoringData model still has post_save listeners. Make sure"
+            " helpers removed them properly in earlier tests.")
+        post_save.connect(fire_sm_metric_if_new, sender=SchoolMonitoringData)
+
+

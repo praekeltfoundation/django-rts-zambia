@@ -1,5 +1,5 @@
 # Django
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse

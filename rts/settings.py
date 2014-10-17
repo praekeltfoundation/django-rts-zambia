@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'tastypie',
     'mockups',
     # sample apps to explain usage
+    'rts',
     'hierarchy',
     'data',
     'celery_app',
@@ -204,7 +205,6 @@ if DEBUG:
 
 # Django debug toolbar
 DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
     'ENABLE_STACKTRACES': True,
 }
 
