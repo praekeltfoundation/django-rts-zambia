@@ -4,6 +4,7 @@ from rts.utils import DistrictIdFilter, ManagePermissions
 from rts.actions import export_select_fields_csv_action
 
 
+
 class ProvinceAdmin(ManagePermissions):
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name"]
@@ -17,6 +18,7 @@ class DistrictAdmin(ManagePermissions):
 class ZoneAdmin(ManagePermissions):
     actions = [export_select_fields_csv_action("Export selected objects as CSV file")]
     list_display = ["name", "district"]
+    search_fields = ["name"]
 
 
 class SchoolAdmin(ManagePermissions):
@@ -24,6 +26,10 @@ class SchoolAdmin(ManagePermissions):
     list_display = ["emis", "name", "zone", "display_district", "display_province"]
     search_fields = ["emis"]
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "zone":
+            kwargs["queryset"] = Zone.objects.order_by('name')
+        return super(SchoolAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
     def queryset(self, request):
         """
