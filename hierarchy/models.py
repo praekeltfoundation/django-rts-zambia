@@ -16,6 +16,13 @@ class District(models.Model):
     province = models.ForeignKey('Province',
                                   verbose_name=u'Province')
 
+    @classmethod
+    def match(cls, district=None):
+        districts = set()
+        if district:
+            districts.update(District.objects.filter(name__icontains=district))
+        return cls.objects.filter(name__in=districts)
+
     def __unicode__(self):
         return self.name
 
