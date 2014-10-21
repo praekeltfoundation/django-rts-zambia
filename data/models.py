@@ -370,24 +370,24 @@ from django.dispatch import receiver
 @receiver(post_save, sender=HeadTeacher)
 def fire_ht_metric_if_new(sender, instance, created, **kwargs):
     if created:
-        vumi_fire_metric.delay(metric="sum.head_teachers_registrations.django", value=1, agg="incr")
-        vumi_fire_metric.delay(metric="sum.head_teachers_registrations.total", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.head_teachers_registrations.django", value=1, agg="sum")
+        vumi_fire_metric.delay(metric="sum.head_teachers_registrations.total", value=1, agg="sum")
 
 @receiver(post_save, sender=LearnerPerformanceData)
 def fire_lp_metric_if_new(sender, instance, created, **kwargs):
     if created:
-        vumi_fire_metric.delay(metric="sum.learner_performanace_reports.django", value=1, agg="incr")
-        vumi_fire_metric.delay(metric="sum.learner_performanace_reports.total", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.learner_performanace_reports.django", value=1, agg="sum")
+        vumi_fire_metric.delay(metric="sum.learner_performanace_reports.total", value=1, agg="sum")
 
 @receiver(post_save, sender=TeacherPerformanceData)
 def fire_tp_metric_if_new(sender, instance, created, **kwargs):
     if created:
-        vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.django", value=1, agg="incr")
-        vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.total", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.django", value=1, agg="sum")
+        vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.total", value=1, agg="sum")
 
 @receiver(post_save, sender=SchoolMonitoringData)
 def fire_sm_metric_if_new(sender, instance, created, **kwargs):
     if created:
-        vumi_fire_metric.delay(metric="sum.school_monitoring_reports.django", value=1, agg="incr")
-        vumi_fire_metric.delay(metric="sum.school_monitoring_reports.total", value=1, agg="incr")
+        vumi_fire_metric.delay(metric="sum.school_monitoring_reports.django", value=1, agg="sum")
+        vumi_fire_metric.delay(metric="sum.school_monitoring_reports.total", value=1, agg="sum")
 
