@@ -1,4 +1,5 @@
 from django.db import models
+from data.tasks import vumi_fire_metric
 
 
 class Province(models.Model):
@@ -60,3 +61,13 @@ class School(models.Model):
     display_zone.short_description = "Zone"
     display_district.short_description = "District"
     display_province.short_description = "Province"
+
+
+# Make sure new entries are sent to Vumi Metric via Celery
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=School)
+def fire_emis_metric_if_new(sender, instance, created, **kwargs):
+    if created:
+        vumi_fire_metric.delay(metric="sum.emis", value=1, agg="sum")

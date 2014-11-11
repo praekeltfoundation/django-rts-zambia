@@ -1,10 +1,20 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 import json
+from hierarchy.tests import utils
 
 
 class TestHierarchyAPI(TestCase):
     fixtures = ['hierarchy.json']
+
+    def setUp(self):
+        # Need to do super() for the tastypie setUp funcs
+        super(TestHierarchyAPI, self).setUp()
+        self._post_save_helper = utils.PostSaveHelper()
+        self._post_save_helper.replace()
+
+    def tearDown(self):
+        self._post_save_helper.restore()
 
     def test_basic_api_functionality(self):
         """
