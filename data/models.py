@@ -2,6 +2,7 @@ from django.db import models
 import mockups
 from mockups.generators import ChoiceGenerator, IntegerGenerator
 from tasks import vumi_fire_metric
+from django.conf import settings
 
 
 class DistrictAdminUser(models.Model):
@@ -369,25 +370,25 @@ from django.dispatch import receiver
 
 @receiver(post_save, sender=HeadTeacher)
 def fire_ht_metric_if_new(sender, instance, created, **kwargs):
-    if created:
+    if created and settings.TESTING is not True:
         vumi_fire_metric.delay(metric="sum.head_teachers_registrations.django", value=1, agg="sum")
         vumi_fire_metric.delay(metric="sum.head_teachers_registrations.total", value=1, agg="sum")
 
 @receiver(post_save, sender=LearnerPerformanceData)
 def fire_lp_metric_if_new(sender, instance, created, **kwargs):
-    if created:
+    if created and settings.TESTING is not True:
         vumi_fire_metric.delay(metric="sum.learner_performanace_reports.django", value=1, agg="sum")
         vumi_fire_metric.delay(metric="sum.learner_performanace_reports.total", value=1, agg="sum")
 
 @receiver(post_save, sender=TeacherPerformanceData)
 def fire_tp_metric_if_new(sender, instance, created, **kwargs):
-    if created:
+    if created and settings.TESTING is not True:
         vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.django", value=1, agg="sum")
         vumi_fire_metric.delay(metric="sum.teacher_performanace_reports.total", value=1, agg="sum")
 
 @receiver(post_save, sender=SchoolMonitoringData)
 def fire_sm_metric_if_new(sender, instance, created, **kwargs):
-    if created:
+    if created and settings.TESTING is not True:
         vumi_fire_metric.delay(metric="sum.school_monitoring_reports.django", value=1, agg="sum")
         vumi_fire_metric.delay(metric="sum.school_monitoring_reports.total", value=1, agg="sum")
 
