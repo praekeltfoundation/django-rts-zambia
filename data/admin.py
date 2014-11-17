@@ -3,6 +3,7 @@ from models import (SchoolData, HeadTeacher, AcademicAchievementCode,
                     SchoolMonitoringData, DistrictAdminUser,
                     TeacherPerformanceData, LearnerPerformanceData,
                     HeadTeacherDuplicateStore, SchoolDataDuplicateStore)
+from django.contrib.auth.models import User
 
 from rts.actions import export_select_fields_csv_action
 from rts.utils import DistrictIdFilter, ManagePermissions
@@ -129,6 +130,16 @@ class SchoolMonitoringDataAdmin(ManagePermissions):
         qs = super(SchoolMonitoringDataAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Pre-populate district admin field with the logged in user
+        """
+        if db_field.name == 'created_by_da':
+            kwargs['queryset'] = User.objects.all()
+            kwargs['initial'] = request.user.id
+            return db_field.formfield(**kwargs)
+        return super(SchoolMonitoringDataAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 class TeacherPerformanceDataAdmin(ManagePermissions):
     list_display = ["emis", "gender", "age", "years_experience", "g2_pupils_present", "g2_pupils_registered",
@@ -171,6 +182,16 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
         qs = super(TeacherPerformanceDataAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Pre-populate district admin field with the logged in user
+        """
+        if db_field.name == 'created_by_da':
+            kwargs['queryset'] = User.objects.all()
+            kwargs['initial'] = request.user.id
+            return db_field.formfield(**kwargs)
+        return super(TeacherPerformanceDataAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 class LearnerPerformanceDataAdmin(ManagePermissions):
     list_display = ["emis", "gender", "total_number_pupils", "phonetic_awareness", "vocabulary",
@@ -203,6 +224,16 @@ class LearnerPerformanceDataAdmin(ManagePermissions):
         """
         qs = super(LearnerPerformanceDataAdmin, self).queryset(request)
         return DistrictIdFilter(parent=self, request=request, qs=qs).queryset()
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Pre-populate district admin field with the logged in user
+        """
+        if db_field.name == 'created_by_da':
+            kwargs['queryset'] = User.objects.all()
+            kwargs['initial'] = request.user.id
+            return db_field.formfield(**kwargs)
+        return super(LearnerPerformanceDataAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class AcademicAchievementCodeAdmin(admin.ModelAdmin):
