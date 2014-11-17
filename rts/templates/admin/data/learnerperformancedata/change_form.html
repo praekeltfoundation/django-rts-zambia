@@ -3,8 +3,59 @@
 <!-- {% load admin_urls %} -->
 
 {% block field_sets %}
-<script type="text/javascript" src={% static "admin/js/live_validation.js" %}></script>
 {% for fieldset in adminform %}
   {% include "admin/includes/fieldset.html" %}
 {% endfor %}
+<script type="text/javascript">
+function parse_or_zero(val) {
+    var p = parseInt(val, 10);
+    if (isNaN(p)){
+        return 0;
+    } else {
+        return p;
+    }
+}
+
+function check_not_gt(fld){
+    var f = document.forms.learnerperformancedata_form;
+    var target_sum = f["id_total_number_pupils"].value;
+    var val = parse_or_zero(fld.value);
+    if (val > target_sum){
+        alert("You can't enter more than " + target_sum);
+    }
+}
+
+
+function check_building_totals(final_answer){
+    var f = document.forms.learnerperformancedata_form;
+    var target_sum = f["id_total_number_pupils"].value;
+
+    // must be less than or equal to target sum
+    var below_minimum_results = parse_or_zero(f["id_below_minimum_results"].value);
+    var minimum_results = parse_or_zero(f["id_minimum_results"].value);
+    var desirable_results = parse_or_zero(f["id_desirable_results"].value);
+    var outstanding_results = parse_or_zero(f["id_outstanding_results"].value);
+
+    var current_sum = below_minimum_results + minimum_results + desirable_results + outstanding_results;
+    var sum_as_string = [below_minimum_results, minimum_results, desirable_results, outstanding_results].join("+");
+    var error = "You've entered results for " + current_sum + " pupils (" + sum_as_string + "), " +
+                "but you initially indicated " + target_sum + " participants. Please try again.";
+
+    if (final_answer && (current_sum != target_sum)) { // Must be equal on final
+        alert(error);
+    } else if (current_sum > target_sum){ // Must not be more than total
+        alert(error);
+    }
+}
+
+var f = document.forms.learnerperformancedata_form;
+f["id_phonetic_awareness"].setAttribute("onchange", "check_not_gt(this)");
+f["id_vocabulary"].setAttribute("onchange", "check_not_gt(this)");
+f["id_reading_comprehension"].setAttribute("onchange", "check_not_gt(this)");
+f["id_writing_diction"].setAttribute("onchange", "check_not_gt(this)");
+f["id_below_minimum_results"].setAttribute("onchange", "check_building_totals(false)");
+f["id_minimum_results"].setAttribute("onchange", "check_building_totals(false)");
+f["id_desirable_results"].setAttribute("onchange", "check_building_totals(false)");
+f["id_outstanding_results"].setAttribute("onchange", "check_building_totals(true)");
+</script>
 {% endblock %}
