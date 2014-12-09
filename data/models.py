@@ -1,10 +1,12 @@
 from django.db import models
+from django.contrib.auth.models import User
 import mockups
 from mockups.generators import ChoiceGenerator, IntegerGenerator
 from tasks import vumi_fire_metric
 
 
 class DistrictAdminUser(models.Model):
+    user = models.OneToOneField(User, null=True, blank=True)
     first_name = models.CharField(max_length=50, verbose_name=u'First Name')
     last_name = models.CharField(max_length=50, verbose_name=u'Last Name')
     district = models.ForeignKey("hierarchy.District")

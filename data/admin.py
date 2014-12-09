@@ -135,9 +135,9 @@ class SchoolMonitoringDataAdmin(ManagePermissions):
         Pre-populate district admin field with the logged in user
         """
         if db_field.name == 'created_by_da':
-            user_district = UserDistrict.objects.get(user=request.user).district
             kwargs['queryset'] = DistrictAdminUser.objects.all()
-            kwargs['initial'] = DistrictAdminUser.objects.get(district=user_district)
+            if len(DistrictAdminUser.objects.filter(user=request.user)) == 1:
+                kwargs['initial'] = DistrictAdminUser.objects.get(user=request.user)
             return db_field.formfield(**kwargs)
         return super(SchoolMonitoringDataAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
@@ -188,9 +188,9 @@ class TeacherPerformanceDataAdmin(ManagePermissions):
         Pre-populate district admin field with the logged in user
         """
         if db_field.name == 'created_by_da':
-            user_district = UserDistrict.objects.get(user=request.user).district
             kwargs['queryset'] = DistrictAdminUser.objects.all()
-            kwargs['initial'] = DistrictAdminUser.objects.get(district=user_district)
+            if len(DistrictAdminUser.objects.filter(user=request.user)) == 1:
+                kwargs['initial'] = DistrictAdminUser.objects.get(user=request.user)
             return db_field.formfield(**kwargs)
         return super(TeacherPerformanceDataAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
@@ -232,9 +232,9 @@ class LearnerPerformanceDataAdmin(ManagePermissions):
         Pre-populate district admin field with the logged in user
         """
         if db_field.name == 'created_by_da':
-            user_district = UserDistrict.objects.get(user=request.user).district
             kwargs['queryset'] = DistrictAdminUser.objects.all()
-            kwargs['initial'] = DistrictAdminUser.objects.get(district=user_district)
+            if len(DistrictAdminUser.objects.filter(user=request.user)) == 1:
+                kwargs['initial'] = DistrictAdminUser.objects.get(user=request.user)
             return db_field.formfield(**kwargs)
         return super(LearnerPerformanceDataAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
