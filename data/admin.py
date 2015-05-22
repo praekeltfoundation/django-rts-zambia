@@ -15,6 +15,7 @@ class SchoolDataAdmin(ManagePermissions):
     list_display = ["emis", "name", "classrooms", "teachers", "boys", "girls",
                     "teachers_g1", "teachers_g2", "boys_g2", "girls_g2", "created_by", "created_at"]
     search_fields = ["emis__emis", "emis__name"]
+    raw_id_fields = ("created_by",)
     actions = [export_select_fields_csv_action("Export selected objects as CSV file",
                fields= [
                 ("emis", "EMIS"),
